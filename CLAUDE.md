@@ -27,7 +27,7 @@ This is a concept. Several things look real but are invented:
 - The published concept link labels these "Sample reviews" / "· sample". This handoff copy has the labels removed so the developer can drop in real data. Never ship the fictional reviews unlabelled.
 - **Legal texts** in `privacy.html` and `terms.html` are drafts, not lawyer-reviewed.
 - **Emails** `privacy@wattashirt.com` and `hello@wattashirt.com` are invented.
-- **Social icons** in the footer (FB / IG / LinkedIn) link to `404.html`, because there are no real accounts yet.
+- **Social icons** in the footer (FB / IG / LinkedIn) link to the platform home pages (facebook.com, instagram.com, linkedin.com) until the real account URLs exist.
 - **Commerce:** the price, the "Get Black / Get White" CTA, the `EN` language button and the configurator's "Get it" have no backend. They are UI only.
 
 ## Architecture (landing, main.js)
