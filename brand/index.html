@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Brand guidelines — Wattashirt</title>
+  <meta name="description" content="Wattashirt brand guidelines: wordmark, colour and the two modes, type, glass interface, imagery and voice.">
+  <script>try { if (localStorage.getItem('ws-theme') === 'white') document.documentElement.classList.add('is-white'); } catch (e) {}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/brand/brand.css?v=1">
+</head>
+<body>
+  <div class="veil" id="veil" aria-hidden="true"></div>
+  <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+
+  <header class="header">
+    <a class="logo" href="/">Wattashirt</a>
+    <button class="pill lg" id="themeToggle" aria-pressed="false">
+      <span class="pill__label" data-black="I Wanna White" data-white="I Wanna Black">I Wanna White</span>
+      <span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span>
+    </button>
+    <div class="header__right">
+      <span class="header__page" id="pageNo" aria-live="polite">01 / 10</span>
+      <button class="circle lg" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span class="burger" aria-hidden="true"><i></i><i></i></span></button>
+    </div>
+  </header>
+
+  <nav class="menu" id="menu" aria-hidden="true">
+    <ol>
+      <li><a href="#idea">Brand idea</a></li>
+      <li><a href="#product">Product truths</a></li>
+      <li><a href="#wordmark">Wordmark</a></li>
+      <li><a href="#colour">Colour &amp; modes</a></li>
+      <li><a href="#type">Typography</a></li>
+      <li><a href="#interface">Glass interface</a></li>
+      <li><a href="#imagery">Imagery</a></li>
+      <li><a href="#voice">Voice &amp; 404</a></li>
+    </ol>
+    <a class="menu__back" href="/">← Back to the site</a>
+  </nav>
+
+  <nav class="rail" aria-label="Guide sections">
+    <a href="#cover" data-i="0"><span>Cover</span></a>
+    <a href="#contents" data-i="1"><span>Contents</span></a>
+    <a href="#idea" data-i="2"><span>Brand idea</span></a>
+    <a href="#product" data-i="3"><span>Product truths</span></a>
+    <a href="#wordmark" data-i="4"><span>Wordmark</span></a>
+    <a href="#colour" data-i="5"><span>Colour</span></a>
+    <a href="#type" data-i="6"><span>Typography</span></a>
+    <a href="#interface" data-i="7"><span>Interface</span></a>
+    <a href="#imagery" data-i="8"><span>Imagery</span></a>
+    <a href="#voice" data-i="9"><span>Voice</span></a>
+  </nav>
+
+  <main>
+    <!-- 01 Cover -->
+    <section class="sec sec--cover" id="cover" data-name="Cover">
+      <div class="big-word" aria-hidden="true"><span class="t-black">Black</span><span class="t-white">White</span></div>
+      <img class="cover__shirt" id="coverShirt" src="/assets/brand/shirt_front_b.webp" data-black="/assets/brand/shirt_front_b.webp" data-white="/assets/brand/shirt_front_w.webp" alt="The Wattashirt tee, front view">
+      <div class="cover__copy">
+        <h1 class="grad cover__title">Wattashirt</h1>
+        <p class="cover__tag">Brand guidelines · Edition 01</p>
+        <a class="cta" href="#contents">Open the guide<span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></a>
+      </div>
+      <p class="corner corner--bl">Once you go black<br>you never go back</p>
+      <p class="corner corner--br">Wattashirt <span class="t-black">Black</span><span class="t-white">White</span><br>2026</p>
+      <div class="scroll-hint">
+        <svg viewBox="0 0 16.5 21.5" aria-hidden="true"><path d="M1 15.8C1.2 18.2 3.1 20.3 5.5 20.6C6.4 20.7 7.3 20.8 8.25 20.8C9.2 20.8 10.1 20.7 11 20.6C13.4 20.3 15.3 18.2 15.5 15.8C15.6 14.2 15.75 12.5 15.75 10.75C15.75 9 15.6 7.3 15.5 5.7C15.3 3.3 13.4 1.2 11 0.9C10.1 0.8 9.2 0.75 8.25 0.75C7.3 0.75 6.4 0.8 5.5 0.9C3.1 1.2 1.2 3.3 1 5.7C0.86 7.3 0.75 9 0.75 10.75C0.75 12.5 0.86 14.2 1 15.8Z M8.25 4.75V7.75"/></svg>
+        <span>Scroll · or use ↑ ↓</span>
+      </div>
+    </section>
+
+    <!-- 02 Contents -->
+    <section class="sec sec--contents" id="contents" data-name="Contents">
+      <h2 class="sec-title rv"><span class="sec-title__dim">Inside the guide</span><span class="sec-title__main">Contents</span></h2>
+      <div class="contents">
+        <ol class="toc rv">
+          <li><a href="#idea"><span>01</span>Brand idea</a></li>
+          <li><a href="#product"><span>02</span>Product truths</a></li>
+          <li><a href="#wordmark"><span>03</span>Wordmark</a></li>
+          <li><a href="#colour"><span>04</span>Colour &amp; modes</a></li>
+          <li><a href="#type"><span>05</span>Typography</a></li>
+          <li><a href="#interface"><span>06</span>Glass interface</a></li>
+          <li><a href="#imagery"><span>07</span>Imagery</a></li>
+          <li><a href="#voice"><span>08</span>Voice &amp; 404</a></li>
+        </ol>
+        <div class="contents__side">
+          <img class="contents__shirt" src="/assets/brand/shirt_back_b.webp" data-black="/assets/brand/shirt_back_b.webp" data-white="/assets/brand/shirt_back_w.webp" alt="The Wattashirt tee, back view" loading="lazy">
+          <div class="glass card rv">
+            <p class="k">How to read it</p>
+            <p>Everything here is live: flip the pill at the top to see the White mode, click colours to copy them, type in the specimen, drag the shirt.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Brand idea -->
+    <section class="sec sec--idea" id="idea" data-name="Brand idea">
+      <h2 class="sec-title rv"><span class="sec-title__dim">01 · Brand idea</span><span class="sec-title__main">Once you go black, you never go back.</span></h2>
+      <div class="idea__stage" aria-hidden="true">
+        <svg class="ring" viewBox="0 0 1000 200" preserveAspectRatio="none"><ellipse cx="500" cy="100" rx="497" ry="97" vector-effect="non-scaling-stroke"/></svg>
+        <img src="/assets/brand/shirt_three_b.webp" data-black="/assets/brand/shirt_three_b.webp" data-white="/assets/brand/shirt_three_w.webp" alt="" loading="lazy">
+      </div>
+      <p class="side-copy side-copy--l rv">At Wattashirt, we craft oversized T-shirts that highlight your figure with effortless style, perfect for those who lead an active life.</p>
+      <div class="pillars">
+        <button class="glass card pillar rv" aria-expanded="false">
+          <span class="k">01 — Craft</span><span class="pillar__t">Fabric, engineered</span>
+          <span class="pillar__b">Double-spun cotton, knitted tight and pre-shrunk, so the cut keeps its line wash after wash.</span>
+        </button>
+        <button class="glass card pillar rv" aria-expanded="false">
+          <span class="k">02 — Cut</span><span class="pillar__t">Cut to move</span>
+          <span class="pillar__b">Dropped shoulders, a longer back and a collar that stays flat. Built for an active day.</span>
+        </button>
+        <button class="glass card pillar rv" aria-expanded="false">
+          <span class="k">03 — Feel</span><span class="pillar__t">Feels like nothing</span>
+          <span class="pillar__b">Heavy feel, featherweight wear. Wear it to train, to work, or to do nothing at all.</span>
+        </button>
+        <p class="eyebrow rv">One oversized cut, two colours. Nothing else to choose.</p>
+      </div>
+    </section>
+
+    <!-- 04 Product truths -->
+    <section class="sec sec--product" id="product" data-name="Product truths">
+      <h2 class="sec-title rv"><span class="sec-title__dim">02 · Inside the knit</span><span class="sec-title__main">Fabric, engineered</span></h2>
+      <div class="product__stage">
+        <img src="/assets/brand/shirt_front_b.webp" data-black="/assets/brand/shirt_front_b.webp" data-white="/assets/brand/shirt_front_w.webp" alt="The Wattashirt tee, front view" loading="lazy">
+        <button class="hs" style="--x:50%;--y:40%" data-tip="Combed cotton, 92%. Soft on skin, with just enough stretch." aria-label="Fabric"><i></i></button>
+        <button class="hs hs--sm" style="--x:50%;--y:16%" data-tip="Collar that stays flat, wash after wash." aria-label="Collar"><i></i></button>
+        <button class="hs hs--sm" style="--x:22%;--y:30%" data-tip="Dropped shoulders for the oversized line." aria-label="Shoulder"><i></i></button>
+        <button class="hs hs--sm" style="--x:56%;--y:86%" data-tip="A longer back, never boxy." aria-label="Hem"><i></i></button>
+        <p class="hs-tip glass" id="hsTip" role="status"></p>
+      </div>
+      <div class="product__l">
+        <div class="glass card rv" id="mix">
+          <p class="k">Composition</p>
+          <div class="bar"><p><span>Combed cotton</span><b>92%</b></p><span class="bar__track"><i style="--w:92%"></i></span></div>
+          <div class="bar"><p><span>Elastane</span><b>8%</b></p><span class="bar__track"><i style="--w:8%"></i></span></div>
+          <p class="note">Soft on skin, with just enough stretch to spring back.</p>
+        </div>
+        <div class="glass card rv">
+          <p class="k">Weight</p>
+          <p class="big"><span id="gsm" data-to="180">180</span><small>g/m²</small></p>
+          <p class="note">Dense enough to hold the drape, light enough to forget.</p>
+        </div>
+      </div>
+      <div class="product__r">
+        <figure class="vcard rv">
+          <div class="vcard__screen loupe" id="loupe"><img src="/assets/brand/macro_b.webp" data-black="/assets/brand/macro_b.webp" data-white="/assets/brand/macro_w.webp" alt="Macro of the single-jersey knit" loading="lazy"></div>
+          <figcaption><b>×12 macro</b>A tight single-jersey loop: it breathes, and it doesn't pill. <em>Move over it to zoom.</em></figcaption>
+        </figure>
+        <figure class="vcard rv">
+          <div class="vcard__screen"><img src="/assets/brand/seam_b.webp" data-black="/assets/brand/seam_b.webp" data-white="/assets/brand/seam_w.webp" alt="Macro of a flatlock seam" loading="lazy"></div>
+          <figcaption><b>Flatlock seams</b>Stitched flat on the inside: no ridge, no rub under a backpack strap.</figcaption>
+        </figure>
+      </div>
+      <p class="product__care rv"><span><em>Care:</em> Machine wash 30°, pre-shrunk</span><span><em>Fit:</em> Oversized or regular, true to size</span></p>
+    </section>
+
+    <!-- 05 Wordmark -->
+    <section class="sec sec--wordmark" id="wordmark" data-name="Wordmark">
+      <h2 class="sec-title rv"><span class="sec-title__dim">03 · Wordmark</span><span class="sec-title__main">Set in type, never drawn</span></h2>
+      <div class="side-r rv">
+        <p class="copy">The wordmark is the name set in Inter Tight Bold, all caps, tracked −1%. There is no symbol or monogram: the tee does that job.</p>
+        <p class="note">Minimum size: 24 px in the desktop header, 18 px on mobile.</p>
+      </div>
+      <div class="wm rv">
+        <div class="wm__box" id="wmBox">
+          <span class="wm__label">Clear space x = cap height</span>
+          <span class="wm__x wm__x--v"><i>x</i></span><span class="wm__x wm__x--h"><i>x</i></span>
+          <p class="wm__mark" id="wmMark">Wattashirt</p>
+        </div>
+        <div class="wm__ctrl glass">
+          <label for="wmSize">Size <b id="wmSizeOut">110 px</b></label>
+          <input type="range" id="wmSize" min="12" max="140" value="110">
+          <span class="wm__flag" id="wmFlag">OK</span>
+          <button class="seg-btn" id="wmGuides" aria-pressed="true">Guides</button>
+        </div>
+      </div>
+      <ul class="wm__tiles rv">
+        <li><div class="tile tile--black"><span>Wattashirt</span></div><p>On black · #FFFFFF</p></li>
+        <li><div class="tile tile--grey"><span>Wattashirt</span></div><p>On studio grey · #0C0C0C</p></li>
+        <li><div class="tile glass"><span class="grad">Wattashirt</span></div><p>Hero only · radial gradient</p></li>
+        <li class="dont"><div class="tile glass"><span style="color:#3d6bff">Wattashirt</span></div><p>Don't add colour</p></li>
+        <li class="dont"><div class="tile glass"><span style="font-weight:400;text-transform:none;letter-spacing:.02em">Wattashirt</span></div><p>Don't set it in lowercase or light</p></li>
+        <li class="dont"><div class="tile glass"><span style="display:inline-block;transform:scale(1.3,.75)">Wattashirt</span></div><p>Don't stretch or squash</p></li>
+      </ul>
+    </section>
+
+    <!-- 06 Colour & modes -->
+    <section class="sec sec--colour" id="colour" data-name="Colour">
+      <h2 class="sec-title rv"><span class="sec-title__dim">04 · Colour &amp; modes</span><span class="sec-title__main">Black, white, nothing else</span></h2>
+      <p class="side-r copy rv">No accent colour. The product is the palette. Dark is the default; “I Wanna White” flips the whole site to a light studio on #EAEAEA, the same grey the white tee was shot on. The switch is instant. <em>Click any colour to copy it.</em></p>
+      <div class="modes">
+        <article class="mode mode--black rv">
+          <header><p class="k">Mode 01 · Default</p><span class="mini-pill">I Wanna White</span></header>
+          <p class="mode__name">Black</p>
+          <ul class="swatches">
+            <li><button data-copy="#000000" style="--c:#000"><i></i><b>Background</b><span>#000000</span></button></li>
+            <li><button data-copy="#FFFFFF" style="--c:#fff"><i></i><b>Foreground</b><span>#FFFFFF</span></button></li>
+            <li><button data-copy="#9C9C9C" style="--c:#9c9c9c"><i></i><b>Muted</b><span>#9C9C9C</span></button></li>
+            <li><button data-copy="#ECECEC" style="--c:#ececec"><i></i><b>Soft</b><span>#ECECEC</span></button></li>
+            <li><button data-copy="#18191C" style="--c:#18191c"><i></i><b>Chip</b><span>#18191C</span></button></li>
+            <li><button data-copy="rgba(255,255,255,.11)" class="is-glass"><i></i><b>Glass</b><span>White 11 → 1%</span></button></li>
+          </ul>
+          <footer><span class="mini-cta">Get Black Now</span><p>Deep blacks stay deep. Never lift them to grey.</p></footer>
+        </article>
+        <article class="mode mode--white rv">
+          <header><p class="k">Mode 02 · I Wanna White</p><span class="mini-pill">I Wanna Black</span></header>
+          <p class="mode__name">White</p>
+          <ul class="swatches">
+            <li><button data-copy="#EAEAEA" style="--c:#eaeaea"><i></i><b>Background</b><span>#EAEAEA</span></button></li>
+            <li><button data-copy="#0C0C0C" style="--c:#0c0c0c"><i></i><b>Foreground</b><span>#0C0C0C</span></button></li>
+            <li><button data-copy="#6F6F6F" style="--c:#6f6f6f"><i></i><b>Muted</b><span>#6F6F6F</span></button></li>
+            <li><button data-copy="#1D1D1D" style="--c:#1d1d1d"><i></i><b>Soft</b><span>#1D1D1D</span></button></li>
+            <li><button data-copy="#DEDEDE" style="--c:#dedede"><i></i><b>Chip</b><span>#DEDEDE</span></button></li>
+            <li><button data-copy="rgba(255,255,255,.5)" class="is-glass"><i></i><b>Glass</b><span>White 50 → 6%</span></button></li>
+          </ul>
+          <footer><span class="mini-cta">Get White Now</span><p>All buttons turn white glass with dark text.</p></footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- 07 Typography -->
+    <section class="sec sec--type" id="type" data-name="Typography">
+      <h2 class="sec-title rv"><span class="sec-title__dim">05 · Typography</span><span class="sec-title__main">One family, all the way</span></h2>
+      <div class="type__l rv">
+        <p class="grad type__aa" id="aa">Aa</p>
+        <p class="type__name">Inter Tight</p>
+        <div class="weights" role="group" aria-label="Specimen weight">
+          <button data-w="400">Regular 400</button><button data-w="500">Medium 500</button><button data-w="700" class="is-on">Bold 700</button>
+        </div>
+        <p class="note">Free on Google Fonts. Headlines in caps, body in sentence case, always left-aligned. Bold is kept for the wordmark, the hero and the buy button.</p>
+      </div>
+      <div class="type__r">
+        <label class="tester glass rv"><span class="k">Try it</span><input id="tester" type="text" maxlength="40" placeholder="Type a headline…" value=""></label>
+        <ul class="scale">
+          <li class="rv"><p class="grad s-hero" data-def="Wattashirt">Wattashirt</p><p class="spec"><b>Hero</b>Bold 700 · 100 / 120 · caps · −1%</p></li>
+          <li class="rv"><p class="s-title" data-def="Cut to move">Cut to move</p><p class="spec"><b>Section title</b>Regular 400 · 52 / 53 · caps</p></li>
+          <li class="rv"><p class="s-fig">180<small>g/m²</small></p><p class="spec"><b>Figure</b>Regular 400 · 56 / 50 · −2%</p></li>
+          <li class="rv"><p class="s-eyebrow" data-def="Once you go black you never go back.">Once you go black you never go back.</p><p class="spec"><b>Eyebrow · tagline</b>Regular–Medium · 20–30 · caps</p></li>
+          <li class="rv"><p class="s-body" data-def="Double-spun cotton, knitted tight and pre-shrunk, so the oversized cut keeps its line wash after wash.">Double-spun cotton, knitted tight and pre-shrunk, so the oversized cut keeps its line wash after wash.</p><p class="spec"><b>Body</b>Regular 400 · 16 / 21</p></li>
+          <li class="rv"><p class="s-label"><span>Inside the knit</span><em>Kilometre eight, still dry.</em></p><p class="spec"><b>Label · caption</b>12 caps +24% · 14 muted</p></li>
+          <li class="rv"><p class="s-big" data-def="Black">Black</p><p class="spec"><b>Big word</b>Bold italic · 1 px outline · backdrop only</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 08 Interface -->
+    <section class="sec sec--interface" id="interface" data-name="Interface">
+      <h2 class="sec-title rv"><span class="sec-title__dim">06 · Interface</span><span class="sec-title__main">Glass, not plastic</span></h2>
+      <ol class="anatomy rv">
+        <li><span>01</span><p><b>Pane.</b> A thin see-through fill: white 11% → 1% on dark, 50% → 6% on white. Never milky.</p></li>
+        <li><span>02</span><p><b>Rim.</b> A 1.2 px highlight lit from the top-left, a faint shade rim bottom-right.</p></li>
+        <li><span>03</span><p><b>Bevel.</b> A soft glow under the top edge gives the glass its thickness.</p></li>
+        <li><span>04</span><p><b>Drop.</b> One soft shadow below. Blur 16 px, saturate 160%.</p></li>
+        <li><span>05</span><p><b>Lead.</b> Primary buttons get the strongest rim and silver glints. Selected items are the brightest glass in dark mode, dark glass in white mode.</p></li>
+      </ol>
+      <div class="kit">
+        <div class="kit__col rv">
+          <p class="k">Buttons · try them</p>
+          <div class="row">
+            <button class="pill lg demo-theme">Flip theme<span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></button>
+            <button class="circle lg">EN</button>
+          </div>
+          <button class="cta">Get <span class="look-color">Black</span> Now<span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></button>
+          <p class="k">Controls</p>
+          <div class="seg lg" id="fitSeg" role="group" aria-label="Fit"><i class="seg__thumb thumb"></i><button data-v="Regular">Regular</button><button data-v="Oversized" class="is-on">Oversized</button></div>
+          <div class="row">
+            <button class="sw is-on" data-v="Black" aria-label="Black"><i style="background:#000"></i></button>
+            <button class="sw" data-v="White" aria-label="White"><i style="background:#f4f4f4"></i></button>
+            <span class="orb" aria-hidden="true"><i></i></span>
+          </div>
+        </div>
+        <div class="kit__col rv">
+          <p class="k">Cards</p>
+          <div class="glass card">
+            <p class="k">Composition</p>
+            <div class="bar"><p><span>Combed cotton</span><b>92%</b></p><span class="bar__track"><i style="--w:92%"></i></span></div>
+            <div class="bar"><p><span>Elastane</span><b>8%</b></p><span class="bar__track"><i style="--w:8%"></i></span></div>
+          </div>
+          <div class="glass look">
+            <div><p class="k">Your look</p><p class="look__v" id="lookV">Black · Oversized</p></div>
+            <span class="cta cta--sm">Get it</span>
+          </div>
+        </div>
+      </div>
+      <ul class="motion rv">
+        <li class="glass"><p class="k">Hover · buttons</p><p class="v">−2 px</p><p class="note">Lift, plus a brighter glass rim.</p></li>
+        <li class="glass"><p class="k">Hover · icon</p><p class="v">−12° · 1.08</p><p class="note">The tee bead tilts. Social icons only lift.</p></li>
+        <li class="glass"><p class="k">Easing</p><p class="v">0.4–0.6 s</p><p class="note">cubic-bezier(.22, 1, .36, 1). Fast out, long settle.</p></li>
+        <li class="glass"><p class="k">Theme switch</p><p class="v">150 ms</p><p class="note">Instant: a veil in the new colour, then the flip.</p></li>
+      </ul>
+    </section>
+
+    <!-- 09 Imagery -->
+    <section class="sec sec--imagery" id="imagery" data-name="Imagery">
+      <h2 class="sec-title rv"><span class="sec-title__dim">07 · Imagery</span><span class="sec-title__main">Deep blacks, studio grey</span></h2>
+      <ol class="rules rv">
+        <li><span>01</span><p><b>The shirt is the hero.</b> Photoreal, alone, centred, lit from the top-left. Never a flat mock-up.</p></li>
+        <li><span>02</span><p><b>Keep the blacks deep.</b> Never lift them to grey. Detail lives in the rim light.</p></li>
+        <li><span>03</span><p><b>White is its own shoot.</b> Shot natively on #EAEAEA, never recoloured from black.</p></li>
+        <li><span>04</span><p><b>Cotton bolls, not petals.</b> The fibre is the only prop.</p></li>
+        <li><span>05</span><p><b>One muse, deadpan.</b> Same styling every time: black beanie, wide trousers, a timestamp.</p></li>
+      </ol>
+      <div class="imagery">
+        <div class="turn glass rv" id="turn" aria-label="Drag to rotate the tee">
+          <img id="turnImg" src="/assets/seq/black/turn/0000.webp" alt="The Wattashirt tee on a turntable" draggable="false">
+          <div class="turn__ui"><span class="k">360° · drag to turn</span><input type="range" id="turnRange" min="0" max="59" value="0" aria-label="Rotate the tee"></div>
+        </div>
+        <div class="angles rv">
+          <figure><div class="glass"><img src="/assets/brand/shirt_front_b.webp" data-black="/assets/brand/shirt_front_b.webp" data-white="/assets/brand/shirt_front_w.webp" alt="Tee, front" loading="lazy"></div><figcaption>Front</figcaption></figure>
+          <figure><div class="glass"><img src="/assets/brand/shirt_three_b.webp" data-black="/assets/brand/shirt_three_b.webp" data-white="/assets/brand/shirt_three_w.webp" alt="Tee, three-quarter" loading="lazy"></div><figcaption>Three-quarter</figcaption></figure>
+          <figure><div class="glass"><img src="/assets/brand/shirt_back_b.webp" data-black="/assets/brand/shirt_back_b.webp" data-white="/assets/brand/shirt_back_w.webp" alt="Tee, back" loading="lazy"></div><figcaption>Back</figcaption></figure>
+          <figure><div class="glass"><img src="/assets/brand/shirt_cotton_b.webp" data-black="/assets/brand/shirt_cotton_b.webp" data-white="/assets/brand/shirt_cotton_w.webp" alt="Cotton bolls" loading="lazy"></div><figcaption>Cotton cocoon</figcaption></figure>
+        </div>
+        <div class="day rv">
+          <figure><div class="photo"><img src="/assets/brand/d1_run_b.webp" data-black="/assets/brand/d1_run_b.webp" data-white="/assets/brand/d1_run_w.webp" alt="The muse running by the sea at dawn" loading="lazy"></div><figcaption><b>06:40</b>Kilometre eight, still dry.</figcaption></figure>
+          <figure><div class="photo"><img src="/assets/brand/d2_cafe_b.webp" data-black="/assets/brand/d2_cafe_b.webp" data-white="/assets/brand/d2_cafe_w.webp" alt="The muse at a café window" loading="lazy"></div><figcaption><b>09:15</b>Same tee, different meeting.</figcaption></figure>
+          <figure><div class="photo"><img src="/assets/brand/d4_night_b.webp" data-black="/assets/brand/d4_night_b.webp" data-white="/assets/brand/d4_night_w.webp" alt="The muse on a wet street at night" loading="lazy"></div><figcaption><b>21:00</b>Out after dark.</figcaption></figure>
+          <figure class="day__wide"><div class="photo"><img src="/assets/brand/avatar_b.webp" data-black="/assets/brand/avatar_b.webp" data-white="/assets/brand/avatar_w.webp" alt="The AI muse, full length" loading="lazy"></div><figcaption><b>AI muse</b>Full length, same set as the tee.</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 Voice & 404 -->
+    <section class="sec sec--voice" id="voice" data-name="Voice">
+      <h2 class="sec-title rv"><span class="sec-title__dim">08 · Voice</span><span class="sec-title__main">Say less. Mean it.</span></h2>
+      <div class="voice__l">
+        <button class="glass sayno rv" aria-pressed="false"><span class="k">Say</span><b>Kilometre eight, still dry.</b><span class="k">Not</span><s>Revolutionary sweat-wicking tech keeps you fresh all day!</s></button>
+        <button class="glass sayno rv" aria-pressed="false"><span class="k">Say</span><b>Feels like nothing at all.</b><span class="k">Not</span><s>The world's most comfortable premium T-shirt.</s></button>
+        <button class="glass sayno rv" aria-pressed="false"><span class="k">Say</span><b>This page didn't survive the spin cycle.</b><span class="k">Not</span><s>Error 404: the requested resource was not found.</s></button>
+        <p class="copy rv">Short sentences. Real numbers over adjectives. Dry humour, never loud, never an exclamation mark.</p>
+      </div>
+      <div class="lines rv">
+        <p class="k">Lines we already own</p>
+        <ul>
+          <li><span>Once you go black</span><em>Tagline</em></li>
+          <li><span>Fabric, engineered</span><em>Technology</em></li>
+          <li><span>Feels like nothing</span><em>Lightness</em></li>
+          <li><span>Cut to move</span><em>Back</em></li>
+          <li><span>A day in black</span><em>Lifestyle</em></li>
+          <li><span>Packed and ready to go</span><em>Checkout</em></li>
+          <li><span>Lost in the wash</span><em>404</em></li>
+        </ul>
+        <p class="note">Headlines in caps, 2–4 words. Captions start with a time or a number: “06:40”, “×12 macro”, “180 g/m²”.</p>
+      </div>
+      <div class="lost glass rv">
+        <p class="lost__panel"><i class="led"></i>Spin cycle<span></span>Page not found</p>
+        <div class="lost__row" aria-label="404">
+          <span class="grad four" aria-hidden="true">4</span>
+          <button class="door" id="door" aria-label="Spin the drum">
+            <span class="porthole"><img id="doorTee" src="/assets/brand/tee404_b.webp" data-black="/assets/brand/tee404_b.webp" data-white="/assets/brand/tee404_w.webp" alt=""></span>
+            <span class="door__handle"></span>
+          </button>
+          <span class="grad four" aria-hidden="true">4</span>
+        </div>
+        <h3>Lost in the wash</h3>
+        <p>This page didn't survive the spin cycle. Your T-shirt made it through.</p>
+        <a class="cta cta--sm" href="/404">See the real one<span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a class="logo" href="/">Wattashirt</a>
+    <p>© 2026 Wattashirt. Brand guidelines, edition 01.</p>
+    <a class="footer__top" href="#cover">Back to top ↑</a>
+  </footer>
+
+  <p class="toast glass" id="toast" role="status" aria-live="polite"></p>
+  <script src="/brand/brand.js?v=1"></script>
+</body>
+</html>
