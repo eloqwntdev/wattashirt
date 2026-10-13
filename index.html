@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wattashirt — Once you go black</title>
+  <meta name="description" content="Wattashirt: oversized black T-shirt for people who lead an active life.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=43">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+</head>
+<body class="is-loading">
+  <script>document.documentElement.classList.add('is-loading');</script>
+
+  <!-- Preloader: counter while the unboxing frames load, then the box opens on the stage canvas -->
+  <div class="loader" id="loader">
+    <div class="loader__corner loader__corner--tl">Once you go black<br>you never go back</div>
+    <div class="loader__corner loader__corner--tr">Wattashirt Black</div>
+    <div class="loader__corner loader__corner--bl">Oversized fit</div>
+    <div class="loader__corner loader__corner--br">2026</div>
+    <div class="loader__center">
+      <span class="loader__num" id="loaderNumL">000</span>
+      <div class="fold" aria-hidden="true">
+        <div class="fold__p fold__l"><svg viewBox="0 0 120 110"><path class="fs" d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/><path class="fn" d="M44 6Q60 17 76 6"/></svg></div>
+        <div class="fold__p fold__r"><svg viewBox="0 0 120 110"><path class="fs" d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/><path class="fn" d="M44 6Q60 17 76 6"/></svg></div>
+        <div class="fold__p fold__ct"><svg viewBox="0 0 120 110"><path class="fs" d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/><path class="fn" d="M44 6Q60 17 76 6"/></svg></div>
+        <div class="fold__p fold__cb"><svg viewBox="0 0 120 110"><path class="fs" d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/><path class="fn" d="M44 6Q60 17 76 6"/></svg></div>
+      </div>
+      <span class="loader__num" id="loaderNumR">000</span>
+    </div>
+    <button class="loader__skip" id="skipIntro">Skip intro</button>
+  </div>
+
+  <!-- Layer behind the shirt -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="big-word" id="bigWord"><span>Black</span></div>
+    <svg class="ring" id="ring" viewBox="0 0 1000 200" preserveAspectRatio="none">
+      <ellipse cx="500" cy="100" rx="497" ry="97" vector-effect="non-scaling-stroke"/>
+    </svg>
+  </div>
+
+  <!-- Photoreal shirt (frame sequences) -->
+  <canvas class="stage" id="stage"></canvas>
+
+  <!-- Header -->
+  <header class="header">
+    <a class="logo" href="#top">Wattashirt</a>
+    <button class="pill pill--toggle" id="colorToggle" aria-pressed="false">
+      <span class="pill__label" data-black="I Wanna White" data-white="I Wanna Black">I Wanna White</span>
+      <span class="pill__icon"><img src="assets/ic-shirt-white.svg" alt=""></span>
+    </button>
+    <div class="header__right">
+      <button class="circle" aria-label="Language">EN</button>
+      <button class="circle" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span class="burger" aria-hidden="true"><i></i><i></i></span></button>
+    </div>
+  </header>
+
+  <nav class="menu" id="menu" aria-hidden="true">
+    <ol>
+      <li><a href="#about">About</a></li>
+      <li><a href="#tech">Technology</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#breeze">Lightness</a></li>
+      <li><a href="#configurator">Try it on</a></li>
+      <li><a href="#day">A day in it</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#buy" id="menuBuy">Get Black</a></li>
+    </ol>
+  </nav>
+
+  <!-- Magnifier loupe -->
+  <div class="loupe" id="loupe" aria-hidden="true">
+    <div class="loupe__lens" id="loupeLens"></div>
+    <span class="loupe__tag">×12</span>
+  </div>
+
+  <!-- Hotspots (screen positions follow the shirt frame) -->
+  <div class="hotspots" id="hotspots"></div>
+
+  <main id="top">
+
+    <section class="sec sec--hero" id="hero" data-scene="hero">
+      <div class="hero__copy">
+        <h1 class="hero__title">Wattashirt</h1>
+        <p class="hero__tag">Once you go black you never go back.</p>
+        <a class="cta" href="#packed">
+          <span>Get Black Now</span>
+          <span class="cta__icon"><img src="assets/ic-shirt-cta.svg" alt=""></span>
+        </a>
+      </div>
+      <div class="scroll-hint">
+        <img src="assets/ic-mouse.svg" alt="">
+        <span>Scroll to explore</span>
+      </div>
+    </section>
+
+    <section class="sec sec--about" id="about" data-scene="about">
+      <p class="side-copy side-copy--br">At Wattashirt, we craft oversized T-shirts that highlight your figure with effortless style, perfect for those who lead an active life.</p>
+      <p class="loupe-hint">Move the loupe over the fabric</p>
+    </section>
+
+    <section class="sec sec--tech" id="tech" data-scene="tech">
+      <h2 class="sec-title">
+        <span class="sec-title__dim">Inside the knit</span>
+        <span class="sec-title__main">Fabric, engineered</span>
+      </h2>
+      <div class="glass glass--a" data-depth="0.25">
+        <p class="glass__k">Composition</p>
+        <ul class="mix">
+          <li><span>Combed cotton</span><b>92%</b><i style="--w:92%"></i></li>
+          <li><span>Elastane</span><b>8%</b><i style="--w:8%"></i></li>
+        </ul>
+        <p class="glass__note">Soft on skin, with just enough stretch to spring back.</p>
+      </div>
+      <div class="glass glass--b" data-depth="0.45">
+        <p class="glass__k">Weight</p>
+        <p class="glass__big">180<small>g/m²</small></p>
+        <p class="glass__note">Dense enough to hold the drape, light enough to forget.</p>
+      </div>
+      <div class="video-card video-card--right" data-depth="0.15">
+        <div class="video-card__screen"><div class="macro"></div>
+          <button class="play" aria-label="Zoom into the fabric"><img src="assets/ic-play.svg" alt=""></button>
+        </div>
+        <p class="video-card__caption"><b>×12 macro</b>A tight single-jersey loop: it breathes, and it doesn’t pill.</p>
+      </div>
+      <p class="side-copy side-copy--bl">Double-spun cotton, knitted tight and pre-shrunk, so the oversized cut keeps its line wash after wash.</p>
+    </section>
+
+    <section class="sec sec--features" id="features" data-scene="features"></section>
+
+    <section class="sec sec--breeze" id="breeze" data-scene="breeze">
+      <div class="breeze__copy">
+        <p class="eyebrow">180 g/m²</p>
+        <h2 class="h2">Feels like<br><em>nothing</em> at all</h2>
+      </div>
+    </section>
+
+    <!-- Configurator: cotton bolls cocoon the shirt and blow away to reveal the AI avatar wearing it.
+         The stage is pinned while you play with the options; scrolling on wraps him back in cotton. -->
+    <section class="sec sec--avatar" id="configurator">
+      <div class="scene-mark scene-mark--in" data-scene="avatarIn"></div>
+      <div class="scene-mark scene-mark--out" data-scene="avatarOut"></div>
+      <div class="cfg">
+        <div class="cfg__side cfg__side--left">
+          <p class="cfg__kicker">AI Influencer / Concept 01</p>
+          <h2 class="cfg__title">Try it on</h2>
+          <p class="cfg__lead">One tee on our AI muse. Change the colour, fit or angle and he moves with it. Pick a mood and watch his face.</p>
+          <div class="cfg__group">
+            <p class="cfg__label"><span>01</span>Colour<b data-val="color">Black</b></p>
+            <div class="swatches">
+              <button class="sw" data-cfg="color:black" aria-label="Black"><i class="sw__dot sw__dot--black"></i></button>
+              <button class="sw" data-cfg="color:white" aria-label="White"><i class="sw__dot sw__dot--white"></i></button>
+            </div>
+          </div>
+          <div class="cfg__group">
+            <p class="cfg__label"><span>02</span>Fit<b data-val="fit">Oversized</b></p>
+            <div class="seg"><i class="seg__thumb"></i>
+              <button data-cfg="fit:reg"><svg class="tee" viewBox="0 0 24 20" aria-hidden="true"><path d="M8 2Q12 5 16 2L16 4L22 9L19 12L16 10V19H8V10L5 12L2 9L8 4Z"/></svg>Regular</button>
+              <button data-cfg="fit:over"><svg class="tee" viewBox="0 0 24 20" aria-hidden="true"><path d="M8 2Q12 5 16 2L18 4L24 9L21 12L17 10V19H7V10L3 12L0 9L6 4Z"/></svg>Oversized</button>
+            </div>
+          </div>
+        </div>
+        <div class="cfg__side cfg__side--right">
+          <div class="cfg__group">
+            <p class="cfg__label"><span>03</span>View<b data-val="view">Front</b></p>
+            <div class="seg seg--wide"><i class="seg__thumb"></i>
+              <button data-cfg="view:front">Front</button>
+              <button data-cfg="view:side">Side</button>
+              <button data-cfg="view:back">Back</button>
+            </div>
+          </div>
+          <div class="cfg__group">
+            <p class="cfg__label"><span>04</span>Mood<b data-val="mood">Deadpan</b></p>
+            <div class="moods">
+              <button class="mood" data-cfg="mood:deadpan"><img data-mood="deadpan" src="assets/avatar/b_mood_deadpan.webp?v=3" alt=""><span>Deadpan</span></button>
+              <button class="mood" data-cfg="mood:skeptical"><img data-mood="skeptical" src="assets/avatar/b_mood_skeptical.webp?v=3" alt=""><span>Skeptical</span></button>
+              <button class="mood" data-cfg="mood:amused"><img data-mood="amused" src="assets/avatar/b_mood_amused.webp?v=3" alt=""><span>Amused</span></button>
+            </div>
+          </div>
+          <div class="cfg__look">
+            <div class="cfg__look-text">
+              <p class="cfg__look-k">Your look</p>
+              <p class="cfg__look-v" id="cfgLook">Black · Oversized</p>
+            </div>
+            <a class="cfg__cta" href="#buy"><span>$75</span>Get it</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec sec--back" id="back" data-scene="back">
+      <h2 class="sec-title sec-title--right">
+        <span class="sec-title__dim">From behind</span>
+        <span class="sec-title__main">Cut to move</span>
+      </h2>
+      <div class="video-card video-card--left" data-depth="0.2">
+        <div class="video-card__screen"><div class="photo photo--seam" role="img" aria-label="Macro of a flatlock seam on the inside of the tee"></div></div>
+        <p class="video-card__caption"><b>Flatlock seams</b>Stitched flat on the inside: no ridge, no rub under a backpack strap.</p>
+      </div>
+    </section>
+
+    <!-- A day in black: the muse wears it through one day. Pinned; the strip slides sideways with the scroll.
+         The shirt leaves upward for this section and comes back down for the statement. -->
+    <section class="sec sec--day" id="day" data-scene="day">
+      <div class="day__stage">
+        <h2 class="sec-title day__title">
+          <span class="sec-title__dim">24 hours</span>
+          <span class="sec-title__main">A day in black</span>
+        </h2>
+        <div class="day__track">
+            <figure class="day__card">
+              <div class="day__photo"><img src="assets/day/d1_run.webp" data-black="assets/day/d1_run.webp" data-white="assets/day/d1_run_w.webp" alt="" decoding="async"></div>
+              <figcaption><b>06:40</b>Kilometre eight, still dry.</figcaption>
+            </figure>
+            <figure class="day__card">
+              <div class="day__photo"><img src="assets/day/d2_cafe.webp" data-black="assets/day/d2_cafe.webp" data-white="assets/day/d2_cafe_w.webp" alt="" decoding="async"></div>
+              <figcaption><b>09:15</b>Same tee, different meeting.</figcaption>
+            </figure>
+            <figure class="day__card">
+              <div class="day__photo"><img src="assets/day/d3_gym.webp" data-black="assets/day/d3_gym.webp" data-white="assets/day/d3_gym_w.webp" alt="" decoding="async"></div>
+              <figcaption><b>18:30</b>Sets of twelve. It stays put.</figcaption>
+            </figure>
+            <figure class="day__card">
+              <div class="day__photo"><img src="assets/day/d4_night.webp" data-black="assets/day/d4_night.webp" data-white="assets/day/d4_night_w.webp" alt="" decoding="async"></div>
+              <figcaption><b>21:00</b>Out after dark.</figcaption>
+            </figure>
+            <figure class="day__card">
+              <div class="day__photo"><img src="assets/day/d5_home.webp" data-black="assets/day/d5_home.webp" data-white="assets/day/d5_home_w.webp" alt="" decoding="async"></div>
+              <figcaption><b>23:50</b>Still on. Still soft.</figcaption>
+            </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews: a card slider (native horizontal scroll + snap; arrows step one card).
+         The shirt stays out of frame here (scene pose = day). SAMPLE content until real reviews arrive. -->
+    <section class="sec sec--reviews" id="reviews" data-scene="reviews">
+      <h2 class="sec-title rev__title">
+        <span class="sec-title__dim">Worn and washed</span>
+        <span class="sec-title__main">What customers say</span>
+      </h2>
+      <div class="rev__summary">
+        <p class="rev__score"><b>4.9</b><span class="rev__stars" aria-label="4.9 out of 5">★★★★★</span></p>
+        <p class="rev__total">312 reviews from 24 countries</p>
+      </div>
+      <div class="rev__track" id="revTrack" tabindex="0" aria-label="Customer reviews">
+          <article class="rev-card glass">
+            <figure class="rev-card__photo">
+              <img src="assets/reviews/marko.webp" alt="Marko in the black Wattashirt" decoding="async">
+              <span class="rev-card__chip">Black · Oversized · L</span>
+            </figure>
+            <div class="rev-card__body">
+              <p class="rev-card__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>Forty washes in and the collar still sits flat. My old tees gave up by ten.</blockquote>
+              <footer>
+                <img class="rev-card__av" src="assets/reviews/marko_av.webp" alt="" decoding="async">
+                <span><b>Marko</b><small>Kyiv, Ukraine</small></span>
+              </footer>
+            </div>
+          </article>
+          <article class="rev-card glass">
+            <figure class="rev-card__photo">
+              <img src="assets/reviews/dilnoza.webp" alt="Dilnoza in the white Wattashirt" decoding="async">
+              <span class="rev-card__chip">White · Regular · S</span>
+            </figure>
+            <div class="rev-card__body">
+              <p class="rev-card__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>Forty degrees in July and it still feels light. The white doesn't go see-through either.</blockquote>
+              <footer>
+                <img class="rev-card__av" src="assets/reviews/dilnoza_av.webp" alt="" decoding="async">
+                <span><b>Dilnoza</b><small>Tashkent, Uzbekistan</small></span>
+              </footer>
+            </div>
+          </article>
+          <article class="rev-card glass">
+            <figure class="rev-card__photo">
+              <img src="assets/reviews/aisha.webp" alt="Aisha in the black Wattashirt" decoding="async">
+              <span class="rev-card__chip">Black · Regular · M</span>
+            </figure>
+            <div class="rev-card__body">
+              <p class="rev-card__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>I run in it at six and sit in meetings in it at nine. Nobody can tell.</blockquote>
+              <footer>
+                <img class="rev-card__av" src="assets/reviews/aisha_av.webp" alt="" decoding="async">
+                <span><b>Aisha</b><small>London, United Kingdom</small></span>
+              </footer>
+            </div>
+          </article>
+          <article class="rev-card glass">
+            <figure class="rev-card__photo">
+              <img src="assets/reviews/daniel.webp" alt="Daniel in the white Wattashirt" decoding="async">
+              <span class="rev-card__chip">White · Oversized · XL</span>
+            </figure>
+            <div class="rev-card__body">
+              <p class="rev-card__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>The oversized cut looks intentional. Long enough at the back, never boxy.</blockquote>
+              <footer>
+                <img class="rev-card__av" src="assets/reviews/daniel_av.webp" alt="" decoding="async">
+                <span><b>Daniel</b><small>Berlin, Germany</small></span>
+              </footer>
+            </div>
+          </article>
+          <article class="rev-card glass">
+            <figure class="rev-card__photo">
+              <img src="assets/reviews/jasur.webp" alt="Jasur in the black Wattashirt" decoding="async">
+              <span class="rev-card__chip">Black · Oversized · XL</span>
+            </figure>
+            <div class="rev-card__body">
+              <p class="rev-card__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>Bought one, came back for two more. The black hasn't faded at all.</blockquote>
+              <footer>
+                <img class="rev-card__av" src="assets/reviews/jasur_av.webp" alt="" decoding="async">
+                <span><b>Jasur</b><small>Samarkand, Uzbekistan</small></span>
+              </footer>
+            </div>
+          </article>
+          <article class="rev-card glass">
+            <figure class="rev-card__photo">
+              <img src="assets/reviews/sofia.webp" alt="Sofia in the white Wattashirt" decoding="async">
+              <span class="rev-card__chip">White · Regular · S</span>
+            </figure>
+            <div class="rev-card__body">
+              <p class="rev-card__stars" aria-label="4 out of 5">★★★★<i>★</i></p>
+              <blockquote>Heavy feel, but I forget I'm wearing it. Runs slightly long, which I like.</blockquote>
+              <footer>
+                <img class="rev-card__av" src="assets/reviews/sofia_av.webp" alt="" decoding="async">
+                <span><b>Sofia</b><small>Lisbon, Portugal</small></span>
+              </footer>
+            </div>
+          </article>
+          <article class="rev-card glass">
+            <figure class="rev-card__photo">
+              <img src="assets/reviews/kenji.webp" alt="Kenji in the black Wattashirt" decoding="async">
+              <span class="rev-card__chip">Black · Regular · M</span>
+            </figure>
+            <div class="rev-card__body">
+              <p class="rev-card__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>Flat seams and no tag to scratch. It's the shirt I pack first.</blockquote>
+              <footer>
+                <img class="rev-card__av" src="assets/reviews/kenji_av.webp" alt="" decoding="async">
+                <span><b>Kenji</b><small>Tokyo, Japan</small></span>
+              </footer>
+            </div>
+          </article>
+          <article class="rev-card glass">
+            <figure class="rev-card__photo">
+              <img src="assets/reviews/ana.webp" alt="Ana in the white Wattashirt" decoding="async">
+              <span class="rev-card__chip">White · Oversized · M</span>
+            </figure>
+            <div class="rev-card__body">
+              <p class="rev-card__stars" aria-label="5 out of 5">★★★★★</p>
+              <blockquote>A humid summer and a lot of washing later, it still holds its shape.</blockquote>
+              <footer>
+                <img class="rev-card__av" src="assets/reviews/ana_av.webp" alt="" decoding="async">
+                <span><b>Ana</b><small>São Paulo, Brazil</small></span>
+              </footer>
+            </div>
+          </article>
+      </div>
+      <div class="rev__drag" aria-hidden="true"><div class="rev__drag-in"><svg viewBox="0 0 10 16"><path d="M8 2 2 8l6 6"/></svg><span>Drag</span><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></div></div>
+      <div class="rev__nav">
+        <button class="rev__btn" id="revPrev" aria-label="Previous reviews"><svg viewBox="0 0 10 16"><path d="M8 2 2 8l6 6"/></svg></button>
+        <span class="rev__count"><b id="revNum">01</b> / 08</span>
+        <button class="rev__btn" id="revNext" aria-label="Next reviews"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button>
+      </div>
+    </section>
+
+    <!-- Finale: pinned stage — statement, then the same shirt descends into the ring.
+         Nothing in here moves on scroll except the shirt; the UI only cross-fades. -->
+    <section class="sec sec--finale" id="buy">
+      <div class="scene-mark scene-mark--statement" data-scene="statement"></div>
+      <div class="scene-mark scene-mark--buy" data-scene="buy"></div>
+      <div class="finale__stage">
+        <h2 class="statement"><span class="statement__line">Once you go black</span><span class="statement__line">you never go back.</span></h2>
+        <div class="finale__ui">
+          <div class="buy__info">
+            <h2 class="buy__title">Wattashirt<em id="buyColor">Black</em></h2>
+            <a class="buy__rating" href="#reviews"><span class="rev__stars" aria-hidden="true">★★★★★</span>4.9 · 312 reviews</a>
+            <p class="buy__desc">One oversized cut, two colours. Heavy feel, featherweight wear.</p>
+            <p class="buy__price">$75</p>
+          </div>
+          <div class="buy__details">
+            <p class="details__label">Description</p>
+            <p class="details__text">A relaxed tee that still has shape: dropped shoulders, a longer back and a collar that stays flat. Wear it to train, to work, or to do nothing at all.</p>
+            <ul class="details__list">
+              <li>
+                <span class="details__icon"><img src="assets/ic-leather.svg" alt="" style="width:16.7px;height:20px"></span>
+                <span><small>Material:</small>92% combed cotton, 8% elastane</span>
+              </li>
+              <li>
+                <span class="details__icon details__icon--features">
+                  <img class="a" src="assets/ic-arrow-a.svg" alt="">
+                  <img class="b" src="assets/ic-arrow-b.svg" alt="">
+                  <img class="s" src="assets/ic-shirt-small.svg" alt="">
+                </span>
+                <span><small>Care:</small>Machine wash 30°, pre-shrunk</span>
+              </li>
+              <li>
+                <span class="details__icon"><img src="assets/ic-tape.svg" alt="" style="width:20px;height:20px"></span>
+                <span><small>Fit:</small>Oversized or regular, true to size</span>
+              </li>
+            </ul>
+          </div>
+          <div class="spin">
+            <button id="spinL" aria-label="Rotate left"><svg viewBox="0 0 10 16"><path d="M8 2 2 8l6 6"/></svg></button>
+            <span>360°</span>
+            <button id="spinR" aria-label="Rotate right"><svg viewBox="0 0 10 16"><path d="M2 2l6 6-6 6"/></svg></button>
+          </div>
+          <div class="drag-zone" id="dragZone" aria-label="Drag to rotate"></div>
+        </div>
+      </div>
+    </section>
+    <!-- Pack: the shirt folds and settles into the box, the lid closes (unboxing intro, reversed) -->
+    <section class="sec sec--pack" id="pack">
+      <div class="pack__stage">
+        <div class="pack__copy">
+          <p class="cfg__kicker">Wattashirt <span id="packColor">Black</span> — $75</p>
+          <h2 class="pack__title">Packed and<br>ready to go</h2>
+          <a class="cta" href="#pack">
+            <span>Buy now</span>
+            <span class="cta__icon"><img src="assets/ic-shirt-cta.svg" alt=""></span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__top">
+      <a class="logo" href="#top">Wattashirt</a>
+      <button class="pill pill--toggle footer__toggle" aria-pressed="false">
+        <span class="pill__label" data-black="I Wanna White" data-white="I Wanna Black">I Wanna White</span>
+        <span class="pill__icon"><img src="assets/ic-shirt-white.svg" alt=""></span>
+      </button>
+      <div class="socials">
+        <a href="404.html" aria-label="Facebook"><img src="assets/ic-fb.svg" alt=""></a>
+        <a href="404.html" aria-label="Instagram"><img src="assets/ic-ig.svg" alt=""></a>
+        <a href="404.html" aria-label="LinkedIn"><img src="assets/ic-in.svg" alt=""></a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__links"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></div>
+      <p>© 2026 Wattashirt. All right reserved</p>
+      <p class="footer__lang">Language: <b>EN</b></p>
+    </div>
+  </footer>
+
+  <script src="main.js?v=52"></script>
+</body>
+</html>

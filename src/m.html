@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><title>m</title>
+<style>html,body{margin:0;background:#333}iframe{display:block;border:0;margin:10px auto}</style>
+<iframe id="f"></iframe>
+<script>
+// test harness: the site in a fixed-size frame (?w=375&h=740), rAF driven by a timer so it runs in a hidden pane
+const q = new URLSearchParams(location.search), f = document.getElementById('f');
+f.style.width = (q.get('w') || 375) + 'px'; f.style.height = (q.get('h') || 740) + 'px';
+if (q.get('s')) { f.style.transform = 'scale(' + q.get('s') + ')'; f.style.transformOrigin = '0 0'; f.style.margin = '0'; }
+fetch('/' + (q.get('page') || 'index.html') + '?' + Date.now()).then(r => r.text()).then(t => {
+  const shim = '<base href="/"><script>window.__errs=[];addEventListener("error",e=>__errs.push(e.message+" @"+(e.filename||"")+":"+e.lineno));addEventListener("unhandledrejection",e=>__errs.push("rej "+e.reason));window.requestAnimationFrame=cb=>setTimeout(()=>cb(performance.now()),16);<\/script>';
+  const h = q.get('hash') ? '<script>history.replaceState(null, "", "#' + q.get('hash') + '");<\/script>' : '';
+  f.srcdoc = t.replace('<head>', '<head>' + shim + h);
+});
+</script>

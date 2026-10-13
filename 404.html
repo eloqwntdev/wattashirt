@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Page not found — Wattashirt</title>
+  <script>try { if (localStorage.getItem('ws-theme') === 'white') document.documentElement.classList.add('is-white'); } catch (e) {}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="pages.css?v=28">
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="index.html">Wattashirt</a>
+    <button class="theme-pill" id="themeToggle" aria-pressed="false"><span>I Wanna White</span><i><img src="assets/ic-shirt-white.svg" alt=""></i></button>
+    <div class="header__right">
+      <button class="circle" aria-label="Language">EN</button>
+      <button class="circle" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span class="burger" aria-hidden="true"><i></i><i></i></span></button>
+    </div>
+  </header>
+
+  <nav class="menu" id="menu" aria-hidden="true">
+    <ol>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#tech">Technology</a></li>
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#breeze">Lightness</a></li>
+      <li><a href="index.html#configurator">Try it on</a></li>
+      <li><a href="index.html#day">A day in it</a></li>
+      <li><a href="index.html#reviews">Reviews</a></li>
+      <li><a href="index.html#buy" id="menuBuy">Get Black</a></li>
+    </ol>
+  </nav>
+
+  <main class="lost">
+    <div class="lost__row" aria-label="404">
+      <span class="lost__four" aria-hidden="true">4</span>
+      <div class="washer">
+        <div class="washer__panel" aria-hidden="true"><span class="washer__led"></span>Spin cycle<span class="washer__sep"></span>Page not found</div>
+        <div class="washer__door" role="button" tabindex="0" aria-label="Spin the drum">
+          <div class="washer__glass">
+            <div class="washer__pool"><div class="washer__water"></div></div>
+            <div class="washer__ring"></div>
+            <div class="washer__spin">
+            <video class="washer__video washer__video--b" src="assets/pages/tee_float_black.mp4?v=2" autoplay muted loop playsinline preload="auto"></video>
+            <video class="washer__video washer__video--w" src="assets/pages/tee_float_white.mp4?v=2" autoplay muted loop playsinline preload="auto"></video>
+            <div class="washer__tee"><span><img class="b" src="assets/pages/tee_black.webp" alt=""><img class="w" src="assets/pages/tee_white.webp?v=2" alt=""></span></div>
+            <div class="washer__bubbles"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="washer__pool washer__pool--front"><div class="washer__water washer__water--b"></div><div class="washer__water washer__water--c"></div></div>
+          </div>
+          <span class="washer__handle"></span>
+        </div>
+      </div>
+      <span class="lost__four" aria-hidden="true">4</span>
+    </div>
+    <div class="lost__copy">
+      <h1>Lost in the wash</h1>
+      <p>This page didn't survive the spin cycle. Your T-shirt made it through.</p>
+      <a class="glass-pill glass-pill--lg" href="index.html">Back to Wattashirt <i><svg viewBox="0 0 12 12"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></i></a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <nav aria-label="Legal"><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></nav>
+    <p>© 2026 Wattashirt. All right reserved</p>
+    <p>Language: <b>EN</b></p>
+  </footer>
+  <script src="pages.js?v=9"></script>
+</body>
+</html>

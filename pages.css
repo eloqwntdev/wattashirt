@@ -1,0 +1,382 @@
+/* Secondary pages (Privacy, Terms, 404): the landing's tokens, header, glass and footer,
+   without the scroll stage. Theme follows the one picked on the landing (localStorage). */
+:root {
+  --bg: #000;
+  --fg: #fff;
+  --muted: #9c9c9c;
+  --ink: 255, 255, 255;
+  --gutter: 60px;
+  --side-w: min(400px, 28vw);
+  --font: "Inter Tight", system-ui, sans-serif;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  color-scheme: dark;
+}
+html.is-white {
+  --bg: #eaeaea;
+  --fg: #0c0c0c;
+  --muted: #6f6f6f;
+  --ink: 0, 0, 0;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+body { min-height: 100vh; display: flex; flex-direction: column; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 1px solid var(--fg); outline-offset: 3px; }
+
+/* ---------- glass (same build as the landing) ---------- */
+.glass-pill {
+  display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 8px 0 20px; border-radius: 40px;
+  font-size: 14px; text-transform: uppercase; letter-spacing: .02em;
+  background: linear-gradient(160deg, rgba(255,255,255,.2), rgba(255,255,255,.05) 50%, rgba(255,255,255,.1)), rgba(22,22,25,.55);
+  box-shadow: inset 1.5px 1.5px 0 rgba(255,255,255,.85), inset -1px -1px 0 rgba(255,255,255,.22), inset 0 0 0 1px rgba(255,255,255,.1),
+              inset 0 16px 20px -16px rgba(255,255,255,.55), 0 14px 34px -12px rgba(0,0,0,.8);
+  backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%);
+  transition: transform .4s var(--ease), box-shadow .4s;
+}
+.glass-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 1.5px 1.5px 0 rgba(255,255,255,.95), inset -1px -1px 0 rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.14),
+              inset 0 16px 20px -16px rgba(255,255,255,.7), inset 0 0 24px rgba(255,255,255,.08), 0 18px 38px -12px rgba(0,0,0,.85);
+}
+.glass-pill i { transition: transform .6s var(--ease); }
+.glass-pill:hover i { transform: rotate(-12deg) scale(1.08); } /* same as the "I wanna white" pill */
+.glass-pill:active { transform: translateY(0) scale(.98); }
+html.is-white .glass-pill:hover { box-shadow: inset 1.5px 1.5px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.12), inset 0 0 0 1px rgba(0,0,0,.06), inset 0 0 24px rgba(255,255,255,.7), 0 18px 38px -12px rgba(0,0,0,.3); }
+.glass-pill i {
+  width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-style: normal;
+  background: radial-gradient(circle at 35% 28%, rgba(255,255,255,.35), rgba(255,255,255,.05) 60%), #0c0c0e;
+  box-shadow: inset 1.2px 1.2px 0 rgba(255,255,255,.7), inset -1px -1px 0 rgba(255,255,255,.12);
+}
+.glass-pill svg { width: 12px; height: 12px; fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+html.is-white .glass-pill {
+  color: #0c0c0c;
+  background: linear-gradient(160deg, #fff 0%, #f6f6f7 45%, #efeff1 70%, #f7f7f8 100%);
+  box-shadow: inset 1.5px 1.5px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.12), inset 0 0 0 1px rgba(0,0,0,.06), 0 14px 34px -12px rgba(0,0,0,.25);
+}
+html.is-white .glass-pill i { background: radial-gradient(circle at 35% 28%, #fff, rgba(255,255,255,.5) 55%, rgba(255,255,255,.2)), rgba(230,230,233,.6); box-shadow: inset 1.2px 1.2px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.12); }
+html.is-white .glass-pill svg { stroke: #0c0c0c; }
+.glass-pill--lg { height: 56px; padding: 0 10px 0 28px; font-size: 16px; font-weight: 600; }
+.glass-pill--lg i { width: 38px; height: 38px; }
+
+/* ---------- header / footer ---------- */
+.header {
+  position: sticky; top: 0; z-index: 10; height: 88px; padding: 0 var(--gutter);
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  background: linear-gradient(var(--bg) 40%, rgba(var(--ink), 0) 100%);
+  background: linear-gradient(var(--bg) 55%, color-mix(in srgb, var(--bg) 0%, transparent));
+}
+.logo { font-weight: 700; font-size: 24px; line-height: 1.2; text-transform: uppercase; letter-spacing: -.01em; justify-self: start; }
+/* right side and menu: the landing's header, one to one */
+.header__right { display: flex; gap: 16px; justify-self: end; }
+.circle {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 500; font-size: 16px;
+  background: linear-gradient(160deg, rgba(255,255,255,.11), rgba(255,255,255,.035) 38%, rgba(255,255,255,.012) 62%, rgba(255,255,255,.05)), rgba(16,16,18,.55);
+  box-shadow: inset 1.2px 1.2px 0 rgba(255,255,255,.5), inset -1px -1px 0 rgba(255,255,255,.1), inset 0 12px 18px -14px rgba(255,255,255,.35), 0 14px 34px -12px rgba(0,0,0,.75);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+}
+html.is-white .circle { background: linear-gradient(160deg, rgba(255,255,255,.5), rgba(255,255,255,.16) 38%, rgba(255,255,255,.06) 62%, rgba(255,255,255,.24)), rgba(240,240,242,.45); box-shadow: inset 1.2px 1.2px 0 rgba(255,255,255,.95), inset -1px -1px 0 rgba(0,0,0,.1), inset 0 0 0 1px rgba(0,0,0,.05), 0 14px 34px -14px rgba(0,0,0,.22); }
+.burger { position: relative; width: 18px; height: 12px; display: block; }
+.burger i { position: absolute; left: 0; right: 0; height: 1.5px; border-radius: 2px; background: var(--fg); transition: transform .5s var(--ease), top .5s var(--ease); }
+.burger i:first-child { top: 2.5px; }
+.burger i:last-child { top: 8px; }
+#menuBtn.is-open .burger i:first-child { top: 5.25px; transform: rotate(45deg); }
+#menuBtn.is-open .burger i:last-child { top: 5.25px; transform: rotate(-45deg); }
+.menu {
+  position: fixed; inset: 0; z-index: 9; background: rgba(0,0,0,.86);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  display: grid; place-items: center;
+  opacity: 0; visibility: hidden; transition: opacity .5s var(--ease), visibility .5s;
+}
+html.is-white .menu { background: rgba(237,237,237,.88); }
+.menu.is-open { opacity: 1; visibility: visible; }
+.menu ol { list-style: none; margin: 0; padding: 0; text-align: center; counter-reset: m; }
+.menu li { counter-increment: m; overflow: hidden; }
+.menu a { display: inline-block; font-size: clamp(36px, 6vw, 88px); font-weight: 500; text-transform: uppercase; line-height: 1.1; transform: translateY(100%); transition: transform .7s var(--ease), color .3s; }
+.menu a::before { content: "0" counter(m); font-size: 14px; vertical-align: top; margin-right: 12px; color: var(--muted); }
+.menu.is-open a { transform: none; }
+.menu li:nth-child(2) a { transition-delay: .04s; } .menu li:nth-child(3) a { transition-delay: .08s; }
+.menu li:nth-child(4) a { transition-delay: .12s; } .menu li:nth-child(5) a { transition-delay: .16s; }
+.menu a:hover { color: var(--muted); }
+/* theme switch: the landing's "I wanna white" pill */
+.theme-pill {
+  justify-self: center; display: inline-flex; align-items: center; gap: 10px; height: 40px; padding: 0 5px 0 20px; border-radius: 40px;
+  font-size: 13px; text-transform: uppercase; letter-spacing: .02em;
+  background: linear-gradient(160deg, rgba(255,255,255,.11), rgba(255,255,255,.035) 38%, rgba(255,255,255,.05)), rgba(16,16,18,.55);
+  box-shadow: inset 1.2px 1.2px 0 rgba(255,255,255,.5), inset -1px -1px 0 rgba(255,255,255,.1), 0 14px 34px -12px rgba(0,0,0,.75);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+}
+.theme-pill i { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.28), rgba(255,255,255,.04) 60%), #0b0b0c; box-shadow: inset 1px 1px 0 rgba(255,255,255,.45); }
+.theme-pill img { width: 16px; height: 15px; }
+html.is-white .toc { background: rgba(255,255,255,.55); box-shadow: inset 1.2px 1.2px 0 #fff, 0 0 0 1px rgba(0,0,0,.06), 0 24px 48px -30px rgba(0,0,0,.2); }
+html.is-white .toc a.is-on { background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
+html.is-white .theme-pill { color: #0c0c0c; background: linear-gradient(160deg, #fff 0%, #f6f6f7 45%, #efeff1 70%, #f7f7f8 100%); box-shadow: inset 1.5px 1.5px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.12), 0 14px 34px -12px rgba(0,0,0,.25); }
+html.is-white .theme-pill i { background: radial-gradient(circle at 35% 28%, #fff, rgba(255,255,255,.5) 55%, rgba(255,255,255,.2)), rgba(230,230,233,.6); box-shadow: inset 1.2px 1.2px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.12); }
+html.is-white .theme-pill img { filter: invert(1); }
+.footer { margin-top: auto; padding: 48px var(--gutter) 28px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; color: var(--muted); font-size: 15px; border-top: 1px solid rgba(var(--ink), .1); }
+.footer nav { display: flex; gap: 40px; }
+.footer a:hover, .footer a[aria-current="page"] { color: var(--fg); }
+.footer p { margin: 0; }
+.footer p:last-child { justify-self: end; }
+
+/* ---------- legal pages ---------- */
+.legal { display: grid; grid-template-columns: 240px minmax(0, 68ch); justify-content: center; gap: 0 96px; padding: 14vh var(--gutter) 120px; } /* one centred block: contents column + reading column */
+.legal__head { grid-column: 1 / -1; margin-bottom: 72px; display: flex; flex-direction: column; gap: 10px; text-transform: uppercase; }
+.legal__head span { font-weight: 700; font-size: 13px; letter-spacing: .18em; color: var(--muted); }
+.legal__head h1 { margin: 0; font-weight: 400; font-size: clamp(40px, 5vw, 76px); line-height: 1.02; letter-spacing: -.01em; text-wrap: balance; }
+.legal__head p { margin: 14px 0 0; font-size: 13px; letter-spacing: .12em; color: var(--muted); }
+
+.toc {
+  position: sticky; top: 120px; align-self: start; display: flex; flex-direction: column; gap: 2px; counter-reset: toc;
+  padding: 14px; border-radius: 20px;   /* glass card under the contents, like the landing's glass panels */
+  background: linear-gradient(160deg, rgba(var(--ink), .07), rgba(var(--ink), .02) 45%, rgba(var(--ink), .04));
+  box-shadow: inset 1.2px 1.2px 0 rgba(var(--ink), .3), inset -1px -1px 0 rgba(var(--ink), .07), inset 0 12px 18px -14px rgba(var(--ink), .25), 0 24px 48px -28px rgba(0,0,0,.6);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+}
+.toc a { display: flex; gap: 14px; padding: 9px 12px; border-radius: 10px; font-size: 15px; color: var(--muted); transition: color .3s, background .3s; counter-increment: toc; }
+.toc a.is-on { background: rgba(var(--ink), .08); box-shadow: inset 1px 1px 0 rgba(var(--ink), .18); }
+.toc a::before { content: counter(toc, decimal-leading-zero); font-size: 12px; letter-spacing: .1em; padding-top: 2px; font-variant-numeric: tabular-nums; }
+.toc a:hover, .toc a.is-on { color: var(--fg); }
+
+.legal__body { max-width: 68ch; }
+.legal__body section { padding: 0 0 44px; margin-bottom: 44px; border-bottom: 1px solid rgba(var(--ink), .1); scroll-margin-top: 110px; }
+.legal__body section:last-child { border-bottom: 0; }
+.legal__body h2 { margin: 0 0 18px; font-weight: 400; font-size: 26px; line-height: 1.15; text-transform: uppercase; }
+.legal__body p, .legal__body li { font-size: 17px; line-height: 1.6; color: rgba(var(--ink), .78); }
+.legal__body p { margin: 0 0 14px; }
+.legal__body ul { margin: 0 0 14px; padding-left: 20px; }
+.legal__body li { margin-bottom: 6px; }
+.legal__body strong { color: var(--fg); font-weight: 500; }
+.legal__body a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(var(--ink), .35); }
+
+/* ---------- 404 ---------- */
+/* 404, "Lost in the wash": a washer door in glass, the tee tumbling behind it; the site's
+   left-column copy on the left. Everything is drawn in CSS from the ink token, so both themes work. */
+.lost {
+  --d: min(30vh, 17vw);                       /* washer diameter; the 4s are sized from it */
+  position: relative; flex: 1; min-height: calc(100vh - 88px); overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 96px;
+  padding: 8vh var(--gutter) 8vh; text-align: center;
+}
+.lost__row { display: flex; align-items: center; justify-content: center; gap: calc(var(--d) * .07); }
+.lost__row .washer { margin-left: calc(var(--d) * .062); } /* optical centring: the 4 glyph sits further in on its left side than it overhangs on its right, so the door shifts right to leave equal ink gaps */
+/* the two 4s: the hero title's treatment, cap height = the washer's diameter */
+.lost__four {
+  font-weight: 700; font-size: calc(var(--d) / .72); line-height: .72; letter-spacing: -.04em; user-select: none;
+  background: radial-gradient(60% 100% at 50% 40%, var(--fg) 0%, #cecece 55%, #8a8a8a 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  padding-top: .02em;
+}
+html.is-white .lost__four { background-image: radial-gradient(60% 100% at 50% 40%, #0c0c0c 0%, #3a3a3a 55%, #777 100%); }
+.lost__copy { display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 620px; }
+.lost__copy h1 { margin: 0; font-weight: 400; font-size: clamp(30px, 2.8vw, 44px); line-height: 1.05; letter-spacing: -.01em; text-transform: uppercase; }
+.lost__copy p { margin: 0 0 22px; color: var(--muted); font-size: 17px; line-height: 1.45; max-width: 60ch; text-wrap: balance; }
+
+.washer { position: relative; display: flex; flex-direction: column; align-items: center; }
+.washer__panel { position: absolute; bottom: calc(100% + 30px); left: 50%; transform: translateX(-50%); white-space: nowrap; }
+
+/* program readout */
+.washer__panel {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+}
+.washer__led { width: 6px; height: 6px; border-radius: 50%; background: #ff4d3d; box-shadow: 0 0 8px 1px rgba(255,77,61,.55); animation: blink 1.6s steps(2, start) infinite; }
+.washer__sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(var(--ink), .35); }
+
+/* the door: bezel ring, glass porthole, handle */
+.washer__door {
+  position: relative; width: var(--d); aspect-ratio: 1; border-radius: 50%; padding: calc(var(--d) * .065);
+  background:
+    radial-gradient(circle at 30% 22%, rgba(var(--ink), .22), transparent 42%),
+    linear-gradient(145deg, rgba(var(--ink), .16), rgba(var(--ink), .03) 48%, rgba(var(--ink), .1));
+  box-shadow:
+    inset 1.6px 1.6px 0 rgba(var(--ink), .6), inset -1.2px -1.2px 0 rgba(var(--ink), .14),
+    inset 0 0 0 1px rgba(var(--ink), .06), 0 50px 90px -40px rgba(0,0,0,.9);
+}
+.washer__handle {
+  position: absolute; right: calc(var(--d) * -.035); top: 50%; width: calc(var(--d) * .07); height: calc(var(--d) * .26); transform: translateY(-50%);
+  border-radius: 40px; background: #1c1c1f; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 8px 18px -10px rgba(0,0,0,.7); /* matte: flat, no gloss */
+}
+.washer__glass {
+  position: relative; width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+  background: radial-gradient(circle at 50% 44%, rgba(var(--ink), .2), rgba(var(--ink), .05) 46%, rgba(var(--ink), .01) 64%, rgba(0,0,0,.35)); /* a light behind the tee, so black on black still reads */
+  box-shadow: inset 0 0 0 1px rgba(var(--ink), .18), inset 0 24px 60px rgba(0,0,0,.55), inset 0 -16px 40px rgba(var(--ink), .05);
+}
+/* glare on the porthole */
+.washer__glass::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; z-index: 4;
+  background:
+    radial-gradient(70% 45% at 30% 16%, rgba(255,255,255,.16), transparent 60%);
+}
+html.is-white .washer__glass { background: radial-gradient(circle at 50% 42%, rgba(255,255,255,.7), rgba(255,255,255,.25) 58%, rgba(0,0,0,.08)); box-shadow: inset 0 0 0 1px rgba(0,0,0,.12), inset 0 24px 60px rgba(0,0,0,.12), inset 0 -16px 40px rgba(255,255,255,.6); }
+html.is-white .washer__door { box-shadow: inset 1.6px 1.6px 0 #fff, inset -1.2px -1.2px 0 rgba(0,0,0,.12), 0 50px 90px -40px rgba(0,0,0,.35); background: radial-gradient(circle at 30% 22%, #fff, transparent 45%), linear-gradient(145deg, rgba(255,255,255,.9), rgba(255,255,255,.4) 50%, rgba(255,255,255,.7)); }
+
+/* water: two big rotating rounded squares make a wobbling surface */
+.washer__water {
+  position: absolute; left: -30%; width: 160%; aspect-ratio: 1; top: 54%; border-radius: 43%; z-index: 1;
+  background: linear-gradient(rgba(var(--ink), .09), rgba(var(--ink), .03) 30%);
+  box-shadow: inset 0 2px 0 rgba(var(--ink), .14);
+  animation: spin 8s linear infinite;
+}
+.washer__water--b { top: 60%; border-radius: 38%; background: linear-gradient(rgba(var(--ink), .07), rgba(var(--ink), .02) 30%); animation-duration: 11s; animation-direction: reverse; z-index: 3; }
+.washer__water--c { top: 66%; border-radius: 45%; background: linear-gradient(rgba(var(--ink), .06), rgba(var(--ink), .02) 30%); animation-duration: 6.5s; z-index: 3; }
+
+/* the tee tumbles; the inner wrapper bobs, so the motion never repeats exactly */
+/* a filmed loop of the tee floating like cloth fills the porthole, one per theme */
+.washer__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; transform: scale(1.14); animation: drift 9s ease-in-out infinite; }
+@keyframes drift {
+  0%, 100% { transform: scale(1.14) translate(0, 0) rotate(0deg); }
+  25% { transform: scale(1.14) translate(3%, -3%) rotate(9deg); }
+  50% { transform: scale(1.16) translate(-2%, 2%) rotate(-6deg); }
+  75% { transform: scale(1.14) translate(-3%, -2%) rotate(5deg); }
+}
+.washer__glass .washer__tee { display: none; }        /* still image: only the reduced-motion fallback now */
+html:not(.is-white) .washer__video--w, html.is-white .washer__video--b { display: none; }
+@media (prefers-reduced-motion: reduce) { .washer__video { display: none !important; } .washer__glass .washer__tee { display: grid; } }
+.washer__tee { position: absolute; inset: 0; display: grid; place-items: center; z-index: 2; animation: spin 18s linear infinite; }
+.washer__tee span { width: 58%; animation: bob 5s ease-in-out infinite; }
+.washer__tee img { width: 100%; display: block; filter: drop-shadow(0 20px 30px rgba(0,0,0,.45)); }
+.washer__tee .w { display: none; }
+html.is-white .washer__tee .b { display: none; }
+html.is-white .washer__tee .w { display: block; }
+html.is-white .washer__tee img { filter: drop-shadow(0 16px 24px rgba(0,0,0,.12)); }
+
+.washer__bubbles i {
+  position: absolute; bottom: -10%; border-radius: 50%; z-index: 3;
+  border: 1px solid rgba(var(--ink), .35); background: radial-gradient(circle at 35% 30%, rgba(var(--ink), .35), rgba(var(--ink), .03) 60%);
+  animation: rise linear infinite;
+}
+.washer__bubbles i:nth-child(1) { left: 22%; width: 14px; height: 14px; animation-duration: 7s; }
+.washer__bubbles i:nth-child(2) { left: 38%; width: 8px; height: 8px; animation-duration: 5.5s; animation-delay: -2s; }
+.washer__bubbles i:nth-child(3) { left: 55%; width: 18px; height: 18px; animation-duration: 8.5s; animation-delay: -4s; }
+.washer__bubbles i:nth-child(4) { left: 68%; width: 10px; height: 10px; animation-duration: 6s; animation-delay: -1s; }
+.washer__bubbles i:nth-child(5) { left: 80%; width: 7px; height: 7px; animation-duration: 5s; animation-delay: -3s; }
+.washer__bubbles i:nth-child(6) { left: 46%; width: 11px; height: 11px; animation-duration: 9s; animation-delay: -6s; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes bob { 0%, 100% { transform: translateY(-4%) rotate(-6deg); } 50% { transform: translateY(5%) rotate(8deg); } }
+@keyframes rise { 0% { transform: translateY(0) translateX(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(calc(var(--d) * -1.1)) translateX(12px); opacity: 0; } }
+@keyframes blink { to { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) {
+  .washer__tee, .washer__tee span, .washer__water, .washer__bubbles i, .washer__led, .washer__video { animation: none; }
+}
+
+@media (max-width: 900px) {
+  :root { --gutter: 24px; }
+  .lost { --d: min(28vw, 26vh); gap: 30px; padding-top: 8vh; } /* row ≈ 2.9 × d wide: the two 4s plus the door fit the screen */
+  .legal { grid-template-columns: 1fr; padding-top: 10vh; }
+  .toc { position: static; margin-bottom: 48px; flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  .toc a { padding: 6px 10px; font-size: 14px; }
+}
+@media (max-width: 600px) {
+  :root { --gutter: 16px; }
+  .header { height: 72px; }
+  .logo { font-size: 16px; }
+  .header { grid-template-columns: auto 1fr auto; column-gap: 8px; }
+  .theme-pill { justify-self: end; }
+  .theme-pill { height: 34px; padding-left: 11px; font-size: 10px; letter-spacing: 0; gap: 6px; }
+  .theme-pill i { width: 24px; height: 24px; }
+  .theme-pill img { width: 13px; height: 12px; }
+  .header__right { gap: 8px; }
+  .circle { width: 36px; height: 36px; font-size: 14px; }
+  .header__right .circle:first-child { display: none; }
+  .logo { font-size: 18px; }
+  .glass-pill { height: 40px; padding-left: 16px; font-size: 12px; }
+  .legal__head { margin-bottom: 40px; }
+  .legal__body h2 { font-size: 21px; }
+  .legal__body p, .legal__body li { font-size: 16px; }
+  .footer { grid-template-columns: 1fr; padding-top: 32px; }
+  .footer nav { gap: 24px; }
+  .footer p:last-child { justify-self: start; }
+}
+
+/* hovers: same behaviour as the landing */
+.logo { transition: opacity .3s; }
+.logo:hover { opacity: .7; }
+:is(.circle, .theme-pill) { transition: transform .4s var(--ease), box-shadow .4s; }
+:is(.circle, .theme-pill):hover { transform: translateY(-2px); }
+:is(.circle, .theme-pill):active { transform: translateY(0) scale(.96); }
+html:not(.is-white) :is(.circle, .theme-pill):hover { box-shadow: inset 1.4px 1.4px 0 rgba(255,255,255,.8), inset -1px -1px 0 rgba(255,255,255,.2), inset 0 14px 18px -14px rgba(255,255,255,.5), inset 0 0 22px rgba(255,255,255,.1), 0 18px 36px -12px rgba(0,0,0,.8); }
+html.is-white :is(.circle, .theme-pill):hover { box-shadow: inset 1.5px 1.5px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.12), inset 0 0 22px rgba(255,255,255,.7), 0 18px 36px -14px rgba(0,0,0,.3); }
+.theme-pill i { transition: transform .6s var(--ease); }
+.theme-pill:hover i { transform: rotate(-12deg) scale(1.08); }
+.legal__body a { transition: text-decoration-color .3s; }
+.legal__body a:hover { text-decoration-color: var(--fg); }
+#menuBtn .burger { transition: transform .6s var(--ease); }
+#menuBtn:hover .burger { transform: scale(1.12); }
+
+/* ---------- 404, light theme: clean and flat ---------- */
+html.is-white .lost__four { background: none; color: #0c0c0c; -webkit-text-fill-color: #0c0c0c; }
+html.is-white .washer__door {
+  background: #f7f7f8;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.07), inset 0 1px 0 #fff, 0 24px 48px -28px rgba(0,0,0,.22);
+}
+html.is-white .washer__glass {
+  background: #e6e6e8;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), inset 0 10px 28px rgba(0,0,0,.06);
+}
+html.is-white .washer__glass::after { background: radial-gradient(70% 45% at 30% 16%, rgba(255,255,255,.45), transparent 60%); }
+html.is-white .washer__handle { background: #ececee; box-shadow: inset 0 0 0 1px rgba(0,0,0,.07), 0 6px 14px -10px rgba(0,0,0,.18); }
+html.is-white .washer__water { background: linear-gradient(rgba(255,255,255,.4), rgba(255,255,255,.12) 30%); box-shadow: inset 0 1.5px 0 rgba(255,255,255,.9); }
+html.is-white .washer__water--b, html.is-white .washer__water--c { background: linear-gradient(rgba(255,255,255,.28), rgba(255,255,255,.08) 30%); box-shadow: none; }
+html.is-white .washer__bubbles i { border-color: rgba(255,255,255,.9); background: radial-gradient(circle at 35% 30%, #fff, rgba(255,255,255,.25) 60%); }
+html.is-white .washer__panel { color: #6f6f6f; }
+
+/* legal pages: the header gets a frosted bar, since the text scrolls under it */
+.page-legal .header {
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-bottom: 1px solid rgba(var(--ink), .08);
+}
+
+/* 404 drum: tap to spin (pages.js). Everything behind the glass turns; the glare on the glass stays. */
+.washer__spin { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; will-change: transform; }
+.washer__door { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .4s var(--ease); }
+.washer__door:hover { transform: scale(1.02); }
+.washer__door:active { transform: scale(.985); }
+.washer__door:focus-visible { outline: 1px solid var(--fg); outline-offset: 6px; }
+.washer.is-spinning .washer__led { animation-duration: .35s; }
+
+/* water stays put under gravity: the pool tilts / sloshes with the drum's speed (pages.js),
+   the back layer sits behind the tee, the front layers in front of it */
+.washer__pool { position: absolute; inset: 0; z-index: 1; will-change: transform; }
+.washer__pool--front { z-index: 3; pointer-events: none; }
+/* at speed the water is flung to the wall as a thin film */
+.washer__ring {
+  position: absolute; inset: 0; border-radius: 50%; z-index: 3; opacity: 0; pointer-events: none;
+  background:
+    radial-gradient(circle, transparent 60%, rgba(var(--ink), .05) 70%, rgba(var(--ink), .13) 80%, rgba(var(--ink), .05) 88%, transparent 92%),
+    repeating-conic-gradient(from 0deg, rgba(var(--ink), .05) 0 6deg, transparent 6deg 14deg);
+  -webkit-mask: radial-gradient(circle, transparent 62%, #000 74%); mask: radial-gradient(circle, transparent 62%, #000 74%);
+}
+html.is-white .washer__ring { background: radial-gradient(circle, transparent 60%, rgba(255,255,255,.35) 72%, rgba(255,255,255,.7) 82%, transparent 92%), repeating-conic-gradient(from 0deg, rgba(255,255,255,.4) 0 6deg, transparent 6deg 14deg); }
+
+/* foam bubbles spawned while the drum spins (pages.js) */
+.washer__foam { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.washer__foam i {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(var(--ink), .4);
+  background: radial-gradient(circle at 35% 30%, rgba(var(--ink), .4), rgba(var(--ink), .04) 60%);
+}
+html.is-white .washer__foam i { border-color: rgba(255,255,255,.95); background: radial-gradient(circle at 35% 30%, #fff, rgba(255,255,255,.25) 60%); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+/* the surface churns faster while spinning */
+.washer.is-spinning .washer__water { animation-duration: 2.4s; }
+.washer.is-spinning .washer__water--b { animation-duration: 3.1s; }
+.washer.is-spinning .washer__water--c { animation-duration: 1.9s; }
+
+/* glass "Spin" disc that replaces the pointer over the 404 door (pages.js), same build as "Drag" on the landing */
+@media (hover: hover) and (pointer: fine) { .washer__door { cursor: none; } }
+.spin-cursor { position: fixed; left: 0; top: 0; z-index: 30; width: 84px; height: 84px; margin: -42px 0 0 -42px; pointer-events: none; }
+.spin-cursor__in {
+  width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg);
+  background: rgba(var(--ink), .08);
+  box-shadow: inset 1.2px 1.2px 0 rgba(var(--ink), .45), inset -1px -1px 0 rgba(var(--ink), .1), inset 0 12px 18px -14px rgba(var(--ink), .35), 0 14px 30px -12px rgba(0,0,0,.5);
+  backdrop-filter: blur(12px) saturate(150%); -webkit-backdrop-filter: blur(12px) saturate(150%);
+  opacity: 0; transform: scale(.5); transition: opacity .3s, transform .35s var(--ease);
+}
+.spin-cursor svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.spin-cursor.is-on .spin-cursor__in { opacity: 1; transform: scale(1); }
+.spin-cursor.is-on.is-down .spin-cursor__in { transform: scale(.82); }
+html.is-white .spin-cursor__in { background: rgba(255,255,255,.6); box-shadow: inset 1.2px 1.2px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.1), 0 14px 30px -14px rgba(0,0,0,.3); }
