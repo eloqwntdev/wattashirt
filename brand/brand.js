@@ -169,15 +169,20 @@
 
   /* ---------- type: weight switch and live tester ---------- */
   const aa = $('#aa');
+  const scale = $('.scale'), typeSec = $('#type');
   $$('.weights button').forEach(b => b.addEventListener('click', () => {
     $$('.weights button').forEach(x => x.classList.toggle('is-on', x === b));
-    aa.style.fontWeight = b.dataset.w;
+    typeSec.style.setProperty('--tw', b.dataset.w);   // Aa and every specimen in the scale switch at once
+    scale.classList.add('has-w');
   }));
   const tester = $('#tester'), samples = $$('.scale [data-def]');
-  tester.addEventListener('input', () => {
+  const paintSamples = () => {
     const v = tester.value.trim();
-    samples.forEach(p => { p.textContent = v || p.dataset.def; });
-  });
+    samples.forEach(p => { p.textContent = v || (isWhite() && p.dataset.defWhite) || p.dataset.def; });
+  };
+  tester.addEventListener('input', paintSamples);
+  document.addEventListener('themechange', paintSamples);
+  paintSamples();
 
   /* ---------- interface: segmented control and swatches drive "Your look" ---------- */
   const seg = $('#fitSeg'), lookV = $('#lookV');
@@ -273,24 +278,112 @@
   /* ---------- voice: flip say / not ---------- */
   $$('.sayno').forEach(b => b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))));
 
-  /* ---------- 404 washer: each tap kicks the drum, drag slows it down (pages.js physics, simplified) ---------- */
-  const door = $('#door'), tee = $('#doorTee'), lost = $('.lost');
-  const KICK = 1080, MAX = 4200, DRAG = 1.2;
-  let ang = 0, vel = 0, last = 0, idle = 0;
-  door.addEventListener('click', () => { vel = Math.min(MAX, vel + KICK); idle = 0; });
-  function spin(t) {
-    const dt = last ? Math.min(.05, (t - last) / 1000) : 0; last = t;
-    idle += dt;
-    const target = reduce ? 0 : 40 * Math.sin(idle * 1.4) + 40;   // a lazy idle wash when untouched
-    vel += (target - vel) * Math.min(1, DRAG * dt);
-    ang += vel * dt;
-    const blur = Math.min(3, Math.abs(vel) / 1200);
-    tee.style.transform = `rotate(${ang}deg)`;
-    tee.style.filter = blur > .2 ? `blur(${blur}px)` : '';
-    lost.classList.toggle('is-spinning', Math.abs(vel) > 600);
-    requestAnimationFrame(spin);
-  }
-  requestAnimationFrame(spin);
+  /* ---------- 404 washer: the 404 page's drum (pages.js). A tap kicks it ~2.5 turns, taps add up,
+     friction stops it. Water sloshes on a damped spring, foam is flung to the wall, fast spins blur and shake. ---------- */
+  (() => {
+    const door = $('#door'); if (!door) return;
+    const spin = $('.washer__spin', door), lost = door.closest('.lost'), glass = $('.washer__glass', door);
+    const pools = $$('.washer__pool', door), ring = $('.washer__ring', door);
+    const foamLayer = document.createElement('div'); foamLayer.className = 'washer__foam'; glass.appendChild(foamLayer);
+    const bubbles = []; let spawnDebt = 0;
+    const KICK = 1080, MAX = 4200, DRAG = 1.2;
+    let angle = 0, vel = 0, last = 0, running = false, tilt = 0, tiltV = 0, ringAngle = 0;
+    function foam(dt, speed) {
+      spawnDebt += speed * 70 * dt;
+      while (spawnDebt >= 1 && bubbles.length < 50) {
+        spawnDebt -= 1;
+        const el = document.createElement('i');
+        const size = 2 + Math.random() * Math.random() * 9;
+        el.style.width = el.style.height = size + 'px';
+        el.style.transform = 'translate(-50%, -50%)';
+        foamLayer.appendChild(el);
+        bubbles.push({ el, a: Math.random() * 360, r: 0.12 + Math.random() * 0.3, life: 0, max: 0.6 + Math.random() * 1.1, spin: 0.55 + Math.random() * 0.4 });
+      }
+      if (spawnDebt > 1) spawnDebt = 1;
+      for (let i = bubbles.length - 1; i >= 0; i--) {
+        const bb = bubbles[i];
+        bb.life += dt;
+        bb.a += vel * bb.spin * dt;
+        bb.r = Math.min(0.46, bb.r + dt * (0.08 + speed * 0.35));
+        const k = bb.life / bb.max, rad = bb.a * Math.PI / 180;
+        bb.el.style.left = (50 + Math.cos(rad) * bb.r * 100) + '%';
+        bb.el.style.top = (50 + Math.sin(rad) * bb.r * 100) + '%';
+        bb.el.style.opacity = (k < 0.15 ? k / 0.15 : 1 - (k - 0.15) / 0.85).toFixed(2);
+        if (k >= 1) { bb.el.remove(); bubbles.splice(i, 1); }
+      }
+    }
+    // idle wash programme: ease up, roll ~3/4 turn, pause, roll back
+    const STEPS = [[+270, 2.2], [0, 0.8], [-270, 2.2], [0, 0.6]];
+    const PROG_LEN = STEPS.reduce((acc, x) => acc + x[1], 0);
+    let progT = -1, progBase = 0;
+    const ease = x => 0.5 - 0.5 * Math.cos(Math.PI * x);
+    function progOffset(t) { let off = 0; for (const [deg, dur] of STEPS) { if (t <= dur) return off + deg * ease(t / dur); off += deg; t -= dur; } return off; }
+    function frame(now) {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (progT >= 0) {
+        const prev = progOffset(progT); progT += dt;
+        const cur = progOffset(Math.min(progT, PROG_LEN));
+        vel = (cur - prev) / Math.max(dt, 1e-3); angle = progBase + cur;
+        if (progT >= PROG_LEN) { progT = -1; vel = 0; }
+      } else {
+        vel *= Math.exp(-DRAG * dt);
+        if (Math.abs(vel) < 25) vel *= 0.85;
+        angle = (angle + vel * dt) % 360;
+      }
+      const speed = Math.abs(vel) / MAX;
+      spin.style.transform = `rotate(${angle}deg)`;
+      spin.style.filter = speed > 0.25 ? `blur(${((speed - 0.25) * 2).toFixed(2)}px)` : '';
+      const shake = speed > 0.45 ? (speed - 0.45) * 3.2 : 0;
+      door.style.translate = shake ? `${(Math.random() - .5) * shake}px ${(Math.random() - .5) * shake}px` : '';
+      lost.classList.toggle('is-spinning', Math.abs(vel) > 40);
+      const target = Math.max(-38, Math.min(38, vel * 0.014 + vel * 0.05 * Math.exp(-Math.abs(vel) / 400)));
+      tiltV += ((target - tilt) * 26 - tiltV * 3.2) * dt; tilt += tiltV * dt;
+      const fling = Math.max(0, Math.min(1, (speed - 0.3) / 0.45));
+      const t = now / 1000, churn = Math.min(1, speed * 1.6);
+      pools.forEach((el, i) => {
+        const ph = i * 2.1;
+        const wob = churn * (9 * Math.sin(t * 6.3 + ph) + 5 * Math.sin(t * 10.7 + ph * 1.7) + 3 * Math.sin(t * 17.9 + ph * 0.6));
+        const bob = churn * (4 * Math.sin(t * 8.1 + ph * 1.3) + 2 * Math.sin(t * 14.2 + ph));
+        el.style.transform = `rotate(${(tilt + wob).toFixed(2)}deg) translateY(${(fling * 16 + bob).toFixed(1)}%)`;
+      });
+      foam(dt, speed);
+      ringAngle = (ringAngle + vel * 0.9 * dt) % 360;
+      ring.style.opacity = fling.toFixed(2);
+      ring.style.transform = `rotate(${ringAngle}deg)`;
+      const calm = Math.abs(vel) <= 1 && Math.abs(tilt) < 0.2 && Math.abs(tiltV) < 0.5 && !bubbles.length && progT < 0;
+      if (!calm) requestAnimationFrame(frame);
+      else { running = false; vel = 0; tilt = 0; tiltV = 0; spin.style.filter = ''; door.style.translate = ''; lost.classList.remove('is-spinning'); pools.forEach(el => { el.style.transform = ''; }); ring.style.opacity = 0; }
+    }
+    const run = () => { if (!running) { running = true; last = performance.now(); requestAnimationFrame(frame); } };
+    let lastTouch = performance.now();
+    const kick = () => { if (reduce) return; lastTouch = performance.now(); progT = -1; vel = Math.min(MAX, vel + KICK); run(); };
+    let visible = false;
+    new IntersectionObserver(en => { visible = en[0].isIntersecting; }).observe(door);
+    setInterval(() => {
+      if (reduce || document.hidden || !visible || Math.abs(vel) > 1 || progT >= 0) return;
+      if (performance.now() - lastTouch < 4000) return;
+      progBase = angle; progT = 0; run();
+    }, 3000);
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const cur = document.createElement('div');
+      cur.className = 'spin-cursor'; cur.setAttribute('aria-hidden', 'true');
+      cur.innerHTML = '<div class="spin-cursor__in"><svg viewBox="0 0 16 16"><path d="M13 8a5 5 0 1 1-1.5-3.6"/><path d="M13 2.5v3h-3"/></svg><span>Spin</span></div>';
+      document.body.appendChild(cur);
+      let cx = 0, cy = 0, tx = 0, ty = 0, on = false, raf = 0;
+      const follow = () => {
+        cx += (tx - cx) * 0.25; cy += (ty - cy) * 0.25;
+        cur.style.transform = `translate(${cx.toFixed(1)}px, ${cy.toFixed(1)}px)`;
+        raf = (on || Math.abs(tx - cx) + Math.abs(ty - cy) > 0.5) ? requestAnimationFrame(follow) : 0;
+      };
+      door.addEventListener('pointerenter', e => { if (e.pointerType !== 'mouse') return; tx = cx = e.clientX; ty = cy = e.clientY; on = true; cur.classList.add('is-on'); if (!raf) raf = requestAnimationFrame(follow); });
+      door.addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; });
+      door.addEventListener('pointerleave', () => { on = false; cur.classList.remove('is-on', 'is-down'); });
+      door.addEventListener('pointerdown', () => cur.classList.add('is-down'));
+      addEventListener('pointerup', () => cur.classList.remove('is-down'));
+    }
+    door.addEventListener('click', kick);
+    door.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); kick(); } });
+  })();
 
   syncTheme();
 })();

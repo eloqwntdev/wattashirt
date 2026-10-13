@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/brand/brand.css?v=2">
+  <link rel="stylesheet" href="/brand/brand.css?v=4">
 </head>
 <body>
   <div class="veil" id="veil" aria-hidden="true"></div>
@@ -64,7 +64,7 @@
         <p class="cover__tag">Brand guidelines · Edition 01</p>
         <a class="cta" href="#contents">Open the guide<span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></a>
       </div>
-      <p class="corner corner--bl">Once you go black<br>you never go back</p>
+      <p class="corner corner--bl"><span class="t-black">Once you go black<br>you never go back</span><span class="t-white">Once you go white<br>it's alright</span></p>
       <p class="corner corner--br">Wattashirt <span class="t-black">Black</span><span class="t-white">White</span><br>2026</p>
       <div class="scroll-hint">
         <svg viewBox="0 0 16.5 21.5" aria-hidden="true"><path d="M1 15.8C1.2 18.2 3.1 20.3 5.5 20.6C6.4 20.7 7.3 20.8 8.25 20.8C9.2 20.8 10.1 20.7 11 20.6C13.4 20.3 15.3 18.2 15.5 15.8C15.6 14.2 15.75 12.5 15.75 10.75C15.75 9 15.6 7.3 15.5 5.7C15.3 3.3 13.4 1.2 11 0.9C10.1 0.8 9.2 0.75 8.25 0.75C7.3 0.75 6.4 0.8 5.5 0.9C3.1 1.2 1.2 3.3 1 5.7C0.86 7.3 0.75 9 0.75 10.75C0.75 12.5 0.86 14.2 1 15.8Z M8.25 4.75V7.75"/></svg>
@@ -98,7 +98,7 @@
 
     <!-- 03 Brand idea -->
     <section class="sec sec--idea" id="idea" data-name="Brand idea">
-      <h2 class="sec-title rv"><span class="sec-title__dim">01 · Brand idea</span><span class="sec-title__main">Once you go black, you never go back.</span></h2>
+      <h2 class="sec-title rv"><span class="sec-title__dim">01 · Brand idea</span><span class="sec-title__main"><span class="t-black">Once you go black, you never go back.</span><span class="t-white">Once you go white, it's alright.</span></span></h2>
       <div class="idea__stage turnable" id="ideaTurn" data-start="0.375" aria-label="Drag to turn the tee 360°">
         <svg class="ring" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="500" cy="100" rx="497" ry="97" vector-effect="non-scaling-stroke"/></svg>
         <div class="turnable__view"><img class="turnable__img" src="/assets/seq/black/turn/0080.webp" alt="The Wattashirt tee. Drag to turn it 360°." draggable="false"></div>
@@ -240,7 +240,7 @@
           <li class="rv"><p class="grad s-hero" data-def="Wattashirt">Wattashirt</p><p class="spec"><b>Hero</b>Bold 700 · 100 / 120 · caps · −1%</p></li>
           <li class="rv"><p class="s-title" data-def="Cut to move">Cut to move</p><p class="spec"><b>Section title</b>Regular 400 · 52 / 53 · caps</p></li>
           <li class="rv"><p class="s-fig">180<small>g/m²</small></p><p class="spec"><b>Figure</b>Regular 400 · 56 / 50 · −2%</p></li>
-          <li class="rv"><p class="s-eyebrow" data-def="Once you go black you never go back.">Once you go black you never go back.</p><p class="spec"><b>Eyebrow · tagline</b>Regular–Medium · 20–30 · caps</p></li>
+          <li class="rv"><p class="s-eyebrow" data-def="Once you go black you never go back." data-def-white="Once you go white, it's alright.">Once you go black you never go back.</p><p class="spec"><b>Eyebrow · tagline</b>Regular–Medium · 20–30 · caps</p></li>
           <li class="rv"><p class="s-body" data-def="Double-spun cotton, knitted tight and pre-shrunk, so the oversized cut keeps its line wash after wash.">Double-spun cotton, knitted tight and pre-shrunk, so the oversized cut keeps its line wash after wash.</p><p class="spec"><b>Body</b>Regular 400 · 16 / 21</p></li>
           <li class="rv"><p class="s-label"><span>Inside the knit</span><em>Kilometre eight, still dry.</em></p><p class="spec"><b>Label · caption</b>12 caps +24% · 14 muted</p></li>
           <li class="rv"><p class="s-big" data-def="Black">Black</p><p class="spec"><b>Big word</b>Bold italic · 1 px outline · backdrop only</p></li>
@@ -337,7 +337,7 @@
       <div class="lines rv">
         <p class="k">Lines we already own</p>
         <ul>
-          <li><span>Once you go black</span><em>Tagline</em></li>
+          <li><span class="t-black">Once you go black</span><span class="t-white">Once you go white</span><em>Tagline</em></li>
           <li><span>Fabric, engineered</span><em>Technology</em></li>
           <li><span>Feels like nothing</span><em>Lightness</em></li>
           <li><span>Cut to move</span><em>Back</em></li>
@@ -351,10 +351,22 @@
         <p class="lost__panel"><i class="led"></i>Spin cycle<span></span>Page not found</p>
         <div class="lost__row" aria-label="404">
           <span class="grad four" aria-hidden="true">4</span>
-          <button class="door" id="door" aria-label="Spin the drum">
-            <span class="porthole"><img id="doorTee" src="/assets/brand/tee404_b.webp" data-black="/assets/brand/tee404_b.webp" data-white="/assets/brand/tee404_w.webp" alt=""></span>
-            <span class="door__handle"></span>
-          </button>
+          <div class="washer">
+            <div class="washer__door" id="door" role="button" tabindex="0" aria-label="Spin the drum">
+              <div class="washer__glass">
+                <div class="washer__pool"><div class="washer__water"></div></div>
+                <div class="washer__ring"></div>
+                <div class="washer__spin">
+                  <video class="washer__video washer__video--b" src="/assets/pages/tee_float_black.mp4?v=2" autoplay muted loop playsinline preload="auto"></video>
+                  <video class="washer__video washer__video--w" src="/assets/pages/tee_float_white.mp4?v=2" autoplay muted loop playsinline preload="auto"></video>
+                  <div class="washer__tee"><span><img class="b" src="/assets/pages/tee_black.webp" alt=""><img class="w" src="/assets/pages/tee_white.webp?v=2" alt=""></span></div>
+                  <div class="washer__bubbles"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                </div>
+                <div class="washer__pool washer__pool--front"><div class="washer__water washer__water--b"></div><div class="washer__water washer__water--c"></div></div>
+              </div>
+              <span class="washer__handle"></span>
+            </div>
+          </div>
           <span class="grad four" aria-hidden="true">4</span>
         </div>
         <h3>Lost in the wash</h3>
@@ -371,6 +383,6 @@
   </footer>
 
   <p class="toast glass" id="toast" role="status" aria-live="polite"></p>
-  <script src="/brand/brand.js?v=2"></script>
+  <script src="/brand/brand.js?v=4"></script>
 </body>
 </html>
