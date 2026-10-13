@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/brand/brand.css?v=1">
+  <link rel="stylesheet" href="/brand/brand.css?v=2">
 </head>
 <body>
   <div class="veil" id="veil" aria-hidden="true"></div>
@@ -99,9 +99,10 @@
     <!-- 03 Brand idea -->
     <section class="sec sec--idea" id="idea" data-name="Brand idea">
       <h2 class="sec-title rv"><span class="sec-title__dim">01 · Brand idea</span><span class="sec-title__main">Once you go black, you never go back.</span></h2>
-      <div class="idea__stage" aria-hidden="true">
-        <svg class="ring" viewBox="0 0 1000 200" preserveAspectRatio="none"><ellipse cx="500" cy="100" rx="497" ry="97" vector-effect="non-scaling-stroke"/></svg>
-        <img src="/assets/brand/shirt_three_b.webp" data-black="/assets/brand/shirt_three_b.webp" data-white="/assets/brand/shirt_three_w.webp" alt="" loading="lazy">
+      <div class="idea__stage turnable" id="ideaTurn" data-start="0.375" aria-label="Drag to turn the tee 360°">
+        <svg class="ring" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="500" cy="100" rx="497" ry="97" vector-effect="non-scaling-stroke"/></svg>
+        <div class="turnable__view"><img class="turnable__img" src="/assets/seq/black/turn/0080.webp" alt="The Wattashirt tee. Drag to turn it 360°." draggable="false"></div>
+        <div class="spin"><button data-spin="-1" aria-label="Rotate left"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6"/></svg></button><span>360°</span><button data-spin="1" aria-label="Rotate right"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6"/></svg></button></div>
       </div>
       <p class="side-copy side-copy--l rv">At Wattashirt, we craft oversized T-shirts that highlight your figure with effortless style, perfect for those who lead an active life.</p>
       <div class="pillars">
@@ -305,9 +306,9 @@
         <li><span>05</span><p><b>One muse, deadpan.</b> Same styling every time: black beanie, wide trousers, a timestamp.</p></li>
       </ol>
       <div class="imagery">
-        <div class="turn glass rv" id="turn" aria-label="Drag to rotate the tee">
-          <img id="turnImg" src="/assets/seq/black/turn/0000.webp" alt="The Wattashirt tee on a turntable" draggable="false">
-          <div class="turn__ui"><span class="k">360° · drag to turn</span><input type="range" id="turnRange" min="0" max="59" value="0" aria-label="Rotate the tee"></div>
+        <div class="turn turnable glass rv" id="turn" data-start="0" aria-label="Drag to turn the tee 360°">
+          <div class="turnable__view"><img class="turnable__img" src="/assets/seq/black/turn/0000.webp" alt="The Wattashirt tee on a turntable. Drag to turn it." draggable="false"></div>
+          <div class="turn__ui"><span class="k">360° · drag to turn</span><input type="range" class="turnable__range" min="0" max="1000" value="0" aria-label="Rotate the tee"></div>
         </div>
         <div class="angles rv">
           <figure><div class="glass"><img src="/assets/brand/shirt_front_b.webp" data-black="/assets/brand/shirt_front_b.webp" data-white="/assets/brand/shirt_front_w.webp" alt="Tee, front" loading="lazy"></div><figcaption>Front</figcaption></figure>
@@ -370,6 +371,6 @@
   </footer>
 
   <p class="toast glass" id="toast" role="status" aria-live="polite"></p>
-  <script src="/brand/brand.js?v=1"></script>
+  <script src="/brand/brand.js?v=2"></script>
 </body>
 </html>

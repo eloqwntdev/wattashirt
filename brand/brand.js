@@ -193,34 +193,82 @@
     look.color = b.dataset.v; paintLook();
   }));
 
-  /* ---------- imagery: 360° turntable from the configurator's turn sequence (every 4th frame) ---------- */
-  const turn = (() => {
-    const box = $('#turn'), img = $('#turnImg'), range = $('#turnRange');
-    const N = 60, STEP = 4;
-    let frame = 0, cache = {}, loaded = false;
-    const url = (i, white = isWhite()) => `/assets/seq/${white ? 'white' : 'black'}/turn/${pad4(i * STEP)}.webp`;
-    function pad4(n) { return String(n).padStart(4, '0'); }
-    function preload() {
-      const key = isWhite() ? 'w' : 'b';
-      if (cache[key]) return;
-      cache[key] = [];
-      for (let i = 0; i < N; i++) { const im = new Image(); im.decoding = 'async'; im.src = url(i); cache[key].push(im); }
+  /* ---------- 360° turntables: the landing's turn sequence, same angle map, drag, inertia and ‹ › steps ---------- */
+  // loop clips cover unequal angles: F→S 90°, S→Q 45°, Q→B 45°, B→Q 45°, Q→S 45°, S→F 90° (main.js)
+  const TURN_ANGLES = [0, 0.25, 0.375, 0.5, 0.625, 0.75, 1];
+  const TURN_N = 240;
+  function angleToFrame(a) {
+    const per = TURN_N / 6;
+    a = ((a % 1) + 1) % 1;
+    let k = 0;
+    while (k < 5 && a >= TURN_ANGLES[k + 1]) k++;
+    const t = (a - TURN_ANGLES[k]) / (TURN_ANGLES[k + 1] - TURN_ANGLES[k]);
+    return Math.min(TURN_N - 1, Math.round((k + t) * per));
+  }
+  const frameUrl = (i, white) => `/assets/seq/${white ? 'white' : 'black'}/turn/${String(i).padStart(4, '0')}.webp`;
+  const frames = { b: null, w: null };            // shared cache, loaded once per theme
+  function loadFrames() {
+    const key = isWhite() ? 'w' : 'b';
+    if (frames[key]) return;
+    const list = frames[key] = new Array(TURN_N);
+    // coarse pass first (every 8th frame) so dragging works at once, then fill the gaps
+    const order = [];
+    for (let step of [8, 4, 2, 1]) for (let i = 0; i < TURN_N; i += step) if (!order.includes(i)) order.push(i);
+    order.forEach(i => { const im = new Image(); im.decoding = 'async'; im.onload = () => { list[i] = im.src; }; im.src = frameUrl(i, key === 'w'); });
+  }
+  function nearestLoaded(f) {
+    const list = frames[isWhite() ? 'w' : 'b'];
+    if (!list) return null;
+    for (let d = 0; d < TURN_N / 2; d++) {
+      if (list[(f + d) % TURN_N]) return list[(f + d) % TURN_N];
+      if (list[(f - d + TURN_N) % TURN_N]) return list[(f - d + TURN_N) % TURN_N];
     }
-    function show(i) { frame = ((i % N) + N) % N; img.src = url(frame); range.value = frame; }
-    new IntersectionObserver((en, obs) => { if (en[0].isIntersecting) { obs.disconnect(); loaded = true; preload(); } }, { rootMargin: '400px' }).observe(box);
-    let drag = null;
-    box.addEventListener('pointerdown', e => { drag = { x: e.clientX, f: frame }; box.classList.add('is-drag'); box.setPointerCapture(e.pointerId); });
-    box.addEventListener('pointermove', e => { if (!drag) return; show(drag.f - Math.round((e.clientX - drag.x) / 8)); });
-    const end = () => { drag = null; box.classList.remove('is-drag'); };
+    return null;
+  }
+  const turnables = $$('.turnable').map(box => {
+    const img = $('.turnable__img', box), range = $('.turnable__range', box);
+    const st = { angle: +box.dataset.start || 0, target: +box.dataset.start || 0, vel: 0, drag: false, lastX: 0, seen: false, touched: false, shown: '' };
+    const w = () => box.clientWidth || innerWidth;
+    box.addEventListener('pointerdown', e => {
+      if (e.target.closest('button, input')) return;
+      st.drag = true; st.touched = true; st.lastX = e.clientX; st.vel = 0;
+      box.classList.add('is-drag'); box.setPointerCapture(e.pointerId);
+    });
+    box.addEventListener('pointermove', e => {
+      if (!st.drag) return;
+      const dx = e.clientX - st.lastX; st.lastX = e.clientX;
+      st.target -= dx / (w() * 0.9); st.vel = -dx / (w() * 0.9);
+    });
+    const end = () => { st.drag = false; box.classList.remove('is-drag'); };
     box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
-    range.addEventListener('input', () => show(+range.value));
-    // idle spin once when it first comes into view, so people see it turns
-    new IntersectionObserver((en, obs) => {
-      if (!en[0].isIntersecting || reduce) return; obs.disconnect();
-      let i = 0; const t = setInterval(() => { if (drag) { clearInterval(t); return; } show(frame + 1); if (++i >= N) clearInterval(t); }, 45);
-    }, { threshold: .6 }).observe(box);
-    return { reload() { if (loaded) preload(); show(frame); } };
-  })();
+    $$('[data-spin]', box).forEach(b => b.addEventListener('click', () => { st.touched = true; st.target += 0.125 * +b.dataset.spin; st.vel = 0; }));
+    if (range) range.addEventListener('input', () => { st.touched = true; st.target = st.angle = range.value / 1000; st.vel = 0; });
+    new IntersectionObserver(en => { st.seen = en[0].isIntersecting; if (st.seen) loadFrames(); }, { rootMargin: '300px' }).observe(box);
+    function paint() {
+      const src = nearestLoaded(angleToFrame(st.angle));
+      if (src && src !== st.shown) { img.src = src; st.shown = src; }
+      if (range && !st.drag && document.activeElement !== range) range.value = Math.round((((st.angle % 1) + 1) % 1) * 1000);
+    }
+    return { st, paint, reset() { img.src = frameUrl(angleToFrame(st.angle), isWhite()); st.shown = img.src; } };
+  });
+  const damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt));
+  let tLast = 0;
+  function tick(t) {
+    const dt = tLast ? Math.min(.05, (t - tLast) / 1000) : 0; tLast = t;
+    turnables.forEach(({ st, paint }) => {
+      if (!st.seen) return;
+      if (!st.drag) {
+        st.target += st.vel; st.vel *= 0.92;
+        // untouched: a slow idle spin, like the landing's buy view
+        if (!st.touched && !reduce && Math.abs(st.vel) < 0.0005) st.target += dt * 0.03;
+      }
+      st.angle = damp(st.angle, st.target, 7, dt);
+      paint();
+    });
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  const turn = { reload() { loadFrames(); turnables.forEach(t => t.reset()); } };
 
   /* ---------- voice: flip say / not ---------- */
   $$('.sayno').forEach(b => b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))));

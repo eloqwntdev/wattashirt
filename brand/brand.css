@@ -167,7 +167,19 @@ img { display: block; max-width: 100%; }
 /* 03 idea */
 .sec--idea { grid-template-rows: auto 1fr auto; }
 .idea__stage { grid-column: 2; grid-row: 1 / span 3; position: relative; display: grid; place-items: center; min-height: 72vh; }
-.idea__stage img { position: relative; height: min(76vh, 760px); width: auto; max-width: none; }
+.idea__stage { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.idea__stage.is-drag, .turn.is-drag { cursor: grabbing; }
+.idea__stage .turnable__view { position: relative; width: 100%; height: min(76vh, 760px); }
+.turnable__view { position: relative; overflow: hidden; }
+.turnable__img { position: absolute; left: 50%; top: 0; height: 100%; width: auto; max-width: none; transform: translateX(-50%); pointer-events: none; user-select: none; }
+.idea__stage .ring { z-index: 0; }
+.idea__stage .turnable__view { z-index: 1; }
+.spin { position: absolute; left: 50%; bottom: calc(6% - 2px); transform: translate(-50%, 50%); z-index: 3; height: 40px; padding: 0 6px; border-radius: 40px; display: flex; align-items: center; gap: 2px; font-size: 15px;
+  background: var(--lg-fill); box-shadow: var(--lg-edge), var(--lg-drop); backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur); cursor: default; }
+.spin span { padding: 0 6px; font-variant-numeric: tabular-nums; }
+.spin button { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; transition: background .25s, transform .6s var(--ease); }
+.spin button:hover { background: rgba(var(--ink), .1); }
+.spin svg { width: 7px; height: 12px; fill: none; stroke: var(--fg); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .ring { position: absolute; left: 50%; bottom: 6%; width: min(760px, 100%); height: 140px; transform: translateX(-50%); overflow: visible; }
 .ring ellipse { fill: none; stroke: rgba(var(--ink), .35); stroke-width: 1; }
 .side-copy { width: 300px; color: var(--soft); }
@@ -338,8 +350,7 @@ input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 
 /* 09 imagery */
 .imagery { grid-column: 2 / -1; grid-row: 1 / span 2; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; }
 .turn { grid-row: 1 / span 2; position: relative; border-radius: 20px; overflow: hidden; cursor: grab; touch-action: pan-y; min-height: 460px; display: grid; place-items: center; user-select: none; }
-.turn.is-drag { cursor: grabbing; }
-.turn img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; transform: scale(1.25); }
+.turn .turnable__view { position: absolute; inset: 0 0 56px; }
 .turn__ui { position: absolute; left: 20px; right: 20px; bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .turn__ui input { width: 50%; }
 .angles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-content: start; }
@@ -400,7 +411,7 @@ input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 
   .sec-title, .side-r { grid-column: 1 / -1; grid-row: auto; }
   .contents, .modes, .wm, .wm__tiles, .kit, .motion, .imagery { grid-column: 1 / -1; grid-row: auto; }
   .idea__stage, .product__stage { grid-column: 1 / -1; grid-row: auto; min-height: 0; }
-  .idea__stage img, .product__stage img { height: 60vh; }
+  .idea__stage .turnable__view, .product__stage img { height: 60vh; }
   .side-copy--l, .pillars, .product__l, .product__r, .product__care, .type__l, .type__r, .anatomy, .rules, .voice__l, .lines, .lost { grid-column: auto; grid-row: auto; }
   .product__care, .type__r, .lost { grid-column: 1 / -1; }
   .wm__tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -426,7 +437,7 @@ input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 
   .toc { grid-template-columns: minmax(0, 1fr); }
   .toc li:nth-last-child(2) { border-bottom: 0; }
   .contents__shirt { display: none; }
-  .idea__stage img, .product__stage img { height: 52vh; }
+  .idea__stage .turnable__view, .product__stage img { height: 52vh; }
   .side-copy { width: auto; }
   .hs { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
   .hs--sm { width: 28px; height: 28px; margin: -14px 0 0 -14px; }
