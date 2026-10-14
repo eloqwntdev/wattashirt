@@ -2,6 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "routes": [
     {
+      "src": "/brand/?",
+      "has": [{ "type": "host", "value": "(www\\.)?wattashirt\\.com" }],
+      "status": 308,
+      "headers": { "Location": "https://brand.wattashirt.com/" }
+    },
+    {
       "src": "/(index\\.html)?",
       "has": [{ "type": "host", "value": "brand.wattashirt.com" }],
       "dest": "/brand/index.html"
