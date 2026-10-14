@@ -193,10 +193,11 @@
     seg.dataset.i = i; look.fit = b.dataset.v; paintLook();
   }));
   seg.dataset.i = 1;
-  $$('.sw').forEach(b => b.addEventListener('click', () => {
-    $$('.sw').forEach(x => x.classList.toggle('is-on', x === b));
-    look.color = b.dataset.v; paintLook();
-  }));
+  const pickColor = v => { $$('.sw').forEach(x => x.classList.toggle('is-on', x.dataset.v === v)); look.color = v; paintLook(); };
+  $$('.sw').forEach(b => b.addEventListener('click', () => pickColor(b.dataset.v)));
+  // the demo starts on the mode on screen: black in Black, white in White
+  pickColor(isWhite() ? 'White' : 'Black');
+  document.addEventListener('themechange', () => pickColor(isWhite() ? 'White' : 'Black'));
 
   /* ---------- 360° turntables: the landing's turn sequence, same angle map, drag, inertia and ‹ › steps ---------- */
   // loop clips cover unequal angles: F→S 90°, S→Q 45°, Q→B 45°, B→Q 45°, Q→S 45°, S→F 90° (main.js)

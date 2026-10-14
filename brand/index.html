@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/brand/brand.css?v=8">
+  <link rel="stylesheet" href="/brand/brand.css?v=11">
 </head>
 <body>
   <div class="veil" id="veil" aria-hidden="true"></div>
@@ -104,7 +104,7 @@
           <img class="contents__shirt" src="/assets/brand/shirt_back_b.webp" data-black="/assets/brand/shirt_back_b.webp" data-white="/assets/brand/shirt_back_w.webp" alt="The Wattashirt tee, back view" loading="lazy">
           <div class="glass card rv">
             <p class="k">How to read it</p>
-            <p>Everything here is live: flip the pill at the top to see the White mode, click colours to copy them, type in the specimen, drag the shirt.</p>
+            <p>Everything here is live: flip the pill at the top to see the <span class="t-black">White</span><span class="t-white">Black</span> mode, click colours to copy them, type in the specimen, drag the shirt.</p>
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@
 
     <!-- 03 Brand idea -->
     <section class="sec sec--idea" id="idea" data-name="Brand idea">
-      <h2 class="sec-title rv"><span class="sec-title__dim">01 · Brand idea</span><span class="sec-title__main"><span class="t-black">Once you go black, you never go back.</span><span class="t-white">Once you go white, it's alright.</span></span></h2>
+      <h2 class="sec-title rv"><span class="sec-title__dim">01 · Brand idea</span><span class="sec-title__main"><span class="t-black">Once you<br>go black,<br>you never<br>go back.</span><span class="t-white">Once you<br>go white,<br>it's alright.</span></span></h2>
       <div class="idea__stage turnable" id="ideaTurn" data-start="0.375" aria-label="Drag to turn the tee 360°">
         <svg class="ring" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="500" cy="100" rx="497" ry="97" vector-effect="non-scaling-stroke"/></svg>
         <div class="turnable__view"><img class="turnable__img" src="/assets/seq/black/turn/0080.webp" alt="The Wattashirt tee. Drag to turn it 360°." draggable="false"></div>
@@ -194,8 +194,8 @@
         </div>
       </div>
       <ul class="wm__tiles rv">
-        <li><div class="tile tile--black"><span>Wattashirt</span></div><p>On black · #FFFFFF</p></li>
-        <li><div class="tile tile--grey"><span>Wattashirt</span></div><p>On studio grey · #0C0C0C</p></li>
+        <li class="t-black"><div class="tile tile--black"><span>Wattashirt</span></div><p>On black · #FFFFFF</p></li>
+        <li class="t-white"><div class="tile tile--grey"><span>Wattashirt</span></div><p>On studio grey · #0C0C0C</p></li>
         <li><div class="tile glass"><span class="grad">Wattashirt</span></div><p>Hero only · radial gradient</p></li>
         <li class="dont"><div class="tile glass"><span style="color:#3d6bff">Wattashirt</span></div><p>Don't add colour</p></li>
         <li class="dont"><div class="tile glass"><span style="font-weight:400;text-transform:none;letter-spacing:.02em">Wattashirt</span></div><p>Don't set it in lowercase or light</p></li>
@@ -205,10 +205,10 @@
 
     <!-- 06 Colour & modes -->
     <section class="sec sec--colour" id="colour" data-name="Colour">
-      <h2 class="sec-title rv"><span class="sec-title__dim">04 · Colour &amp; modes</span><span class="sec-title__main">Black, white, nothing else</span></h2>
-      <p class="side-r copy rv">No accent colour. The product is the palette. Dark is the default; “I Wanna White” flips the whole site to a light studio on #EAEAEA, the same grey the white tee was shot on. The switch is instant. <em>Click any colour to copy it.</em></p>
+      <h2 class="sec-title rv"><span class="sec-title__dim">04 · Colour</span><span class="sec-title__main"><span class="t-black">Black, nothing else</span><span class="t-white">White, nothing else</span></span></h2>
+      <p class="side-r copy rv"><span class="t-black">No accent colour. The product is the palette: a black tee on black, drawn by its rim light. This is the default mode.</span><span class="t-white">No accent colour. “I Wanna White” turns the whole site into a light studio on #EAEAEA, the grey the white tee was shot on. The switch is instant.</span> <em>Click any colour to copy it.</em></p>
       <div class="modes">
-        <article class="mode mode--black rv">
+        <article class="mode mode--black t-black rv">
           <header><p class="k">Mode 01 · Default</p><span class="mini-pill">I Wanna White</span></header>
           <p class="mode__name">Black</p>
           <ul class="swatches">
@@ -221,7 +221,7 @@
           </ul>
           <footer><span class="mini-cta">Get Black Now</span><p>Deep blacks stay deep. Never lift them to grey.</p></footer>
         </article>
-        <article class="mode mode--white rv">
+        <article class="mode mode--white t-white rv">
           <header><p class="k">Mode 02 · I Wanna White</p><span class="mini-pill">I Wanna Black</span></header>
           <p class="mode__name">White</p>
           <ul class="swatches">
@@ -257,7 +257,7 @@
           <li class="rv"><p class="s-eyebrow" data-def="Once you go black you never go back." data-def-white="Once you go white, it's alright.">Once you go black you never go back.</p><p class="spec"><b>Eyebrow · tagline</b>Regular–Medium · 20–30 · caps</p></li>
           <li class="rv"><p class="s-body" data-def="Double-spun cotton, knitted tight and pre-shrunk, so the oversized cut keeps its line wash after wash.">Double-spun cotton, knitted tight and pre-shrunk, so the oversized cut keeps its line wash after wash.</p><p class="spec"><b>Body</b>Regular 400 · 16 / 21</p></li>
           <li class="rv"><p class="s-label"><span>Inside the knit</span><em>Kilometre eight, still dry.</em></p><p class="spec"><b>Label · caption</b>12 caps +24% · 14 muted</p></li>
-          <li class="rv"><p class="s-big" data-def="Black">Black</p><p class="spec"><b>Big word</b>Bold italic · 1 px outline · backdrop only</p></li>
+          <li class="rv"><p class="s-big" data-def="Black" data-def-white="White">Black</p><p class="spec"><b>Big word</b>Bold italic · 1 px outline · backdrop only</p></li>
         </ul>
       </div>
     </section>
@@ -266,11 +266,11 @@
     <section class="sec sec--interface" id="interface" data-name="Interface">
       <h2 class="sec-title rv"><span class="sec-title__dim">06 · Interface</span><span class="sec-title__main">Glass, not plastic</span></h2>
       <ol class="anatomy rv">
-        <li><span>01</span><p><b>Pane.</b> A thin see-through fill: white 11% → 1% on dark, 50% → 6% on white. Never milky.</p></li>
+        <li><span>01</span><p><b>Pane.</b> <span class="t-black">A thin see-through fill, white 11% → 1% over black.</span><span class="t-white">A thin see-through fill, white 50% → 6% over studio grey.</span> Never milky.</p></li>
         <li><span>02</span><p><b>Rim.</b> A 1.2 px highlight lit from the top-left, a faint shade rim bottom-right.</p></li>
         <li><span>03</span><p><b>Bevel.</b> A soft glow under the top edge gives the glass its thickness.</p></li>
         <li><span>04</span><p><b>Drop.</b> One soft shadow below. Blur 16 px, saturate 160%.</p></li>
-        <li><span>05</span><p><b>Lead.</b> Primary buttons get the strongest rim and silver glints. Selected items are the brightest glass in dark mode, dark glass in white mode.</p></li>
+        <li><span>05</span><p><b>Lead.</b> <span class="t-black">Primary buttons get the strongest rim and silver glints. The selected item is the brightest glass.</span><span class="t-white">Primary buttons are solid white glass with the strongest rim. The selected item is the brightest white bead, with dark text.</span></p></li>
       </ol>
       <div class="kit">
         <div class="kit__col rv">
@@ -279,7 +279,7 @@
             <button class="pill lg demo-theme">Flip theme<span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></button>
             <button class="circle lg">EN</button>
           </div>
-          <button class="cta">Get <span class="look-color">Black</span> Now<span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></button>
+          <button class="cta"><span>Get <span class="look-color">Black</span> Now</span><span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></button>
           <p class="k">Controls</p>
           <div class="seg lg" id="fitSeg" role="group" aria-label="Fit"><i class="seg__thumb thumb"></i><button data-v="Regular">Regular</button><button data-v="Oversized" class="is-on">Oversized</button></div>
           <div class="row">
@@ -296,7 +296,7 @@
             <div class="bar"><p><span>Elastane</span><b>8%</b></p><span class="bar__track"><i style="--w:8%"></i></span></div>
           </div>
           <div class="glass look">
-            <div><p class="k">Your look</p><p class="look__v" id="lookV">Black · Oversized</p></div>
+            <div><p class="k">Your look</p><p class="look__v" id="lookV"><span class="look-color">Black</span> · Oversized</p></div>
             <span class="cta cta--sm">Get it</span>
           </div>
         </div>
@@ -311,13 +311,13 @@
 
     <!-- 09 Imagery -->
     <section class="sec sec--imagery" id="imagery" data-name="Imagery">
-      <h2 class="sec-title rv"><span class="sec-title__dim">07 · Imagery</span><span class="sec-title__main">Deep blacks, studio grey</span></h2>
+      <h2 class="sec-title rv"><span class="sec-title__dim">07 · Imagery</span><span class="sec-title__main"><span class="t-black">Deep blacks, rim light</span><span class="t-white">Studio grey, soft light</span></span></h2>
       <ol class="rules rv">
         <li><span>01</span><p><b>The shirt is the hero.</b> Photoreal, alone, centred, lit from the top-left. Never a flat mock-up.</p></li>
-        <li><span>02</span><p><b>Keep the blacks deep.</b> Never lift them to grey. Detail lives in the rim light.</p></li>
-        <li><span>03</span><p><b>White is its own shoot.</b> Shot natively on #EAEAEA, never recoloured from black.</p></li>
-        <li><span>04</span><p><b>Cotton bolls, not petals.</b> The fibre is the only prop.</p></li>
-        <li><span>05</span><p><b>One muse, deadpan.</b> Same styling every time: black beanie, wide trousers, a timestamp.</p></li>
+        <li class="t-black"><span>02</span><p><b>Keep the blacks deep.</b> Never lift them to grey. Detail lives in the rim light.</p></li>
+        <li class="t-white"><span>02</span><p><b>White is its own shoot.</b> Shot natively on #EAEAEA, never recoloured from black.</p></li>
+        <li><span>03</span><p><b>Cotton bolls, not petals.</b> The fibre is the only prop.</p></li>
+        <li><span>04</span><p><b>One muse, deadpan.</b> Same styling every time: black beanie, wide trousers, a timestamp.</p></li>
       </ol>
       <div class="imagery">
         <div class="turn turnable glass rv" id="turn" data-start="0" aria-label="Drag to turn the tee 360°">
@@ -355,7 +355,7 @@
           <li><span>Fabric, engineered</span><em>Technology</em></li>
           <li><span>Feels like nothing</span><em>Lightness</em></li>
           <li><span>Cut to move</span><em>Back</em></li>
-          <li><span>A day in black</span><em>Lifestyle</em></li>
+          <li><span class="t-black">A day in black</span><span class="t-white">A day in white</span><em>Lifestyle</em></li>
           <li><span>Packed and ready to go</span><em>Checkout</em></li>
           <li><span>Lost in the wash</span><em>404</em></li>
         </ul>
@@ -384,7 +384,7 @@
           <span class="grad four" aria-hidden="true">4</span>
         </div>
         <h3>Lost in the wash</h3>
-        <p>This page didn't survive the spin cycle. Your T-shirt made it through.</p>
+        <p>This page didn't survive the spin cycle. Your T‑shirt made it through.</p>
         <a class="cta cta--sm" href="https://wattashirt.com/404">See the real one<span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></a>
       </div>
     </section>
@@ -397,6 +397,6 @@
   </footer>
 
   <p class="toast glass" id="toast" role="status" aria-live="polite"></p>
-  <script src="/brand/brand.js?v=4"></script>
+  <script src="/brand/brand.js?v=5"></script>
 </body>
 </html>
