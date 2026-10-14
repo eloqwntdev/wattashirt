@@ -234,14 +234,14 @@
   placeHots(); wide.addEventListener('change', placeHots);
   function layoutHots() {
     const sr = stick.getBoundingClientRect(), ir = img.getBoundingClientRect();
-    const [x0, y0, x1, y1] = TEE_BOX[state.color], W = stick.clientWidth, tw = 240;
+    const [x0, y0, x1, y1] = TEE_BOX[state.color], W = stick.clientWidth, tw = 260;
     hotEls.forEach(h => {
       const x = ir.left - sr.left + ir.width * (x0 + h.u * (x1 - x0));
       const y = ir.top - sr.top + ir.height * (y0 + h.v * (y1 - y0));
       h.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
       const tx = h.right ? W - tw : 0, k = h.right ? 1 : -1;
-      h.path.setAttribute('d', `M0 0 L${28 * k} -31.6 Q${31.8 * k} -38 ${43 * k} -38 H${((h.right ? tx + tw : tx) - x).toFixed(1)}`);
-      h.text.style.left = `${tx - x}px`; h.text.style.top = '-84px';
+      h.path.setAttribute('d', `M0 0 L${30 * k} -35.6 Q${33.8 * k} -42 ${45 * k} -42 H${((h.right ? tx + tw : tx) - x).toFixed(1)}`);
+      h.text.style.left = `${tx - x}px`; h.text.style.top = '-90px';
     });
   }
 
