@@ -230,8 +230,12 @@ img { display: block; max-width: 100%; }
 .hs:hover, .hs.is-on { transform: scale(1.12); }
 .hs.is-on i { transform: scale(.6); }
 @keyframes ping { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.6); opacity: 0; } }
-.hs-tip { position: absolute; left: 50%; bottom: 4%; transform: translate(-50%, 10px); width: max-content; max-width: 300px; padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.35; opacity: 0; pointer-events: none; transition: opacity .4s var(--ease), transform .4s var(--ease); }
-.hs-tip.is-on { opacity: 1; transform: translate(-50%, 0); }
+.hs-tip { position: absolute; left: 0; top: 0; z-index: 4; width: max-content; max-width: 240px; padding: 14px 16px; border-radius: 14px; font-size: 14px; line-height: 1.4; text-wrap: pretty; opacity: 0; pointer-events: none; transform: translateX(-8px); transition: opacity .35s var(--ease), transform .45s var(--ease); }
+.hs-tip[data-side="left"] { transform: translateX(8px); }
+.hs-tip[data-side="below"] { transform: translateY(-8px); }
+.hs-tip[data-side="above"] { transform: translateY(8px); }
+.hs-tip b { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+.hs-tip.is-on { opacity: 1; transform: none; }   /* text only: clicks go through to the dots under it */
 
 /* 05 wordmark */
 .wm { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 20px 0 8px; }
