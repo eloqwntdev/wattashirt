@@ -75,7 +75,7 @@ html.is-white .ht__dot::after { background: radial-gradient(circle at 38% 32%, #
 .ht:nth-of-type(2) * { transition-delay: .1s; } .ht:nth-of-type(3) * { transition-delay: .18s; } .ht:nth-of-type(4) * { transition-delay: .26s; }
 
 /* ---------- questions ---------- */
-.faq { display: flex; flex-direction: column; max-width: 760px; padding: 72px 0 120px; }
+.faq { display: flex; flex-direction: column; padding: 72px 0 120px; }   /* the full left column: the same lines as the tee above */
 .faq > .k { margin-bottom: 8px; }
 .faq details { border-top: 1px solid rgba(var(--ink), .14); }
 .faq details:last-child { border-bottom: 1px solid rgba(var(--ink), .14); }
@@ -83,7 +83,7 @@ html.is-white .ht__dot::after { background: radial-gradient(circle at 38% 32%, #
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after { content: "+"; font-size: 20px; color: var(--muted); transition: transform .4s var(--ease); }
 .faq details[open] summary::after { transform: rotate(45deg); }
-.faq p { padding: 0 0 18px; font-size: 15px; line-height: 1.45; color: var(--muted); max-width: 560px; }
+.faq p { padding: 0 0 18px; font-size: 15px; line-height: 1.45; color: var(--muted); max-width: 640px; text-wrap: pretty; }
 
 /* ---------- the buy card: light glass, always on screen ---------- */
 .card { position: sticky; top: var(--card-top, 104px); margin: calc(var(--card-top, 104px) - 88px) 0 48px; max-height: calc(100vh - var(--card-top, 104px) - 24px); overflow-y: auto; scrollbar-width: none;
