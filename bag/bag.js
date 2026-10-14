@@ -22,6 +22,10 @@
   const read = () => { try { return (JSON.parse(localStorage.getItem(KEY)) || []).filter(valid); } catch (e) { return []; } };
   let bag = read();
   let lastAdded = null;
+  let fresh = null, freshT;   // the item just added: it drops onto the rail
+  let shownCount = null;      // to bump the badge when the count goes up
+  // a hanger, drawn: hook, shoulders, bar (the empty bag and every item hang on one)
+  const HANGER = '<svg class="wsb__hanger" viewBox="0 0 64 36" aria-hidden="true"><path d="M32 13V9.6c0-2.4 4.4-3 4.4-5.9a4.4 4.4 0 0 0-8.6-1.3"/><path d="M32 13 4.2 30.6c-1.8 1.1-1 2.9.9 2.9h53.8c1.9 0 2.7-1.8.9-2.9z"/></svg>';
 
   /* ---------- markup: header button + sheet ---------- */
   const btn = document.createElement('button');
@@ -45,6 +49,7 @@
       <button type="button" class="wsb__x" data-close aria-label="Close">×</button>
       <p class="wsb__k">Your bag</p>
       <h2 class="wsb__h" id="wsbTitle">Packed and ready to go</h2>
+      <div class="wsb__rail" aria-hidden="true"><i class="wsb__bar"></i><div class="wsb__hooks"></div></div>
       <ul class="wsb__list"></ul>
       <div class="wsb__up" hidden>
         <span class="wsb__dot"></span>
@@ -60,6 +65,7 @@
     </div>`;
   document.body.appendChild(sheet);
   const $ = s => sheet.querySelector(s);
+  const hooks = $('.wsb__hooks');
   const list = $('.wsb__list'), up = $('.wsb__up'), go = $('.wsb__go:not(.wsb__shop)'), shop = $('.wsb__shop'), note = $('.wsb__note');
 
   // a toast of its own unless the page already has one (/buy does)
@@ -86,7 +92,11 @@
         <div class="wsb__txt"><b>Wattashirt ${cap(x.color)}</b><span>${FIT[x.fit]} · Size ${x.size}</span>
           <span class="wsb__qty"><button type="button" data-i="${i}" data-d="-1" aria-label="One less">−</button><output>${x.qty}</output><button type="button" data-i="${i}" data-d="1" aria-label="One more">+</button></span></div>
         <div class="wsb__end"><b>${money(x.qty * PRICE)}</b><button type="button" class="wsb__rm" data-rm="${i}">Remove</button></div>
-      </li>`).join('') || '<li class="wsb__empty">Your bag is empty.</li>';
+      </li>`).join('');
+    // the rail: every line of the bag hangs there; an empty bag is one empty hanger, swinging
+    hooks.innerHTML = bag.length
+      ? bag.map((x, i) => `<figure class="wsb__hang${fresh && sameItem(x, fresh) ? ' is-new' : ''}" style="--i:${i}">${HANGER}<img src="${shirtImg(x.color)}" alt="">${x.qty > 1 ? `<b>×${x.qty}</b>` : ''}</figure>`).join('')
+      : `<figure class="wsb__hang is-empty">${HANGER}</figure><p class="wsb__railNote">Nothing on the hanger yet.</p>`;
     $('.wsb__sum').textContent = money(total);
     $('.wsb__goSum').textContent = money(total);
     // empty bag: no total or checkout, one way to the product instead
@@ -97,6 +107,8 @@
     if (onBuyPage) shop.setAttribute('data-close', ''); // already on /buy: just close
     const badge = btn.querySelector('i');
     badge.hidden = !count; badge.textContent = count;
+    if (shownCount !== null && count > shownCount) { btn.classList.remove('is-bump'); void btn.offsetWidth; btn.classList.add('is-bump'); }
+    shownCount = count;
     btn.setAttribute('aria-label', count ? `Open bag, ${count} item${count === 1 ? '' : 's'}` : 'Open bag');
     // upsell: the other colour, same fit and size, if it isn't in the bag yet
     const ref = lastAdded || bag[bag.length - 1];
@@ -118,6 +130,7 @@
     const hit = bag.find(x => sameItem(x, item));
     if (hit) hit.qty = Math.min(9, hit.qty + item.qty); else bag.push(item);
     lastAdded = item;
+    fresh = item; clearTimeout(freshT); freshT = setTimeout(() => { fresh = null; }, 1500);
     save();
     return true;
   }

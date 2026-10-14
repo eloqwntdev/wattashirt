@@ -50,10 +50,10 @@
     const c = state.color === 'white' ? 'w' : 'b';
     if (typeof stageRefresh === 'function') stageRefresh();
     $('#bothLabel').textContent = `Get both · ${money(PRICE * 2 * state.qty)}`;
-    $('#recapImg').src = `/assets/brand/shirt_front_${c}.webp`;
-    const pill = $('#themeToggle');
-    pill.setAttribute('aria-pressed', String(isWhite()));
-    $('.pill__label', pill).textContent = isWhite() ? 'I Wanna Black' : 'I Wanna White';
+    $$('#themeToggle, #footToggle').forEach(pill => {
+      pill.setAttribute('aria-pressed', String(isWhite()));
+      $('.pill__label', pill).textContent = isWhite() ? 'I Wanna Black' : 'I Wanna White';
+    });
     // shareable URL
     const q = new URLSearchParams({ color: state.color, fit: state.fit });
     if (state.size) q.set('size', state.size);
@@ -78,7 +78,23 @@
     }, reduce ? 0 : 150);
   }
   $$('.sw').forEach(b => b.addEventListener('click', () => setColor(b.dataset.color)));
-  $('#themeToggle').addEventListener('click', () => setColor(isWhite() ? 'black' : 'white'));
+  $$('#themeToggle, #footToggle').forEach(b => b.addEventListener('click', () => setColor(isWhite() ? 'black' : 'white')));
+
+  /* ---------- header: menu, and back goes back when the visitor came from this site ---------- */
+  const menuBtn = $('#menuBtn'), menu = $('#menu');
+  function setMenu(open) {
+    menu.classList.toggle('is-open', open); menu.setAttribute('aria-hidden', String(!open));
+    menuBtn.classList.toggle('is-open', open); menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  menuBtn.addEventListener('click', () => setMenu(!menu.classList.contains('is-open')));
+  $$('a', menu).forEach(a => a.addEventListener('click', () => setMenu(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  $('#backBtn').addEventListener('click', e => {
+    let same = false;
+    try { same = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch (err) {}
+    if (same && history.length > 1) { e.preventDefault(); history.back(); }
+  });
 
   /* ---------- fit, size, quantity ---------- */
   $$('#fitSeg button').forEach(b => b.addEventListener('click', () => { state.fit = b.dataset.fit; render(); stageRefresh(true); }));
@@ -101,7 +117,6 @@
   }
   $('#buyForm').addEventListener('submit', e => { e.preventDefault(); buy(); });
   $('#barBtn').addEventListener('click', buy);
-  $('#recapBtn').addEventListener('click', buy);
   $('#bothBtn').addEventListener('click', () => {
     if (!state.size) { needSize(); return; }
     bag.add({ color: 'black', fit: state.fit, size: state.size, qty: state.qty });
@@ -109,17 +124,21 @@
     bag.open();
   });
 
-  /* ---------- sticky bar: only while neither the main button nor the recap card is on screen ---------- */
+  /* ---------- sticky bar (phones): once the main button has scrolled away, until the footer ---------- */
   const bar = $('#bar');
-  let mainOut = false, recapIn = false;
+  let mainOut = false, footIn = false;
   function syncBar() {
-    const on = mainOut && !recapIn;
+    const on = mainOut && !footIn;
     bar.classList.toggle('is-on', on);
     bar.setAttribute('aria-hidden', String(!on));
     $('#barBtn').tabIndex = on ? 0 : -1;
   }
   new IntersectionObserver(([en]) => { mainOut = !en.isIntersecting && en.boundingClientRect.top < 0; syncBar(); }).observe($('#buyBtn'));
-  new IntersectionObserver(([en]) => { recapIn = en.isIntersecting; syncBar(); }, { threshold: .3 }).observe($('#recap'));
+  new IntersectionObserver(([en]) => { footIn = en.isIntersecting; syncBar(); }).observe($('.footer'));
+
+  /* ---------- specs in view: the four facts come in around the sticky tee ---------- */
+  const scene = $('#scene');
+  new IntersectionObserver(([en]) => scene.classList.toggle('is-specs', en.intersectionRatio >= .35), { threshold: [0, .35, .7] }).observe($('#why'));
 
   /* ---------- the stage: one draggable view, two sequences ----------
      'tee'  = the bare tee, a full 360° (seq/{black|white}/turn, 240 frames; there is one cut per colour)
@@ -190,22 +209,28 @@
   const end = () => { st.drag = false; stage.classList.remove('is-drag'); if (view === 'muse') setView('muse'); };
   stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
   $$('[data-spin]', stage).forEach(b => b.addEventListener('click', () => { st.touched = true; st.target += 0.125 * +b.dataset.spin; st.vel = 0; if (view === 'muse') setView('muse'); }));
-  const turn = { reset: paintNow };   // colour change
+  const turn = { reset: () => { paintNow(); load(`tee_${state.color}`); } };   // colour change
   function stageRefresh(fitChanged) {  // called by render(): thumbnails follow colour + fit
     $$('[data-av]').forEach(im => { im.src = `/assets/seq/av/${state.color === 'white' ? 'w' : 'b'}_${state.fit}_turn/${pad4(museFrame(VIEW_ANGLE[im.dataset.av]))}.webp?v=17`; });
     if (fitChanged) setView('muse', view === 'muse' ? undefined : 0);
   }
   const damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt));
-  let tLast = 0;
+  let tLast = 0, thumbT = 0, thumbF = 0;
+  const thumbImg = $('#thumbSpin');
   (function tick(t) {
     const dt = tLast ? Math.min(.05, (t - tLast) / 1000) : 0; tLast = t;
     if (!st.drag) { st.target += st.vel; st.vel *= 0.92; if (!st.touched && !reduce && view === 'tee') st.target += dt * 0.03; }
     st.angle = damp(st.angle, st.target, 7, dt);
+    if (t - thumbT > 70) {   // the 360 thumbnail: a small tee that keeps turning
+      thumbT = t; thumbF = (thumbF + 2) % TURN_N;
+      const s = nearest(`tee_${state.color}`, thumbF);
+      if (s && thumbImg.src !== s) thumbImg.src = s;
+    }
     const src = nearest(key(), frameOf(st.angle));
     if (src && src !== st.shown) { img.src = src; st.shown = src; }
     requestAnimationFrame(tick);
   })(0);
-  load(key());
+  load(key()); load(`tee_${state.color}`);
   // warm the muse clips for both fits of this colour, so switching fit is instant
   setTimeout(() => ['over', 'reg'].forEach(f => load(`av_${state.color === 'white' ? 'w' : 'b'}_${f}`)), 1200);
 

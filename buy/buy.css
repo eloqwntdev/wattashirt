@@ -1,65 +1,73 @@
-/* Buy page (/buy): product page on the brand's tokens and glass (brand.css). Two sections: product + why. */
-.page-buy main { padding: 0 var(--gutter); }
+/* Buy page (/buy) on the brand's tokens and glass (brand.css).
+   Desktop: the buy card sits on the right and stays on screen; on the left the tee is sticky while the page
+   scrolls past it, first as the product, then with the four facts around it; questions and the footer close.
+   Phones: one column (tee, card, facts, questions) and a sticky buy bar. */
 .ic-back { width: 8px; height: 13px; fill: none; stroke: var(--fg); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ---------- 1 · product ---------- */
-.pdp { min-height: 100vh; padding: 104px 0 48px; display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 48px; align-items: center; }
-.pdp__media { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.stage { position: relative; height: min(70vh, 720px); cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+/* ---------- header: back + logo on the left, EN + bag + menu on the right ---------- */
+.page-buy .header { background: color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border-bottom: 1px solid rgba(var(--ink), .08); }
+.header__left { justify-self: start; display: flex; align-items: center; gap: 16px; }
+.burger { position: relative; width: 18px; height: 12px; display: block; }
+.burger i { position: absolute; left: 0; right: 0; height: 1.5px; border-radius: 2px; background: var(--fg); transition: transform .5s var(--ease), top .5s var(--ease); }
+.burger i:first-child { top: 2.5px; } .burger i:last-child { top: 8px; }
+#menuBtn.is-open .burger i:first-child { top: 5.25px; transform: rotate(45deg); }
+#menuBtn.is-open .burger i:last-child { top: 5.25px; transform: rotate(-45deg); }
+
+/* ---------- layout ---------- */
+.shop { display: grid; grid-template-columns: minmax(0, 1fr) 400px; column-gap: 56px; padding: 88px var(--gutter) 0; }
+.shop__left { min-width: 0; }
+.shop__right { position: relative; }
+
+/* the scene: one grid cell holds the sticky tee and, on top of it, the sections that scroll past */
+.scene { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: calc(100vh - 88px) auto; }
+.scene__stick { grid-area: 1 / 1 / 3 / 2; align-self: start; position: sticky; top: 88px; height: calc(100vh - 88px); display: flex; flex-direction: column; padding: 16px 0 24px; }
+.scene__hero { grid-area: 1 / 1 / 2 / 2; pointer-events: none; }
+.specs { grid-area: 2 / 1 / 3 / 2; position: relative; min-height: 100vh; padding-top: 88px; pointer-events: none; }   /* top 88 = under the header, like the sticky tee */
+
+/* ---------- stage ---------- */
+.stage { position: relative; flex: 1; min-height: 0; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; transition: transform .9s var(--ease); }
 .stage.is-drag { cursor: grabbing; }
 .stage .turnable__view { position: absolute; inset: 0 0 34px; overflow: hidden; z-index: 1; }
-.stage .ring { position: absolute; left: 50%; bottom: 34px; width: min(640px, 92%); height: 120px; transform: translate(-50%, 0); overflow: visible; z-index: 0; }
+.stage .ring { position: absolute; left: 50%; bottom: 34px; width: min(640px, 86%); height: 120px; transform: translate(-50%, 0); overflow: visible; z-index: 0; transition: opacity .4s var(--ease); }
 .stage .ring ellipse { fill: none; stroke: rgba(var(--ink), .3); stroke-width: 1; }
-.stage .spin { bottom: 34px; transform: translate(-50%, 50%); }
+.stage .spin { bottom: 34px; transform: translate(-50%, 50%); transition: opacity .4s var(--ease); }
 .stage.is-muse .ring { opacity: 0; }   /* the muse frames carry their own studio floor */
-.stage .ring { transition: opacity .4s var(--ease); }
-.thumbs { display: flex; gap: 10px; justify-content: center; }
-.thumb-btn { width: 64px; height: 64px; border-radius: 14px; overflow: hidden; display: grid; place-items: center; background: var(--lg-fill); box-shadow: var(--lg-edge); transition: box-shadow .3s, transform .5s var(--ease); }
+.thumbs { display: flex; gap: 10px; justify-content: center; padding-top: 18px; transition: opacity .4s var(--ease), transform .6s var(--ease); }
+.thumb-btn { position: relative; width: 64px; height: 64px; border-radius: 14px; overflow: hidden; display: grid; place-items: center; background: var(--lg-fill); box-shadow: var(--lg-edge); transition: box-shadow .3s, transform .5s var(--ease); }
 .thumb-btn:hover { transform: translateY(-2px); }
 .thumb-btn img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transform: scale(1.9); }
-.thumb-btn__360 { font-size: 13px; font-weight: 500; }
+.thumb-btn img.thumb-btn__spin { object-position: 50% 50%; transform: scale(1.35); }
+.thumb-btn__tag { position: absolute; right: 4px; bottom: 4px; padding: 1px 5px; border-radius: 6px; font-size: 9px; font-weight: 700; letter-spacing: .04em; line-height: 1.4; background: rgba(var(--paper), .7); color: var(--fg); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 .thumb-btn.is-on { box-shadow: inset 0 0 0 1.5px var(--fg), var(--lg-drop); }
 
-.pdp__panel { border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 18px; border: 0; }
-.pdp__title { font-weight: 400; font-size: clamp(34px, 3.2vw, 48px); line-height: 1.02; text-transform: uppercase; }
-.pdp__title em { font-style: normal; font-weight: 700; display: block; }
-.pdp__price { display: flex; align-items: baseline; gap: 12px; font-size: 32px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.pdp__price small { font-size: 12px; letter-spacing: 0; color: var(--muted); }
-.pdp__desc { font-size: 15px; line-height: 1.4; color: var(--muted); }
-.opt { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-.opt legend { display: flex; align-items: baseline; gap: 10px; padding: 0; margin-bottom: 10px; width: 100%; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-.opt legend > span:first-child { font-size: 11px; }
-.opt legend b { color: var(--fg); font-weight: 500; letter-spacing: .04em; }
-.opt__hint { margin-left: auto; letter-spacing: .04em; text-transform: none; font-size: 13px; }
-.opt .seg { width: 100%; }
-.sizes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.sizes button { display: grid; place-items: center; text-align: center; height: 48px; border-radius: 14px; font-size: 16px; font-weight: 500; background: var(--lg-fill); box-shadow: var(--lg-edge); transition: transform .5s var(--ease), box-shadow .3s, background .3s, color .3s; }
-.sizes button:hover { transform: translateY(-2px); }
-.sizes button[aria-checked="true"] { background: var(--thumb); box-shadow: var(--thumb-edge); color: #fff; }
-#sizeOpt.is-missing legend b { color: var(--fg); }
-#sizeOpt.is-missing .sizes button { box-shadow: var(--lg-edge), 0 0 0 1px rgba(var(--ink), .6); }
-#sizeOpt.is-missing .sizes { animation: nudgeX .45s var(--ease); }
-@keyframes nudgeX { 20% { transform: translateX(-6px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
-.buyrow { display: flex; gap: 10px; align-items: center; margin-top: 4px; }
-.qty { display: flex; align-items: center; height: 56px; border-radius: 500px; padding: 0 6px; flex: none; }
-.qty button { width: 40px; height: 40px; border-radius: 50%; font-size: 20px; display: grid; place-items: center; transition: background .25s; }
-.qty button:hover { background: rgba(var(--ink), .1); }
-.qty output { min-width: 22px; text-align: center; font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
-.buy-cta { flex: 1; width: auto; justify-content: space-between; white-space: nowrap; }
-.trust { display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid rgba(var(--ink), .12); }
-.trust li { display: flex; align-items: center; gap: 12px; font-size: 14px; }
-.trust svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--fg); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; opacity: .8; }
+/* specs in view: the tee steps back a little, the controls give way to the four facts */
+.scene.is-specs .stage { transform: scale(.86) translateY(4%); }
+.scene.is-specs :is(.thumbs, .stage .spin) { opacity: 0; pointer-events: none; }
+.scene.is-specs .thumbs { transform: translateY(12px); }
 
-/* ---------- 2 · why: heading, four facts, then questions beside a live recap with the one buy button ---------- */
-.why { padding: 56px 0 120px; display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 24px 48px; border-top: 1px solid rgba(var(--ink), .08); align-items: start; }
-.why__title { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 10px; text-transform: uppercase; font-weight: 400; }
-.why__line { font-size: clamp(30px, 3.2vw, 48px); line-height: 1.04; }
-.facts { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.facts li { border-radius: 16px; padding: 20px; min-height: 170px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
-.facts .v { font-size: 44px; line-height: .95; letter-spacing: -.02em; }
-.facts .v small { font-size: 16px; letter-spacing: 0; margin-left: 6px; color: var(--muted); }
-.faq { display: flex; flex-direction: column; margin-top: 16px; }
-.faq__k { margin-bottom: 8px; }
+/* ---------- specs: title, then four facts around the tee ---------- */
+.specs__title { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 10px; padding-top: 32px; text-transform: uppercase; font-weight: 400; }
+.specs__line { font-size: clamp(24px, 2.4vw, 36px); line-height: 1.04; max-width: 16em; }
+.facts { position: absolute; inset: 88px 0 0; }
+.fact { position: absolute; width: min(230px, 26%); display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 18px; pointer-events: auto;
+  background: var(--lg-fill); box-shadow: var(--lg-edge), var(--lg-drop); backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur);
+  opacity: 0; transition: opacity .7s var(--ease), transform .9s var(--ease); }
+.fact--tl { left: 0; top: 30%; transform: translateX(-24px); }
+.fact--bl { left: 0; top: 60%; transform: translateX(-24px); }
+.fact--tr { right: 0; top: 30%; transform: translateX(24px); }
+.fact--br { right: 0; top: 60%; transform: translateX(24px); }
+.fact--bl, .fact--br { transition-delay: .12s; }
+.scene.is-specs .fact { opacity: 1; transform: none; }
+.fact::after { content: ""; position: absolute; top: 34px; width: 48px; height: 1px; background: linear-gradient(90deg, rgba(var(--ink), .4), rgba(var(--ink), 0)); }
+.fact--tl::after, .fact--bl::after { left: 100%; }
+.fact--tr::after, .fact--br::after { right: 100%; transform: scaleX(-1); }
+.fact .v { font-size: 40px; line-height: .95; letter-spacing: -.02em; }
+.fact .v small { font-size: 15px; letter-spacing: 0; margin-left: 6px; color: var(--muted); }
+.fact .note { font-size: 13px; line-height: 1.35; color: var(--muted); }
+
+/* ---------- questions ---------- */
+.faq { display: flex; flex-direction: column; max-width: 760px; padding: 72px 0 120px; }
+.faq > .k { margin-bottom: 8px; }
 .faq details { border-top: 1px solid rgba(var(--ink), .14); }
 .faq details:last-child { border-bottom: 1px solid rgba(var(--ink), .14); }
 .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 0; font-size: 18px; text-transform: uppercase; }
@@ -67,63 +75,133 @@
 .faq summary::after { content: "+"; font-size: 20px; color: var(--muted); transition: transform .4s var(--ease); }
 .faq details[open] summary::after { transform: rotate(45deg); }
 .faq p { padding: 0 0 18px; font-size: 15px; line-height: 1.45; color: var(--muted); max-width: 560px; }
-.recap { margin-top: 16px; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 104px; }
-.recap__row { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 14px; align-items: center; }
-.recap__img { width: 72px; height: 72px; object-fit: contain; border-radius: 14px; background: rgba(var(--ink), .05); }
-.recap__name { font-size: 18px; font-weight: 500; text-transform: uppercase; }
-.recap__opts { font-size: 14px; color: var(--muted); margin-top: 4px; }
-.recap__price { font-size: 26px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.recap__btn { width: 100%; justify-content: space-between; }
 
-/* ---------- sticky bar ---------- */
+/* ---------- the buy card: light glass, always on screen ---------- */
+.card { position: sticky; top: 104px; margin: 16px 0 48px; max-height: calc(100vh - 120px); overflow-y: auto; scrollbar-width: none;
+  border: 0; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 18px;
+  background: linear-gradient(160deg, rgba(var(--ink), .07), rgba(var(--ink), .015) 55%, rgba(var(--ink), .04));
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,.22), inset 0 0 0 1px rgba(var(--ink), .08);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+.card::-webkit-scrollbar { display: none; }
+.card__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.card__head .k { margin-bottom: 10px; }
+.card__title { font-weight: 400; font-size: 30px; line-height: 1.02; text-transform: uppercase; }
+.card__title em { font-style: normal; font-weight: 700; display: block; }
+.card__price { font-size: 28px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; padding-top: 22px; }
+.card__desc { font-size: 14px; line-height: 1.4; color: var(--muted); margin-top: -6px; }
+.opt { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.opt legend { display: flex; align-items: baseline; gap: 10px; padding: 0; margin-bottom: 10px; width: 100%; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.opt legend > span:first-child { font-size: 10px; }
+.opt legend b { color: var(--fg); font-weight: 500; letter-spacing: .04em; }
+.opt__hint { margin-left: auto; letter-spacing: .04em; text-transform: none; font-size: 12px; }
+.opt .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.card .sw { width: 44px; height: 44px; }
+.card .sw i { width: 28px; height: 28px; }
+.card .seg { width: 100%; height: 46px; }
+.card .seg button { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
+.card .seg svg.tee { width: 20px; height: 17px; fill: currentColor; opacity: .85; }
+.sizes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.sizes button { display: grid; place-items: center; text-align: center; height: 44px; border-radius: 12px; font-size: 15px; font-weight: 500; box-shadow: inset 0 0 0 1px rgba(var(--ink), .16); transition: transform .5s var(--ease), box-shadow .3s, background .3s, color .3s; }
+.sizes button:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(var(--ink), .4); }
+.sizes button[aria-checked="true"] { background: var(--thumb); box-shadow: var(--thumb-edge); color: #fff; }
+#sizeOpt.is-missing legend b { color: var(--fg); }
+#sizeOpt.is-missing .sizes button { box-shadow: inset 0 0 0 1px rgba(var(--ink), .7); }
+#sizeOpt.is-missing .sizes { animation: nudgeX .45s var(--ease); }
+@keyframes nudgeX { 20% { transform: translateX(-6px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+.buyrow { display: flex; gap: 10px; align-items: center; margin-top: 2px; }
+.qty { display: flex; align-items: center; height: 56px; border-radius: 500px; padding: 0 6px; flex: none; box-shadow: inset 0 0 0 1px rgba(var(--ink), .16); }
+.qty button { width: 38px; height: 38px; border-radius: 50%; font-size: 20px; display: grid; place-items: center; transition: background .25s; }
+.qty button:hover { background: rgba(var(--ink), .1); }
+.qty output { min-width: 20px; text-align: center; font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.buy-cta { flex: 1; width: auto; justify-content: space-between; white-space: nowrap; font-size: 18px; }
+.trust { display: flex; flex-wrap: wrap; gap: 8px 16px; padding-top: 14px; border-top: 1px solid rgba(var(--ink), .1); }
+.trust li { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.trust svg { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* get both */
+.both { height: 40px; padding: 0 16px 0 12px; border-radius: 500px; display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; box-shadow: inset 0 0 0 1px rgba(var(--ink), .16); transition: transform .5s var(--ease), box-shadow .3s; }
+.both:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(var(--ink), .4); }
+.both__dots { display: flex; }
+.both__dots i { width: 16px; height: 16px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(var(--ink), .4); }
+.both__dots i:first-child { background: #000; } .both__dots i:last-child { background: #f4f4f4; margin-left: -5px; }
+
+/* ---------- footer (the landing's, on brand tokens) ---------- */
+.page-buy .footer { position: relative; z-index: 2; background: var(--bg); min-height: 210px; padding: 24px var(--gutter) 25px; display: flex; flex-direction: column; align-items: stretch; justify-content: space-between; gap: 40px; border-top: 1px solid rgba(var(--ink), .08); font-size: 16px; }   /* brand.css has its own centred grid footer */
+.page-buy .footer .logo { font-size: 24px; }
+.page-buy .footer__top { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; justify-self: auto; }
+.page-buy .footer__top:hover { color: inherit; }
+.footer__toggle { justify-self: center; }
+.socials { justify-self: end; display: flex; gap: 12px; }
+.socials a { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; transition: transform .4s var(--ease); }
+.socials a:hover { transform: translateY(-2px); }
+.socials img { width: 17px; height: 17px; transform: scaleY(-1); opacity: .9; }
+html.is-white .socials img { filter: invert(1); }
+.footer__bottom { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; color: var(--muted); font-size: 16px; line-height: 1.3; }
+.footer__bottom p:last-child { justify-self: end; }
+.footer__bottom b { color: var(--fg); font-weight: 400; margin-left: 8px; }
+.footer__links { display: flex; gap: 40px; }
+.page-buy .footer a:hover { color: var(--fg); }
+
+/* ---------- sticky buy bar (phones only) ---------- */
 .buybar { position: fixed; left: 50%; bottom: 18px; z-index: 40; transform: translate(-50%, 140%); display: flex; align-items: center; gap: 20px; padding: 8px 8px 8px 22px; border-radius: 500px; width: min(560px, calc(100% - 24px)); justify-content: space-between; transition: transform .6s var(--ease); }
 .buybar.is-on { transform: translate(-50%, 0); }
 .buybar__info { display: flex; flex-direction: column; font-size: 13px; line-height: 1.3; min-width: 0; }
 .buybar__info b { font-weight: 500; font-size: 15px; text-transform: uppercase; }
 .buybar__info > span { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .buybar .cta { flex: none; }
+@media (min-width: 1001px) { .buybar { display: none; } }
 
-/* ---------- get both (the bag itself is /bag/bag.css) ---------- */
-.opt .row { flex-wrap: wrap; }
-.both { margin-left: 6px; height: 40px; padding: 0 16px 0 12px; border-radius: 500px; display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; background: var(--lg-fill); box-shadow: var(--lg-edge), var(--lg-drop); transition: transform .5s var(--ease); }
-.both:hover { transform: translateY(-2px); }
-.both__dots { display: flex; }
-.both__dots i { width: 16px; height: 16px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(var(--ink), .4); }
-.both__dots i:first-child { background: #000; } .both__dots i:last-child { background: #f4f4f4; margin-left: -5px; }
+/* ---------- smaller desktops ---------- */
+@media (max-width: 1200px) {
+  .shop { grid-template-columns: minmax(0, 1fr) 360px; column-gap: 40px; }
+  .card { padding: 20px; gap: 16px; }
+  .card__title { font-size: 26px; }
+  .fact { width: min(200px, 28%); padding: 14px; }
+  .fact .v { font-size: 32px; }
+}
+@media (max-height: 760px) and (min-width: 1001px) {
+  .card { gap: 12px; padding: 18px 20px; }
+  .card__desc { display: none; }
+}
 
-/* ---------- responsive ---------- */
+/* ---------- one column: tee, card, facts, questions ---------- */
 @media (max-width: 1000px) {
-  .pdp { grid-template-columns: minmax(0, 1fr); padding-top: 88px; gap: 24px; }
-  .stage { height: min(56vh, 560px); }
-  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .why { grid-template-columns: minmax(0, 1fr); }
-  .recap { position: static; }
+  .shop { grid-template-columns: minmax(0, 1fr); padding-top: 72px; }
+  .shop__left, .scene { display: contents; }
+  .scene__stick { order: 1; grid-area: auto; position: relative; top: auto; height: min(64vh, 600px); padding-top: 8px; }
+  .scene__hero { display: none; }
+  .shop__right { order: 2; }
+  .specs { order: 3; grid-area: auto; min-height: 0; padding-top: 0; pointer-events: auto; padding-bottom: 8px; }
+  .faq { order: 4; padding: 48px 0 120px; }
+  .card { position: static; max-height: none; overflow: visible; margin: 8px 0 0; }
+  .specs__title { padding-top: 48px; }
+  .facts { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+  .fact { position: static; width: auto; opacity: 1; transform: none; }
+  .fact::after { display: none; }
+  .scene.is-specs .stage { transform: none; }
+  .scene.is-specs :is(.thumbs, .stage .spin) { opacity: 1; pointer-events: auto; transform: none; }
 }
-@media (max-width: 760px) {
-  .page-buy main { padding: 0 var(--gutter); }
-  .pdp { padding-top: 72px; }
-  .stage { height: 50vh; }
-  .pdp__panel { padding: 22px 18px; border-radius: 20px; }
-  .why { grid-template-columns: minmax(0, 1fr); padding-bottom: 110px; }
-  .recap { position: static; }
-  .facts li { min-height: 140px; padding: 16px; }
-  .facts .v { font-size: 34px; }
-  .thumb-btn { width: 56px; height: 56px; }
-  .buy-cta { font-size: 17px; padding-left: 18px; gap: 10px; }
-  .qty { height: 52px; padding: 0 2px; }
-  .qty button { width: 34px; }
-}
-
-/* the page scrolls under the header: frosted bar, as on the legal pages */
-.page-buy .header { background: color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border-bottom: 1px solid rgba(var(--ink), .08); }
-
-/* phones: logo, pill, bag and back share one row (same build as the landing header) */
 @media (max-width: 760px) {
   .page-buy .header { column-gap: 8px; }
-  .page-buy .header__right { gap: 8px; }
+  .header__left, .page-buy .header__right { gap: 8px; }
+  .page-buy #backBtn, .page-buy .header__right > .circle:first-child { display: none; }   /* logo + menu go home; EN as on the landing */
   .page-buy .header .circle { width: 36px; height: 36px; }
   .page-buy .header #themeToggle { padding-right: 4px; gap: 6px; }
   .page-buy .header #themeToggle .bead { width: 26px; height: 26px; }
+  .scene__stick { height: 54vh; }
+  .thumb-btn { width: 56px; height: 56px; }
+  .card { padding: 20px 18px; border-radius: 20px; }
+  .fact { padding: 14px; }
+  .fact .v { font-size: 30px; }
+  .buy-cta { font-size: 16px; padding-left: 18px; gap: 10px; }
+  .qty { height: 52px; padding: 0 2px; }
+  .qty button { width: 34px; }
+  .page-buy .footer__top { grid-template-columns: 1fr auto; row-gap: 20px; }
+  .footer__toggle { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
+  .footer__bottom { grid-template-columns: 1fr; gap: 12px; }
+  .page-buy .footer { gap: 32px; padding-bottom: 96px; }   /* room for the buy bar */
+  .footer__bottom p:last-child { justify-self: start; }
+  .footer__links { gap: 20px; flex-wrap: wrap; }
 }
 @media (max-width: 380px) {
   .page-buy .logo { font-size: 16px; }
