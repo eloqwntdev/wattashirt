@@ -30,8 +30,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/brand/brand.css?v=4">
-  <link rel="stylesheet" href="/buy/buy.css?v=8">
+  <link rel="stylesheet" href="/brand/brand.css?v=14">
+  <link rel="stylesheet" href="/buy/buy.css?v=19">
+  <link rel="stylesheet" href="/bag/bag.css?v=5">
 </head>
 <body class="page-buy">
   <div class="veil" id="veil" aria-hidden="true"></div>
@@ -43,33 +44,80 @@
       <span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span>
     </button>
     <div class="header__right">
-      <button class="circle lg bag-btn" id="bagBtn" aria-label="Open bag" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg><i id="bagCount">0</i></button>
-      <a class="circle lg" href="/" aria-label="Back to the site"><svg class="ic-back" viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6"/></svg></a>
+      <button class="circle lg" aria-label="Language">EN</button>
+      <button class="circle lg" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span class="burger" aria-hidden="true"><i></i><i></i></span></button>
     </div>
   </header>
 
-  <main>
-    <!-- 1 · Product -->
-    <section class="pdp" id="product">
-      <div class="pdp__media">
-        <div class="stage turnable" id="stage" data-start="0" aria-label="Drag to turn it">
-          <svg class="ring" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="500" cy="100" rx="497" ry="97" vector-effect="non-scaling-stroke"/></svg>
-          <div class="turnable__view"><img class="turnable__img" src="/assets/seq/black/turn/0000.webp" alt="The Wattashirt tee. Drag to turn it 360°." draggable="false"></div>
-          <div class="spin"><button data-spin="-1" aria-label="Rotate left"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6"/></svg></button><span>360°</span><button data-spin="1" aria-label="Rotate right"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6"/></svg></button></div>
+  <nav class="menu" id="menu" aria-hidden="true">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#tech">Technology</a></li>
+      <li><a href="/#features">Features</a></li>
+      <li><a href="/#breeze">Lightness</a></li>
+      <li><a href="/#configurator">Try it on</a></li>
+      <li><a href="/#day">A day in it</a></li>
+      <li><a href="/#reviews">Reviews</a></li>
+    </ol>
+  </nav>
+
+  <main class="shop">
+    <div class="shop__left">
+      <!-- the tee stays on screen (sticky) while the page scrolls past it: product first, then the four facts around it -->
+      <div class="scene" id="scene">
+        <div class="scene__stick">
+          <div class="stage turnable" id="stage" aria-label="Drag to turn it">
+            <div class="turnable__view"><img class="turnable__img" src="/assets/seq/black/turn/0000.webp" alt="The Wattashirt tee. Drag to turn it 360°." draggable="false"></div>
+            <div class="spin"><button data-spin="-1" aria-label="Rotate left"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6"/></svg></button><span>360°</span><button data-spin="1" aria-label="Rotate right"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6"/></svg></button></div>
+          </div>
+          <div class="thumbs" role="group" aria-label="Views">
+            <button class="thumb-btn is-on" data-view="360" aria-label="360° view"><img class="thumb-btn__spin" id="thumbSpin" alt=""><span class="thumb-btn__tag">360</span></button>
+            <button class="thumb-btn" data-view="front" aria-label="On the muse, front"><img alt="" data-av="front"></button>
+            <button class="thumb-btn" data-view="side" aria-label="On the muse, side"><img alt="" data-av="side"></button>
+            <button class="thumb-btn" data-view="back" aria-label="On the muse, back"><img alt="" data-av="back"></button>
+          </div>
         </div>
-        <div class="thumbs" role="group" aria-label="Views">
-          <button class="thumb-btn is-on" data-view="360" aria-label="360° view"><span class="thumb-btn__360">360°</span></button>
-          <button class="thumb-btn" data-view="front" aria-label="On the muse, front"><img alt="" data-av="front"></button>
-          <button class="thumb-btn" data-view="side" aria-label="On the muse, side"><img alt="" data-av="side"></button>
-          <button class="thumb-btn" data-view="back" aria-label="On the muse, back"><img alt="" data-av="back"></button>
-        </div>
+
+        <section class="scene__hero" id="product" aria-label="The tee">
+          <a class="back lg" id="backBtn" href="/"><svg class="ic-back" viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6"/></svg>Back</a>
+        </section>
+
+        <section class="specs" id="why" aria-labelledby="specsTitle">
+          <!-- the four facts as hotspots on the tee (buy.js places them; on phones they are a plain list) -->
+          <div class="ht-layer" id="hots">
+            <h2 class="specs__title" id="specsTitle"><span class="sec-title__dim">Before you buy</span><span class="specs__line"><span class="t-black">Once you go black, you never go back.</span><span class="t-white">Once you go white, it's alright.</span></span></h2>
+            <div class="ht" data-u=".19" data-v=".34" data-side="left"><span class="ht__dot"></span><svg class="ht__line" width="1" height="1" aria-hidden="true"><path/></svg>
+              <div class="ht__text"><h3><i class="ht__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16"/><path d="M5.5 12H8m3 0h2.5m3 0H19"/></svg></i>Flatlock seams</h3><p>Stitched flat inside: no ridge under a backpack strap.</p></div></div>
+            <div class="ht" data-u=".44" data-v=".8" data-side="left"><span class="ht__dot"></span><svg class="ht__line" width="1" height="1" aria-hidden="true"><path/></svg>
+              <div class="ht__text"><h3><i class="ht__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3"/><circle cx="7.8" cy="12.5" r="3"/><circle cx="16.2" cy="12.5" r="3"/><path d="M12 15.5V21m-3 0h6"/></svg></i>92% combed cotton</h3><p>With 8% elastane: soft on skin, and it springs back.</p></div></div>
+            <div class="ht" data-u=".84" data-v=".24" data-side="right"><span class="ht__dot"></span><svg class="ht__line" width="1" height="1" aria-hidden="true"><path/></svg>
+              <div class="ht__text"><h3><i class="ht__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 4C12 4 7.5 9 7 16l-2.5 4.5"/><path d="M7.4 14.5c5.2.3 9.8-3 11.4-8.6"/><path d="M10.5 11.5h4.5"/></svg></i>180 g/m²</h3><p>Dense enough to hold the drape, light enough to forget.</p></div></div>
+            <div class="ht" data-u=".66" data-v=".88" data-side="right"><span class="ht__dot"></span><svg class="ht__line" width="1" height="1" aria-hidden="true"><path/></svg>
+              <div class="ht__text"><h3><i class="ht__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16l-1.5 13a2 2 0 0 1-2 1.8h-9a2 2 0 0 1-2-1.8Z"/><path d="M6.4 11.5c1.6-1 2.8-1 4.4 0s2.8 1 4.4 0 2.4-.9 2.6 0"/></svg></i>Same, wash after wash</h3><p>Pre-shrunk and knitted tight, so the cut keeps its line.</p></div></div>
+          </div>
+        </section>
       </div>
 
-      <form class="pdp__panel glass" id="buyForm" novalidate>
-        <p class="k">Oversized tee · 92% combed cotton</p>
-        <h1 class="pdp__title">Wattashirt <em id="colorName">Black</em></h1>
-        <p class="pdp__price"><span id="price">$75</span><small>Taxes shown at checkout</small></p>
-        <p class="pdp__desc">A relaxed tee that still has shape: dropped shoulders, a longer back and a collar that stays flat.</p>
+      <section class="faq" aria-labelledby="faqTitle">
+        <p class="k" id="faqTitle">Questions</p>
+        <details open><summary>Which fit should I pick?</summary><p>Oversized has dropped shoulders and a longer back for a relaxed line. Regular sits closer to the body. Both are true to size, so order your usual size.</p></details>
+        <details><summary>When will it arrive?</summary><p>Orders ship within 2 business days. Delivery time for your country is shown at checkout, before you pay.</p></details>
+        <details><summary>What if it doesn't fit?</summary><p>Exchange it for another size or colour for free within 30 days of delivery, or return it for a refund.</p></details>
+      </section>
+    </div>
+
+    <!-- the buy card: always on screen on desktop -->
+    <aside class="shop__right">
+      <form class="card" id="buyForm" novalidate>
+        <div class="card__head">
+          <div>
+            <p class="k">Oversized tee · 92% cotton</p>
+            <h1 class="card__title">Wattashirt <em id="colorName">Black</em></h1>
+          </div>
+          <p class="card__price" id="price">$75</p>
+        </div>
+        <p class="card__desc">Dropped shoulders, a longer back and a collar that stays flat.</p>
 
         <fieldset class="opt">
           <legend><span>01</span>Colour <b id="colorVal">Black</b></legend>
@@ -84,8 +132,8 @@
           <legend><span>02</span>Fit <b id="fitVal">Oversized</b></legend>
           <div class="seg lg" id="fitSeg" data-i="1">
             <i class="seg__thumb thumb"></i>
-            <button type="button" data-fit="reg">Regular</button>
-            <button type="button" data-fit="over" class="is-on">Oversized</button>
+            <button type="button" data-fit="reg"><svg class="tee" viewBox="0 0 24 20" aria-hidden="true"><path d="M8 2Q12 5 16 2L16 4L22 9L19 12L16 10V19H8V10L5 12L2 9L8 4Z"/></svg>Regular</button>
+            <button type="button" data-fit="over" class="is-on"><svg class="tee" viewBox="0 0 24 20" aria-hidden="true"><path d="M8 2Q12 5 16 2L18 4L24 9L21 12L17 10V19H7V10L3 12L0 9L6 4Z"/></svg>Oversized</button>
           </div>
         </fieldset>
 
@@ -100,7 +148,7 @@
         </fieldset>
 
         <div class="buyrow">
-          <div class="qty lg" aria-label="Quantity">
+          <div class="qty" aria-label="Quantity">
             <button type="button" id="qtyMinus" aria-label="One less">−</button>
             <output id="qty" aria-live="polite">1</output>
             <button type="button" id="qtyPlus" aria-label="One more">+</button>
@@ -109,72 +157,43 @@
         </div>
 
         <ul class="trust">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg>Ships in 2 business days</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg>Free exchanges · 30-day returns</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 3 6 5.5 6 9.5a6 6 0 0 1-12 0C6 8.5 9 6 12 3z"/></svg>Pre-shrunk · machine wash 30°</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg>Ships in 2 days</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg>30-day exchanges</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 3 6 5.5 6 9.5a6 6 0 0 1-12 0C6 8.5 9 6 12 3z"/></svg>Pre-shrunk</li>
         </ul>
       </form>
-    </section>
-
-    <!-- 2 · Why it, in four facts + the questions people ask before they pay -->
-    <section class="why" id="why">
-      <h2 class="why__title rv"><span class="sec-title__dim">Before you buy</span><span class="why__line"><span class="t-black">Once you go black, you never go back.</span><span class="t-white">Once you go white, it's alright.</span></span></h2>
-      <ul class="facts">
-        <li class="glass rv"><p class="k">Composition</p><p class="v">92%</p><p class="note">Combed cotton, 8% elastane. Soft, and it springs back.</p></li>
-        <li class="glass rv"><p class="k">Weight</p><p class="v">180<small>g/m²</small></p><p class="note">Holds the drape, light enough to forget.</p></li>
-        <li class="glass rv"><p class="k">Seams</p><p class="v">Flat</p><p class="note">Flatlock inside: no ridge under a backpack strap.</p></li>
-        <li class="glass rv"><p class="k">Wash after wash</p><p class="v">Same</p><p class="note">Pre-shrunk, knitted tight. The cut keeps its line.</p></li>
-      </ul>
-      <div class="faq rv">
-        <p class="k faq__k">Questions</p>
-        <details open><summary>Which fit should I pick?</summary><p>Oversized has dropped shoulders and a longer back for a relaxed line. Regular sits closer to the body. Both are true to size, so order your usual size.</p></details>
-        <details><summary>When will it arrive?</summary><p>Orders ship within 2 business days. Delivery time for your country is shown at checkout, before you pay.</p></details>
-        <details><summary>What if it doesn't fit?</summary><p>Exchange it for another size or colour for free within 30 days of delivery, or return it for a refund.</p></details>
-      </div>
-      <aside class="recap glass rv" id="recap" aria-label="Your pick">
-        <p class="k">Your pick</p>
-        <div class="recap__row">
-          <img class="recap__img" id="recapImg" alt="">
-          <div class="recap__txt">
-            <p class="recap__name">Wattashirt <span data-bind="color">Black</span></p>
-            <p class="recap__opts"><span data-bind="fit">Oversized</span> · <span data-bind="size">Pick a size</span> · ×<span data-bind="qty">1</span></p>
-          </div>
-          <p class="recap__price" data-bind="total">$75</p>
-        </div>
-        <button type="button" class="cta recap__btn" id="recapBtn"><span data-bind="label">Choose size</span><span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></button>
-        <p class="note">Ships in 2 business days · free exchanges for 30 days</p>
-      </aside>
-    </section>
+    </aside>
   </main>
 
-  <!-- sticky buy bar: appears once the main button scrolls away -->
+  <footer class="footer">
+    <div class="footer__top">
+      <a class="logo" href="/">Wattashirt</a>
+      <button class="pill lg footer__toggle" id="footToggle" aria-pressed="false">
+        <span class="pill__label">I Wanna White</span>
+        <span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span>
+      </button>
+      <div class="socials">
+        <a class="lg" href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook"><img src="/assets/ic-fb.svg" alt=""></a>
+        <a class="lg" href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><img src="/assets/ic-ig.svg" alt=""></a>
+        <a class="lg" href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="/assets/ic-in.svg" alt=""></a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__links"><a href="/privacy.html">Privacy Policy</a><a href="/terms.html">Terms of Use</a><a href="https://brand.wattashirt.com/">Brand Guidelines</a></div>
+      <p>© 2026 Wattashirt. All right reserved</p>
+      <p class="footer__lang">Language: <b>EN</b></p>
+    </div>
+  </footer>
+
+  <!-- phones: sticky buy bar once the main button scrolls away -->
   <div class="buybar glass" id="bar" aria-hidden="true">
     <div class="buybar__info"><b>Wattashirt <span data-bind="color">Black</span></b><span><span data-bind="fit">Oversized</span> · <span data-bind="size">Pick a size</span></span></div>
     <button class="cta cta--sm" id="barBtn" tabindex="-1"><span data-bind="label">Buy now · $75</span></button>
   </div>
 
-  <!-- order sheet -->
-  <div class="sheet" id="sheet" aria-hidden="true">
-    <div class="sheet__scrim" data-close></div>
-    <div class="sheet__panel glass" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-      <button class="sheet__x" data-close aria-label="Close">×</button>
-      <p class="k">Your bag</p>
-      <h2 id="sheetTitle">Packed and ready to go</h2>
-      <ul class="bag" id="bagList"></ul>
-      <div class="upsell" id="upsell" hidden>
-        <span class="upsell__dot" id="upsellDot"></span>
-        <div><b id="upsellName">Add White too</b><span id="upsellOpts">Same fit and size</span></div>
-        <button type="button" class="upsell__add" id="upsellAdd">+ $75</button>
-      </div>
-      <p class="sheet__total"><span>Total</span><b id="bagTotal">$0</b></p>
-      <p class="sheet__ship">Ships within 2 business days · free exchanges for 30 days</p>
-      <a class="cta sheet__go" id="checkoutBtn" href="#"><span>Checkout · <span id="checkoutTotal">$0</span></span><span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></a>
-      <button type="button" class="sheet__more" data-close>Keep shopping</button>
-      <p class="sheet__note" id="sheetNote" hidden>Checkout opens soon. Your bag is saved on this device.</p>
-    </div>
-  </div>
-
   <p class="toast glass" id="toast" role="status" aria-live="polite"></p>
-  <script src="/buy/buy.js?v=5"></script>
+  <script src="/bag/bag.js?v=4"></script>
+  <script src="/progress.js?v=1"></script>
+  <script src="/buy/buy.js?v=10"></script>
 </body>
 </html>

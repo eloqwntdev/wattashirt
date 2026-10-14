@@ -1,10 +1,7 @@
 // Buy page (/buy). Colour is the theme, like on the landing: picking White flips the page to the light studio.
 // Options sync to the URL (?color=&fit=&size=), so a configured tee can be shared or linked from the landing.
 (() => {
-  // Where "Checkout" goes once payments are connected (Shopify / Stripe Payment Link, etc.).
-  // {items} is filled in as color-fit-size-qty, comma separated (black-over-M-1,white-over-M-1).
-  // Empty = checkout not connected yet: the bag says so.
-  const CHECKOUT_URL = '';
+  // The bag itself (items, sheet, checkout link) is shared by every page: /bag/bag.js, window.WSBag.
   const PRICE = 75;
 
   const root = document.documentElement;
@@ -53,10 +50,10 @@
     const c = state.color === 'white' ? 'w' : 'b';
     if (typeof stageRefresh === 'function') stageRefresh();
     $('#bothLabel').textContent = `Get both · ${money(PRICE * 2 * state.qty)}`;
-    $('#recapImg').src = `/assets/brand/shirt_front_${c}.webp`;
-    const pill = $('#themeToggle');
-    pill.setAttribute('aria-pressed', String(isWhite()));
-    $('.pill__label', pill).textContent = isWhite() ? 'I Wanna Black' : 'I Wanna White';
+    $$('#themeToggle, #footToggle').forEach(pill => {
+      pill.setAttribute('aria-pressed', String(isWhite()));
+      $('.pill__label', pill).textContent = isWhite() ? 'I Wanna Black' : 'I Wanna White';
+    });
     // shareable URL
     const q = new URLSearchParams({ color: state.color, fit: state.fit });
     if (state.size) q.set('size', state.size);
@@ -81,7 +78,23 @@
     }, reduce ? 0 : 150);
   }
   $$('.sw').forEach(b => b.addEventListener('click', () => setColor(b.dataset.color)));
-  $('#themeToggle').addEventListener('click', () => setColor(isWhite() ? 'black' : 'white'));
+  $$('#themeToggle, #footToggle').forEach(b => b.addEventListener('click', () => setColor(isWhite() ? 'black' : 'white')));
+
+  /* ---------- header: menu, and back goes back when the visitor came from this site ---------- */
+  const menuBtn = $('#menuBtn'), menu = $('#menu');
+  function setMenu(open) {
+    menu.classList.toggle('is-open', open); menu.setAttribute('aria-hidden', String(!open));
+    menuBtn.classList.toggle('is-open', open); menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  menuBtn.addEventListener('click', () => setMenu(!menu.classList.contains('is-open')));
+  $$('a', menu).forEach(a => a.addEventListener('click', () => setMenu(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  $('#backBtn').addEventListener('click', e => {
+    let same = false;
+    try { same = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch (err) {}
+    if (same && history.length > 1) { e.preventDefault(); history.back(); }
+  });
 
   /* ---------- fit, size, quantity ---------- */
   $$('#fitSeg button').forEach(b => b.addEventListener('click', () => { state.fit = b.dataset.fit; render(); stageRefresh(true); }));
@@ -90,109 +103,52 @@
   $('#qtyMinus').addEventListener('click', () => { state.qty = Math.max(1, state.qty - 1); render(); });
   $('#qtyPlus').addEventListener('click', () => { state.qty = Math.min(9, state.qty + 1); render(); });
 
-  /* ---------- bag: several items, e.g. one black and one white ---------- */
-  const SIZES = ['S', 'M', 'L', 'XL'];
-  const valid = it => it && ['black', 'white'].includes(it.color) && FIT[it.fit] && SIZES.includes(it.size) && it.qty >= 1 && it.qty <= 9;
-  let bag = [];
-  try { bag = (JSON.parse(localStorage.getItem('ws-bag')) || []).filter(valid); } catch (e) {}
-  const sameItem = (a, b) => a.color === b.color && a.fit === b.fit && a.size === b.size;
-  function add(color, qty = state.qty) {
-    const item = { color, fit: state.fit, size: state.size, qty };
-    const hit = bag.find(x => sameItem(x, item));
-    if (hit) hit.qty = Math.min(9, hit.qty + qty); else bag.push(item);
-    lastAdded = item;
-    renderBag();
-  }
-  let lastAdded = null;
-  const shirtImg = color => `/assets/brand/shirt_front_${color === 'white' ? 'w' : 'b'}.webp`;
-  function renderBag() {
-    try { localStorage.setItem('ws-bag', JSON.stringify(bag)); } catch (e) {}
-    const total = bag.reduce((n, x) => n + x.qty * PRICE, 0), count = bag.reduce((n, x) => n + x.qty, 0);
-    $('#bagList').innerHTML = bag.map((x, i) => `
-      <li class="bag__item">
-        <img src="${shirtImg(x.color)}" alt="">
-        <div class="bag__txt"><b>Wattashirt ${cap(x.color)}</b><span>${FIT[x.fit]} · Size ${x.size}</span>
-          <span class="bag__qty"><button type="button" data-i="${i}" data-d="-1" aria-label="One less">−</button><output>${x.qty}</output><button type="button" data-i="${i}" data-d="1" aria-label="One more">+</button></span></div>
-        <div class="bag__end"><b>${money(x.qty * PRICE)}</b><button type="button" class="bag__rm" data-rm="${i}">Remove</button></div>
-      </li>`).join('') || '<li class="bag__empty">Your bag is empty.</li>';
-    $('#bagTotal').textContent = money(total);
-    $('#checkoutTotal').textContent = money(total);
-    $('#checkoutBtn').classList.toggle('is-off', !bag.length);
-    const bb = $('#bagBtn');
-    bb.hidden = !count; $('#bagCount').textContent = count;
-    bb.setAttribute('aria-label', `Open bag, ${count} item${count === 1 ? '' : 's'}`);
-    // upsell: the other colour, same fit and size, if it isn't in the bag yet
-    const ref = lastAdded || bag[bag.length - 1];
-    const other = ref && { color: ref.color === 'black' ? 'white' : 'black', fit: ref.fit, size: ref.size };
-    const show = other && !bag.some(x => x.color === other.color);
-    const up = $('#upsell'); up.hidden = !show;
-    if (show) {
-      up.dataset.color = other.color; up.dataset.fit = other.fit; up.dataset.size = other.size;
-      $('#upsellName').textContent = `Add ${cap(other.color)} too`;
-      $('#upsellOpts').textContent = `${FIT[other.fit]} · Size ${other.size}. One for each mode.`;
-      $('#upsellDot').style.background = other.color === 'white' ? '#f4f4f4' : '#000';
-      $('#upsellAdd').textContent = `+ ${money(PRICE)}`;
-    }
-  }
-  $('#bagList').addEventListener('click', e => {
-    const q = e.target.closest('[data-d]'), rm = e.target.closest('[data-rm]');
-    if (q) { const it = bag[+q.dataset.i]; it.qty = Math.max(0, Math.min(9, it.qty + +q.dataset.d)); if (!it.qty) bag.splice(+q.dataset.i, 1); renderBag(); }
-    if (rm) { bag.splice(+rm.dataset.rm, 1); renderBag(); }
-  });
-  $('#upsellAdd').addEventListener('click', () => {
-    const up = $('#upsell');
-    const item = { color: up.dataset.color, fit: up.dataset.fit, size: up.dataset.size, qty: 1 };
-    const hit = bag.find(x => sameItem(x, item));
-    if (hit) hit.qty = Math.min(9, hit.qty + 1); else bag.push(item);
-    lastAdded = item; renderBag(); say(`${cap(item.color)} added`);
-  });
-
   /* ---------- buy: size first, then into the bag ---------- */
   function needSize() {
     sizeOpt.classList.remove('is-missing'); void sizeOpt.offsetWidth; sizeOpt.classList.add('is-missing');
     sizeOpt.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
     say('Pick your size first');
   }
-  function buy() { if (!state.size) { needSize(); return; } add(state.color); openSheet(); }
+  const bag = window.WSBag;
+  function buy() {
+    if (!state.size) { needSize(); return; }
+    bag.add({ color: state.color, fit: state.fit, size: state.size, qty: state.qty });
+    bag.open();
+  }
   $('#buyForm').addEventListener('submit', e => { e.preventDefault(); buy(); });
   $('#barBtn').addEventListener('click', buy);
-  $('#recapBtn').addEventListener('click', buy);
   $('#bothBtn').addEventListener('click', () => {
     if (!state.size) { needSize(); return; }
-    add('black'); add('white'); lastAdded = null; renderBag(); openSheet();
+    bag.add({ color: 'black', fit: state.fit, size: state.size, qty: state.qty });
+    bag.add({ color: 'white', fit: state.fit, size: state.size, qty: state.qty });
+    bag.open();
   });
-  $('#bagBtn').addEventListener('click', openSheet);
 
-  const sheet = $('#sheet'); let lastFocus = null;
-  function openSheet() {
-    lastFocus = document.activeElement;
-    $('#sheetNote').hidden = true;
-    sheet.classList.add('is-open'); sheet.setAttribute('aria-hidden', 'false');
-    setTimeout(() => $('#checkoutBtn').focus(), 300);
-  }
-  function closeSheet() { sheet.classList.remove('is-open'); sheet.setAttribute('aria-hidden', 'true'); if (lastFocus) lastFocus.focus(); }
-  $$('[data-close]', sheet).forEach(el => el.addEventListener('click', closeSheet));
-  addEventListener('keydown', e => { if (e.key === 'Escape' && sheet.classList.contains('is-open')) closeSheet(); });
-  const go = $('#checkoutBtn');
-  if (!CHECKOUT_URL) { go.removeAttribute('href'); go.setAttribute('role', 'button'); go.tabIndex = 0; }
-  go.addEventListener('click', e => {
-    if (!bag.length) { e.preventDefault(); closeSheet(); return; }
-    if (!CHECKOUT_URL) { e.preventDefault(); $('#sheetNote').hidden = false; return; }
-    go.href = CHECKOUT_URL.replace('{items}', encodeURIComponent(bag.map(x => `${x.color}-${x.fit}-${x.size}-${x.qty}`).join(',')));
-  });
-  renderBag();
-
-  /* ---------- sticky bar: only while neither the main button nor the recap card is on screen ---------- */
+  /* ---------- sticky bar (phones): once the main button has scrolled away, until the footer ---------- */
   const bar = $('#bar');
-  let mainOut = false, recapIn = false;
+  let mainOut = false, footIn = false;
   function syncBar() {
-    const on = mainOut && !recapIn;
+    const on = mainOut && !footIn;
     bar.classList.toggle('is-on', on);
     bar.setAttribute('aria-hidden', String(!on));
     $('#barBtn').tabIndex = on ? 0 : -1;
   }
   new IntersectionObserver(([en]) => { mainOut = !en.isIntersecting && en.boundingClientRect.top < 0; syncBar(); }).observe($('#buyBtn'));
-  new IntersectionObserver(([en]) => { recapIn = en.isIntersecting; syncBar(); }, { threshold: .3 }).observe($('#recap'));
+  new IntersectionObserver(([en]) => { footIn = en.isIntersecting; syncBar(); }).observe($('.footer'));
+
+  /* ---------- the card's top on the tee's top: the frame fills the view's height, the collar sits 10% down ---------- */
+  const wide = matchMedia('(min-width: 1001px)');
+  function alignCard() {
+    if (!wide.matches) { document.documentElement.style.removeProperty('--card-top'); return; }
+    const view = $('#stage .turnable__view');
+    const top = 88 + 16 + view.offsetTop + view.clientHeight * 0.1;
+    document.documentElement.style.setProperty('--card-top', `${Math.round(Math.max(104, top))}px`);
+  }
+  alignCard(); addEventListener('resize', alignCard);
+
+  /* ---------- specs in view: the four facts come in around the sticky tee ---------- */
+  const scene = $('#scene');
+  new IntersectionObserver(([en]) => scene.classList.toggle('is-specs', en.intersectionRatio >= .35), { threshold: [0, .35, .7] }).observe($('#why'));
 
   /* ---------- the stage: one draggable view, two sequences ----------
      'tee'  = the bare tee, a full 360° (seq/{black|white}/turn, 240 frames; there is one cut per colour)
@@ -230,7 +186,8 @@
     return null;
   }
   const frameOf = a => view === 'tee' ? teeFrame(a) : museFrame(a);
-  const st = { angle: 0, target: 0, vel: 0, drag: false, lastX: 0, touched: false, shown: '' };
+  const st = { angle: 0, target: 0, vel: 0, drag: false, lastX: 0, touched: false, lastT: 0, shown: '' };
+  const touch = () => { st.touched = true; st.lastT = performance.now(); };
   function paintNow() {   // first frame of a new sequence: show it straight away, never the other colour or fit
     const k = key(); load(k);
     img.src = nearest(k, frameOf(st.angle)) || url(k, frameOf(st.angle));
@@ -246,39 +203,74 @@
     $$('.thumb-btn').forEach(x => x.classList.toggle('is-on', x.dataset.view === on));
   }
   $$('.thumb-btn').forEach(b => b.addEventListener('click', () => {
-    st.touched = true;
+    touch();
     if (b.dataset.view === '360') setView('tee', 0);
     else setView('muse', VIEW_ANGLE[b.dataset.view]);
   }));
   stage.addEventListener('pointerdown', e => {
     if (e.target.closest('button')) return;
-    st.drag = true; st.touched = true; st.lastX = e.clientX; st.vel = 0;
+    st.drag = true; touch(); st.lastX = e.clientX; st.vel = 0;
     stage.classList.add('is-drag'); stage.setPointerCapture(e.pointerId);
   });
   stage.addEventListener('pointermove', e => {
     if (!st.drag) return;
-    const dx = e.clientX - st.lastX; st.lastX = e.clientX;
+    const dx = e.clientX - st.lastX; st.lastX = e.clientX; st.lastT = performance.now();
     const w = stage.clientWidth * 0.9; st.target -= dx / w; st.vel = -dx / w;
   });
   const end = () => { st.drag = false; stage.classList.remove('is-drag'); if (view === 'muse') setView('muse'); };
   stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
-  $$('[data-spin]', stage).forEach(b => b.addEventListener('click', () => { st.touched = true; st.target += 0.125 * +b.dataset.spin; st.vel = 0; if (view === 'muse') setView('muse'); }));
-  const turn = { reset: paintNow };   // colour change
+  $$('[data-spin]', stage).forEach(b => b.addEventListener('click', () => { touch(); st.target += 0.125 * +b.dataset.spin; st.vel = 0; if (view === 'muse') setView('muse'); }));
+  const turn = { reset: () => { paintNow(); load(`tee_${state.color}`); } };   // colour change
   function stageRefresh(fitChanged) {  // called by render(): thumbnails follow colour + fit
     $$('[data-av]').forEach(im => { im.src = `/assets/seq/av/${state.color === 'white' ? 'w' : 'b'}_${state.fit}_turn/${pad4(museFrame(VIEW_ANGLE[im.dataset.av]))}.webp?v=17`; });
     if (fitChanged) setView('muse', view === 'muse' ? undefined : 0);
   }
+  /* ---------- the four facts as hotspots on the tee (desktop); on phones the same markup is a list ---------- */
+  const hots = $('#hots'), stick = $('.scene__stick'), why = $('#why');
+  // where the tee sits inside a turn frame (fractions of the frame), measured on frame 0 of each cut
+  const TEE_BOX = { black: [.168, .101, .83, .895], white: [.30, .102, .682, .90] };
+  const hotEls = $$('.ht', hots).map(el => ({ el, u: +el.dataset.u, v: +el.dataset.v, right: el.dataset.side === 'right', path: $('.ht__line path', el), text: $('.ht__text', el) }));
+  function placeHots() { const to = wide.matches ? stick : why; if (hots.parentElement !== to) to.appendChild(hots); }
+  placeHots(); wide.addEventListener('change', placeHots);
+  function layoutHots() {
+    const sr = stick.getBoundingClientRect(), ir = img.getBoundingClientRect();
+    const [x0, y0, x1, y1] = TEE_BOX[state.color], W = stick.clientWidth, tw = 260;
+    hotEls.forEach(h => {
+      const x = ir.left - sr.left + ir.width * (x0 + h.u * (x1 - x0));
+      const y = ir.top - sr.top + ir.height * (y0 + h.v * (y1 - y0));
+      h.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      const tx = h.right ? W - tw : 0, k = h.right ? 1 : -1;
+      h.path.setAttribute('d', `M0 0 L${30 * k} -35.6 Q${33.8 * k} -42 ${45 * k} -42 H${((h.right ? tx + tw : tx) - x).toFixed(1)}`);
+      h.text.style.left = `${tx - x}px`; h.text.style.top = '-90px';
+    });
+  }
+
   const damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt));
-  let tLast = 0;
+  let tLast = 0, thumbT = 0, thumbF = 0;
+  const thumbImg = $('#thumbSpin');
   (function tick(t) {
     const dt = tLast ? Math.min(.05, (t - tLast) / 1000) : 0; tLast = t;
-    if (!st.drag) { st.target += st.vel; st.vel *= 0.92; if (!st.touched && !reduce && view === 'tee') st.target += dt * 0.03; }
+    // specs in view (desktop): the tee comes round to face front and holds there, so the dots sit on it
+    const hold = wide.matches && scene.classList.contains('is-specs');
+    if (hold && view !== 'tee') setView('tee');
+    if (!st.drag) {
+      st.target += st.vel; st.vel *= 0.92;
+      if (hold) st.target = Math.round(st.target);
+      else if (!reduce && view === 'tee' && (!st.touched || t - st.lastT > 3500)) st.target += dt * 0.045;
+    }
+    if (hold) layoutHots();
+    hots.classList.toggle('is-on', hold && !st.drag && Math.abs(st.angle - Math.round(st.angle)) < 0.006);
     st.angle = damp(st.angle, st.target, 7, dt);
+    if (t - thumbT > 70) {   // the 360 thumbnail: a small tee that keeps turning
+      thumbT = t; thumbF = (thumbF + 2) % TURN_N;
+      const s = nearest(`tee_${state.color}`, thumbF);
+      if (s && thumbImg.src !== s) thumbImg.src = s;
+    }
     const src = nearest(key(), frameOf(st.angle));
     if (src && src !== st.shown) { img.src = src; st.shown = src; }
     requestAnimationFrame(tick);
   })(0);
-  load(key());
+  load(key()); load(`tee_${state.color}`);
   // warm the muse clips for both fits of this colour, so switching fit is instant
   setTimeout(() => ['over', 'reg'].forEach(f => load(`av_${state.color === 'white' ? 'w' : 'b'}_${f}`)), 1200);
 

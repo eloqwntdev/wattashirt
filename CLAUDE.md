@@ -45,7 +45,7 @@ This is a concept. Several things look real but are invented:
   - `intro` and `intro_w` (120 frames, unboxing preloader, opaque).
   - `av/{b|w}_{over|reg}_{turn|mood}` (61 frames each, 1600×900, configurator avatar).
 - **`ASSET_V`** (main.js, currently 17) is appended as `?v=` to every frame URL. Bump it after you re-cut any frames.
-- **Cache-busting** on css/js is manual via `?v=` in the HTML: style.css?v=43, main.js?v=52, pages.css?v=28, pages.js?v=9. Bump the number when you edit the file.
+- **Cache-busting** on css/js is manual via `?v=` in the HTML: style.css?v=47, main.js?v=52, pages.css?v=31, pages.js?v=9, bag.css?v=5, bag.js?v=4. Bump the number when you edit the file.
 - **Preloader:** a counter runs while the intro frames load, then the box opens on the stage canvas. Arriving with a hash (`index.html#reviews`) skips the intro and jumps to that section (`arrivalHash` / `anchorTarget()`).
 - **Loupe** (magnifier) only in About. Hotspot labels are laid out in columns outside the shirt (`HS_HALF`/`HS_GAP`). Video cards are linked to the shirt by leader lines (`CARD_LINKS`).
 - **Configurator:** colour / fit / view / mood drive the avatar sequences. Mood shows full height and never zooms.
@@ -76,9 +76,16 @@ This is a concept. Several things look real but are invented:
 - `buy/` is the product page every buy button on the landing opens (`data-buy` links; an inline script after main.js adds `?color=` from the theme and, for the configurator's "Get it", `&fit=`).
   - Colour = theme, like the landing: picking White flips the page. Options sync to the URL (`?color=&fit=&size=`).
   - Two sections: product and "before you buy". The stage plays the bare tee 360° (`seq/*/turn`, one cut per colour) or the muse in the chosen colour + fit (`seq/av/*_turn`, dragged front → back → front); picking a fit switches to the muse, since only his clips differ by fit. Section 2: tagline, four facts, FAQ beside a live "Your pick" card with the one buy button. The sticky bar shows only while neither the main button nor that card is on screen.
-  - **Bag:** Buy needs a size, then adds the pick to a bag (`localStorage['ws-bag']`) and opens it. The bag holds several items (qty, remove), offers the other colour in the same fit and size as a one-tap add, and the header shows a bag button with the count. "Get both" next to the colour swatches adds one black and one white at once.
-  - **`CHECKOUT_URL` in `buy/buy.js` is empty**: until payments are connected the bag says checkout opens soon. Set it to the checkout link; `{items}` is filled in as `color-fit-size-qty`, comma separated.
+  - Layout (desktop): the buy card is sticky on the right, its top on the tee's collar (`--card-top`, set in buy.js: the frame fills the view's height and the collar sits 10% down). The tee is sticky on the left (`.scene__stick`), keeps turning on its own (resumes 3.5 s after a drag), and in `#why` comes round to face front and holds while the four facts appear on it as the landing's hotspots (glass orb, leader line, icon + title + note; `#hots`, placed per frame by `layoutHots()` from `TEE_BOX`, the tee's box inside each turn cut). On phones buy.js moves `#hots` into `#why` and it is a plain list. Back sits under the header so the logo stays where it is on every page. Questions, then the landing footer.
+  - Buy needs a size, then adds the pick to the bag (`window.WSBag.add`) and opens it. "Get both" next to the colour swatches adds one black and one white at once.
   - Uses `brand/brand.css` for tokens, glass, header and menu, plus `buy/buy.css`.
+- **Bag (`bag/bag.js` + `bag/bag.css`) is shared by every page**: landing, /buy, 404, privacy, terms. Each page loads both files; bag.js inserts the bag button into `.header .header__right` (before `#menuBtn`, or before the back button on /buy) and appends the sheet to `<body>`.
+  - Items live in `localStorage['ws-bag']` (`[{color, fit, size, qty}]`), so the bag follows the visitor across pages and tabs (`storage` event). API: `window.WSBag.add(item)`, `.open()`, `.close()`, `.items()`; a `ws-bag` event fires on every change.
+  - The rail at the top of the sheet: every line of the bag hangs on a bar (`assets/bag/tee_{b|w}.webp`, clean cut-outs; the brand shirt_front_w carries the light studio floor). New items drop on and swing; a tee can be dragged along the bar to reorder the bag (it leans with the drag, the others swing aside). An empty bag is one bare swinging hanger.
+  - The sheet: items (qty, remove), the other colour in the same fit and size as a one-tap add, total, checkout. Empty bag: "Shop the tee" to /buy instead of checkout. The page under the sheet is locked (`html.wsb-lock`), and the sheet has `data-lenis-prevent` for the landing.
+  - bag.css carries its own `--wsb-*` tokens (the three stylesheets don't share one variable set); the button takes its glass from the page's `.circle`.
+  - **`CHECKOUT_URL` in `bag/bag.js` is empty**: until payments are connected the bag says checkout opens soon. Set it to the checkout link; `{items}` is filled in as `color-fit-size-qty`, comma separated.
+  - Phones: header circles are 36 px and the theme pill never wraps; under 380 px the pill drops its icon so logo, pill, bag and menu fit one row.
 - `brand/` is the interactive brand guide. `vercel.json` serves it at `brand.wattashirt.com` (a `routes` rule, since rewrites can't shadow the root `index.html`) and redirects `wattashirt.com/brand` there.
 
 ## 404 page ("Lost in the wash")

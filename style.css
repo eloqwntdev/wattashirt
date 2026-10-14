@@ -147,10 +147,13 @@ img { display: block; }
   opacity: 0; visibility: hidden; transition: opacity .5s var(--ease), visibility .5s;
 }
 .menu.is-open { opacity: 1; visibility: visible; }
+.menu { box-sizing: border-box; padding: 88px 0 32px; }   /* centre the items in the room under the header */
+@media (max-width: 760px) { .menu { padding-top: 72px; } }
+
 .menu ol { list-style: none; text-align: center; counter-reset: m; }
 .menu li { counter-increment: m; overflow: hidden; }
 .menu a {
-  display: inline-block; font-size: clamp(40px, 7vw, 96px); font-weight: 500; text-transform: uppercase; line-height: 1.1;
+  display: inline-block; font-size: clamp(28px, min(4.4vw, 6.2vh), 62px); font-weight: 500; text-transform: uppercase; line-height: 1.1; padding: .14em 0;   /* room between the items, the same on every page */
   transform: translateY(100%); transition: transform .7s var(--ease), color .3s;
 }
 .menu a::before { content: "0" counter(m); font-size: 14px; vertical-align: top; margin-right: 12px; color: var(--muted); }
@@ -209,6 +212,7 @@ main a, main button, .drag-zone { pointer-events: auto; }
 .hotspots { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
 .hs { position: absolute; left: 0; top: 0; opacity: 0; transition: opacity .5s var(--ease); will-change: transform; }
 .hs.is-on { opacity: 1; }
+.hs:not(.is-on) .hs__dot { pointer-events: none; } /* a faded-out dot sat over the hero and finale CTAs and ate their clicks */
 .hs__dot {
   position: absolute; width: 100px; height: 100px; left: -50px; top: -50px; border-radius: 50%;
   background: rgba(var(--ink), .2); border: 1px solid rgba(var(--ink), .2);
@@ -359,6 +363,10 @@ html.is-white .photo--seam { background-image: url(assets/seam_white.webp); back
   .pill__icon { width: 26px; height: 26px; }
   .header__right { gap: 8px; }
   .header__right .circle:first-child { display: none; }
+  /* logo, pill, bag and menu share one row: smaller circles, the pill never wraps */
+  .header { gap: 8px; }
+  .header__right .circle { width: 36px; height: 36px; font-size: 14px; }
+  .pill { white-space: nowrap; }
   .hero__copy { top: 22%; gap: 28px; width: calc(100% - 32px); }
   .hero__tag { margin-top: -24px; font-size: 15px; }
   .cta { font-size: 16px; height: 50px; }
@@ -917,3 +925,9 @@ html:not(.is-white) :is(.circle, .pill, .socials a):hover { box-shadow: inset 1.
 .rev__title .sec-title__main { max-width: none; }
 /* the loupe hint sits under the about copy on narrow screens (phones hide it anyway: no hover) */
 @media (max-width: 760px) { .loupe-hint { display: none; } }
+@media (max-width: 380px) {
+  /* narrow phones: the bag button takes the room the pill icon had */
+  .logo { font-size: 16px; }
+  .pill { padding-right: 14px; }
+  .pill__icon { display: none; }
+}

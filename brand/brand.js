@@ -109,14 +109,40 @@
   });
 
   /* ---------- product: hotspots, weight counter, loupe ---------- */
+  // the note opens beside its own dot: on the free side of the tee, below the dot when there's no room
   const tip = $('#hsTip');
-  $$('.hs').forEach(h => h.addEventListener('click', () => {
-    const on = !h.classList.contains('is-on');
-    $$('.hs').forEach(x => x.classList.remove('is-on'));
-    h.classList.toggle('is-on', on);
-    tip.textContent = on ? h.dataset.tip : '';
-    tip.classList.toggle('is-on', on);
-  }));
+  let tipFor = null;
+  function placeTip(h) {
+    const sr = h.parentElement.getBoundingClientRect(), hr = h.getBoundingClientRect();
+    const cx = hr.left + hr.width / 2 - sr.left, cy = hr.top + hr.height / 2 - sr.top, gap = hr.width / 2 + 14;
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    // stay on the tee: beside the dot toward the middle if it fits, else the other side, else under (over, at the hem)
+    const minX = Math.max(0, 16 - sr.left), maxX = Math.min(sr.width, document.documentElement.clientWidth - 16 - sr.left) - tw;
+    const fits = x => x >= minX && x <= maxX;
+    const R = cx + gap, L = cx - gap - tw;
+    let side, x, y = cy - th / 2;
+    if (cx < sr.width / 2 && fits(R)) { side = 'right'; x = R; }
+    else if (cx >= sr.width / 2 && fits(L)) { side = 'left'; x = L; }
+    else if (fits(R)) { side = 'right'; x = R; }
+    else if (fits(L)) { side = 'left'; x = L; }
+    else {
+      x = Math.min(Math.max(cx - tw / 2, minX), Math.max(minX, maxX));
+      if (cy + gap + th <= sr.height) { side = 'below'; y = cy + gap; } else { side = 'above'; y = cy - gap - th; }
+    }
+    tip.style.left = `${Math.round(x)}px`; tip.style.top = `${Math.round(y)}px`; tip.dataset.side = side;
+  }
+  function showTip(h) {
+    $$('.hs').forEach(x => x.classList.toggle('is-on', x === h));
+    tipFor = h;
+    if (!h) { tip.classList.remove('is-on'); return; }
+    tip.innerHTML = `<b>${h.getAttribute('aria-label')}</b>${h.dataset.tip}`;
+    placeTip(h);
+    tip.classList.remove('is-on'); void tip.offsetWidth; tip.classList.add('is-on');
+  }
+  $$('.hs').forEach(h => h.addEventListener('click', e => { e.stopPropagation(); showTip(tipFor === h ? null : h); }));
+  document.addEventListener('click', e => { if (tipFor && !e.target.closest('.hs, .hs-tip')) showTip(null); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && tipFor) showTip(null); });
+  addEventListener('resize', () => { if (tipFor) placeTip(tipFor); });
   const gsm = $('#gsm');
   new IntersectionObserver((en, obs) => {
     if (!en[0].isIntersecting) return;
@@ -193,10 +219,11 @@
     seg.dataset.i = i; look.fit = b.dataset.v; paintLook();
   }));
   seg.dataset.i = 1;
-  $$('.sw').forEach(b => b.addEventListener('click', () => {
-    $$('.sw').forEach(x => x.classList.toggle('is-on', x === b));
-    look.color = b.dataset.v; paintLook();
-  }));
+  const pickColor = v => { $$('.sw').forEach(x => x.classList.toggle('is-on', x.dataset.v === v)); look.color = v; paintLook(); };
+  $$('.sw').forEach(b => b.addEventListener('click', () => pickColor(b.dataset.v)));
+  // the demo starts on the mode on screen: black in Black, white in White
+  pickColor(isWhite() ? 'White' : 'Black');
+  document.addEventListener('themechange', () => pickColor(isWhite() ? 'White' : 'Black'));
 
   /* ---------- 360° turntables: the landing's turn sequence, same angle map, drag, inertia and ‹ › steps ---------- */
   // loop clips cover unequal angles: F→S 90°, S→Q 45°, Q→B 45°, B→Q 45°, Q→S 45°, S→F 90° (main.js)
