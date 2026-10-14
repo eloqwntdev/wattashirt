@@ -87,10 +87,10 @@ html.is-white .ht__dot::after { background: radial-gradient(circle at 38% 32%, #
 
 /* ---------- the buy card: light glass, always on screen ---------- */
 .card { position: sticky; top: var(--card-top, 104px); margin: calc(var(--card-top, 104px) - 88px) 0 48px; max-height: calc(100vh - var(--card-top, 104px) - 24px); overflow-y: auto; scrollbar-width: none;
-  border: 0; border-radius: 28px; padding: 32px 30px 28px; display: flex; flex-direction: column; gap: 26px;
-  background: linear-gradient(160deg, rgba(var(--ink), .06), rgba(var(--ink), .012) 55%, rgba(var(--ink), .03));
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset 0 0 0 1px rgba(var(--ink), .07);
-  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+  border: 0; border-radius: 24px; padding: 32px 30px 28px; display: flex; flex-direction: column; gap: 26px;
+  /* the brand guide's mode cards: a solid panel with a lit top-left rim and a soft drop */
+  background: #000; box-shadow: inset 1.2px 1.2px 0 rgba(255,255,255,.4), inset -1px -1px 0 rgba(255,255,255,.08), 0 0 0 1px rgba(255,255,255,.06), 0 24px 50px -24px rgba(0,0,0,.9); }
+html.is-white .card { background: #eaeaea; box-shadow: inset 1.2px 1.2px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.1), 0 0 0 1px rgba(0,0,0,.06), 0 24px 50px -24px rgba(0,0,0,.35); }
 .card::-webkit-scrollbar { display: none; }
 .card__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
 .card__head .k { margin-bottom: 10px; }
@@ -219,3 +219,13 @@ html.is-white .socials img { filter: invert(1); }
   .page-buy .header #themeToggle { padding-right: 14px; }
   .page-buy .header #themeToggle .bead { display: none; }
 }
+
+/* ---------- light theme: the landing configurator's rules, no dark pieces on the light page ---------- */
+html.is-white .card .seg__thumb { background: var(--cta-bg); box-shadow: var(--cta-edge); }   /* the selected fit: the bright white bead */
+html.is-white .card .seg button.is-on { color: #0c0c0c; }
+html.is-white .sizes button[aria-checked="true"] { background: var(--cta-bg); box-shadow: var(--cta-edge); color: #0c0c0c; }
+html.is-white .card .sw { background: var(--lg-fill); box-shadow: var(--lg-edge), var(--lg-drop); }
+html.is-white .card .sw.is-on { background: var(--lg-fill); box-shadow: 0 0 0 1.5px #121214, 0 10px 24px -10px rgba(0,0,0,.35); }   /* a crisp dark ring */
+html.is-white .sizes button, html.is-white :is(.qty, .both) { box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+/* hotspot icons: glass beads as on the landing (dark: lit rim on smoked glass, light: white glass) */
+.ht__ic { background: var(--lg-fill); box-shadow: var(--lg-edge), var(--lg-drop); backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur); }
