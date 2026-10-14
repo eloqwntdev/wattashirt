@@ -225,12 +225,41 @@
     $$('[data-av]').forEach(im => { im.src = `/assets/seq/av/${state.color === 'white' ? 'w' : 'b'}_${state.fit}_turn/${pad4(museFrame(VIEW_ANGLE[im.dataset.av]))}.webp?v=17`; });
     if (fitChanged) setView('muse', view === 'muse' ? undefined : 0);
   }
+  /* ---------- the four facts as hotspots on the tee (desktop); on phones the same markup is a list ---------- */
+  const hots = $('#hots'), stick = $('.scene__stick'), why = $('#why');
+  // where the tee sits inside a turn frame (fractions of the frame), measured on frame 0 of each cut
+  const TEE_BOX = { black: [.168, .101, .83, .895], white: [.30, .102, .682, .90] };
+  const hotEls = $$('.ht', hots).map(el => ({ el, u: +el.dataset.u, v: +el.dataset.v, right: el.dataset.side === 'right', path: $('.ht__line path', el), text: $('.ht__text', el) }));
+  function placeHots() { const to = wide.matches ? stick : why; if (hots.parentElement !== to) to.appendChild(hots); }
+  placeHots(); wide.addEventListener('change', placeHots);
+  function layoutHots() {
+    const sr = stick.getBoundingClientRect(), ir = img.getBoundingClientRect();
+    const [x0, y0, x1, y1] = TEE_BOX[state.color], W = stick.clientWidth, tw = 240;
+    hotEls.forEach(h => {
+      const x = ir.left - sr.left + ir.width * (x0 + h.u * (x1 - x0));
+      const y = ir.top - sr.top + ir.height * (y0 + h.v * (y1 - y0));
+      h.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      const tx = h.right ? W - tw : 0, k = h.right ? 1 : -1;
+      h.path.setAttribute('d', `M0 0 L${28 * k} -31.6 Q${31.8 * k} -38 ${43 * k} -38 H${((h.right ? tx + tw : tx) - x).toFixed(1)}`);
+      h.text.style.left = `${tx - x}px`; h.text.style.top = '-84px';
+    });
+  }
+
   const damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt));
   let tLast = 0, thumbT = 0, thumbF = 0;
   const thumbImg = $('#thumbSpin');
   (function tick(t) {
     const dt = tLast ? Math.min(.05, (t - tLast) / 1000) : 0; tLast = t;
-    if (!st.drag) { st.target += st.vel; st.vel *= 0.92; if (!reduce && view === 'tee' && (!st.touched || t - st.lastT > 3500)) st.target += dt * 0.045; }
+    // specs in view (desktop): the tee comes round to face front and holds there, so the dots sit on it
+    const hold = wide.matches && scene.classList.contains('is-specs');
+    if (hold && view !== 'tee') setView('tee');
+    if (!st.drag) {
+      st.target += st.vel; st.vel *= 0.92;
+      if (hold) st.target = Math.round(st.target);
+      else if (!reduce && view === 'tee' && (!st.touched || t - st.lastT > 3500)) st.target += dt * 0.045;
+    }
+    if (hold) layoutHots();
+    hots.classList.toggle('is-on', hold && !st.drag && Math.abs(st.angle - Math.round(st.angle)) < 0.006);
     st.angle = damp(st.angle, st.target, 7, dt);
     if (t - thumbT > 70) {   // the 360 thumbnail: a small tee that keeps turning
       thumbT = t; thumbF = (thumbF + 2) % TURN_N;
