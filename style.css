@@ -147,10 +147,13 @@ img { display: block; }
   opacity: 0; visibility: hidden; transition: opacity .5s var(--ease), visibility .5s;
 }
 .menu.is-open { opacity: 1; visibility: visible; }
+.menu { box-sizing: border-box; padding: 88px 0 32px; }   /* centre the items in the room under the header */
+@media (max-width: 760px) { .menu { padding-top: 72px; } }
+
 .menu ol { list-style: none; text-align: center; counter-reset: m; }
 .menu li { counter-increment: m; overflow: hidden; }
 .menu a {
-  display: inline-block; font-size: clamp(28px, min(4.6vw, 7.2vh), 68px); font-weight: 500; text-transform: uppercase; line-height: 1.1;
+  display: inline-block; font-size: clamp(28px, min(4.4vw, 6.2vh), 62px); font-weight: 500; text-transform: uppercase; line-height: 1.1; padding: .14em 0;   /* room between the items, the same on every page */
   transform: translateY(100%); transition: transform .7s var(--ease), color .3s;
 }
 .menu a::before { content: "0" counter(m); font-size: 14px; vertical-align: top; margin-right: 12px; color: var(--muted); }
