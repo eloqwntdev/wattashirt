@@ -31,7 +31,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/brand/brand.css?v=4">
-  <link rel="stylesheet" href="/buy/buy.css?v=8">
+  <link rel="stylesheet" href="/buy/buy.css?v=10">
+  <link rel="stylesheet" href="/bag/bag.css?v=1">
 </head>
 <body class="page-buy">
   <div class="veil" id="veil" aria-hidden="true"></div>
@@ -43,7 +44,6 @@
       <span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span>
     </button>
     <div class="header__right">
-      <button class="circle lg bag-btn" id="bagBtn" aria-label="Open bag" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg><i id="bagCount">0</i></button>
       <a class="circle lg" href="/" aria-label="Back to the site"><svg class="ic-back" viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6"/></svg></a>
     </div>
   </header>
@@ -153,28 +153,8 @@
     <button class="cta cta--sm" id="barBtn" tabindex="-1"><span data-bind="label">Buy now · $75</span></button>
   </div>
 
-  <!-- order sheet -->
-  <div class="sheet" id="sheet" aria-hidden="true">
-    <div class="sheet__scrim" data-close></div>
-    <div class="sheet__panel glass" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-      <button class="sheet__x" data-close aria-label="Close">×</button>
-      <p class="k">Your bag</p>
-      <h2 id="sheetTitle">Packed and ready to go</h2>
-      <ul class="bag" id="bagList"></ul>
-      <div class="upsell" id="upsell" hidden>
-        <span class="upsell__dot" id="upsellDot"></span>
-        <div><b id="upsellName">Add White too</b><span id="upsellOpts">Same fit and size</span></div>
-        <button type="button" class="upsell__add" id="upsellAdd">+ $75</button>
-      </div>
-      <p class="sheet__total"><span>Total</span><b id="bagTotal">$0</b></p>
-      <p class="sheet__ship">Ships within 2 business days · free exchanges for 30 days</p>
-      <a class="cta sheet__go" id="checkoutBtn" href="#"><span>Checkout · <span id="checkoutTotal">$0</span></span><span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span></a>
-      <button type="button" class="sheet__more" data-close>Keep shopping</button>
-      <p class="sheet__note" id="sheetNote" hidden>Checkout opens soon. Your bag is saved on this device.</p>
-    </div>
-  </div>
-
   <p class="toast glass" id="toast" role="status" aria-live="polite"></p>
-  <script src="/buy/buy.js?v=5"></script>
+  <script src="/bag/bag.js?v=1"></script>
+  <script src="/buy/buy.js?v=6"></script>
 </body>
 </html>
