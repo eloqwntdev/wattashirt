@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "routes": [
+    {
+      "src": "/(index\\.html)?",
+      "has": [{ "type": "host", "value": "brand.wattashirt.com" }],
+      "dest": "/brand/index.html"
+    }
+  ]
+}
