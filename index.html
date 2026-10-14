@@ -81,7 +81,7 @@
       <li><a href="#configurator">Try it on</a></li>
       <li><a href="#day">A day in it</a></li>
       <li><a href="#reviews">Reviews</a></li>
-      <li><a href="#buy" id="menuBuy">Get Black</a></li>
+      <li><a href="/buy" id="menuBuy" data-buy>Get Black</a></li>
     </ol>
   </nav>
 
@@ -100,7 +100,7 @@
       <div class="hero__copy">
         <h1 class="hero__title">Wattashirt</h1>
         <p class="hero__tag">Once you go black you never go back.</p>
-        <a class="cta" href="#packed">
+        <a class="cta" href="/buy" data-buy>
           <span>Get Black Now</span>
           <span class="cta__icon"><img src="assets/ic-shirt-cta.svg" alt=""></span>
         </a>
@@ -199,7 +199,7 @@
               <p class="cfg__look-k">Your look</p>
               <p class="cfg__look-v" id="cfgLook">Black · Oversized</p>
             </div>
-            <a class="cfg__cta" href="#buy"><span>$75</span>Get it</a>
+            <a class="cfg__cta" href="/buy" data-buy="cfg"><span>$75</span>Get it</a>
           </div>
         </div>
       </div>
@@ -433,7 +433,7 @@
         <div class="pack__copy">
           <p class="cfg__kicker">Wattashirt <span id="packColor">Black</span> — $75</p>
           <h2 class="pack__title">Packed and<br>ready to go</h2>
-          <a class="cta" href="#pack">
+          <a class="cta" href="/buy" data-buy>
             <span>Buy now</span>
             <span class="cta__icon"><img src="assets/ic-shirt-cta.svg" alt=""></span>
           </a>
@@ -463,5 +463,20 @@
   </footer>
 
   <script src="main.js?v=52"></script>
+  <script>
+    // buy buttons open /buy with the tee on screen: colour = theme, fit from the configurator
+    document.querySelectorAll('[data-buy]').forEach(function (a) {
+      a.addEventListener('click', function () {
+        var q = new URLSearchParams({ color: document.documentElement.classList.contains('is-white') ? 'white' : 'black' });
+        if (a.dataset.buy === 'cfg') {
+          var fit = document.querySelector('[data-val="fit"]');
+          var col = document.querySelector('[data-val="color"]');
+          if (col) q.set('color', col.textContent.trim().toLowerCase() === 'white' ? 'white' : 'black');
+          if (fit) q.set('fit', /regular/i.test(fit.textContent) ? 'reg' : 'over');
+        }
+        a.href = '/buy?' + q;
+      });
+    });
+  </script>
 </body>
 </html>
