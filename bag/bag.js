@@ -15,7 +15,7 @@
   const money = n => `$${n}`;
   const valid = it => it && ['black', 'white'].includes(it.color) && FIT[it.fit] && SIZES.includes(it.size) && it.qty >= 1 && it.qty <= 9;
   const sameItem = (a, b) => a.color === b.color && a.fit === b.fit && a.size === b.size;
-  const shirtImg = color => `/assets/brand/shirt_front_${color === 'white' ? 'w' : 'b'}.webp`;
+  const shirtImg = color => `/assets/bag/tee_${color === 'white' ? 'w' : 'b'}.webp`;   // clean cut-outs, no studio floor
   const onBuyPage = /^\/buy(\/|\/index\.html)?$/.test(location.pathname);
   const TEE = '<svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg>';
 
@@ -95,8 +95,8 @@
       </li>`).join('');
     // the rail: every line of the bag hangs there; an empty bag is one empty hanger, swinging
     hooks.innerHTML = bag.length
-      ? bag.map((x, i) => `<figure class="wsb__hang${fresh && sameItem(x, fresh) ? ' is-new' : ''}" style="--i:${i}">${HANGER}<img src="${shirtImg(x.color)}" alt="">${x.qty > 1 ? `<b>×${x.qty}</b>` : ''}</figure>`).join('')
-      : `<figure class="wsb__hang is-empty">${HANGER}</figure><p class="wsb__railNote">Nothing on the hanger yet.</p>`;
+      ? bag.map((x, i) => `<figure class="wsb__hang${fresh && sameItem(x, fresh) ? ' is-new' : ''}" style="--i:${i}"><span class="wsb__swing">${HANGER}<img src="${shirtImg(x.color)}" alt="">${x.qty > 1 ? `<b>×${x.qty}</b>` : ''}</span></figure>`).join('')
+      : `<figure class="wsb__hang is-empty"><span class="wsb__swing">${HANGER}</span></figure><p class="wsb__railNote">Nothing on the hanger yet.</p>`;
     $('.wsb__sum').textContent = money(total);
     $('.wsb__goSum').textContent = money(total);
     // empty bag: no total or checkout, one way to the product instead
@@ -184,6 +184,70 @@
     go.href = CHECKOUT_URL.replace('{items}', encodeURIComponent(bag.map(x => `${x.color}-${x.fit}-${x.size}-${x.qty}`).join(',')));
   });
   go.addEventListener('keydown', e => { if (e.key === 'Enter' && !CHECKOUT_URL) go.click(); });
+
+  /* ---------- the rail: drag a tee along the bar; it leans into the move and swaps places ---------- */
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let drag = null;
+  hooks.addEventListener('pointerdown', e => {
+    const el = e.target.closest('.wsb__hang:not(.is-empty)');
+    if (!el || bag.length < 1) return;
+    const items = [...hooks.querySelectorAll('.wsb__hang')];
+    const step = items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : el.offsetWidth + 14;
+    drag = { el, items, from: items.indexOf(el), to: items.indexOf(el), x0: e.clientX, x: e.clientX, v: 0, lean: 0, step, raf: 0, t: performance.now() };
+    el.setPointerCapture(e.pointerId);
+    el.classList.add('is-drag'); hooks.classList.add('is-dragging');
+    const loop = () => {   // the hanger lags behind the hand: lean follows speed, eases back when it stops
+      if (!drag) return;
+      drag.lean += (Math.max(-22, Math.min(22, -drag.v * 2.2)) - drag.lean) * 0.18;
+      drag.v *= 0.85;
+      drag.el.style.transform = `translateX(${drag.x - drag.x0}px) rotate(${drag.lean}deg)`;
+      drag.raf = requestAnimationFrame(loop);
+    };
+    drag.raf = requestAnimationFrame(loop);
+  });
+  hooks.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const now = performance.now(), dt = Math.max(8, now - drag.t);
+    drag.v = (e.clientX - drag.x) / dt * 16; drag.x = e.clientX; drag.t = now;
+    const n = drag.items.length, dx = drag.x - drag.x0;
+    const to = Math.max(0, Math.min(n - 1, drag.from + Math.round(dx / drag.step)));
+    if (to !== drag.to) {
+      drag.to = to;
+      // the others make room, each with a little swing
+      drag.items.forEach((it, i) => {
+        if (it === drag.el) return;
+        let shift = 0;
+        if (drag.from < to && i > drag.from && i <= to) shift = -drag.step;
+        if (drag.from > to && i < drag.from && i >= to) shift = drag.step;
+        if (it.dataset.shift !== String(shift)) {
+          it.dataset.shift = shift;
+          it.style.transform = `translateX(${shift}px)`;
+          const sw = it.querySelector('.wsb__swing');
+          if (!reduceMotion) { sw.classList.remove('is-nudge'); void sw.offsetWidth; sw.classList.add('is-nudge'); }
+        }
+      });
+    }
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    cancelAnimationFrame(drag.raf);
+    const { from, to, el } = drag;
+    hooks.classList.remove('is-dragging'); el.classList.remove('is-drag');
+    drag = null;
+    if (from !== to) {
+      const [it] = bag.splice(from, 1); bag.splice(to, 0, it);
+      lastAdded = null; fresh = null;
+      save();   // re-renders the rail in the new order
+      const moved = hooks.querySelectorAll('.wsb__swing')[to];
+      if (moved && !reduceMotion) moved.classList.add('is-settle');
+    } else {
+      el.style.transform = '';
+      const sw = el.querySelector('.wsb__swing');
+      if (!reduceMotion) { sw.classList.remove('is-settle'); void sw.offsetWidth; sw.classList.add('is-settle'); }
+    }
+  };
+  hooks.addEventListener('pointerup', endDrag);
+  hooks.addEventListener('pointercancel', endDrag);
 
   // another tab changed the bag
   addEventListener('storage', e => { if (e.key === KEY) { bag = read(); render(); } });

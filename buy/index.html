@@ -31,17 +31,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/brand/brand.css?v=5">
-  <link rel="stylesheet" href="/buy/buy.css?v=11">
-  <link rel="stylesheet" href="/bag/bag.css?v=2">
+  <link rel="stylesheet" href="/buy/buy.css?v=12">
+  <link rel="stylesheet" href="/bag/bag.css?v=3">
 </head>
 <body class="page-buy">
   <div class="veil" id="veil" aria-hidden="true"></div>
 
   <header class="header">
-    <div class="header__left">
-      <a class="circle lg" id="backBtn" href="/" aria-label="Back"><svg class="ic-back" viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6"/></svg></a>
-      <a class="logo" href="/">Wattashirt</a>
-    </div>
+    <a class="logo" href="/">Wattashirt</a>
     <button class="pill lg" id="themeToggle" aria-pressed="false">
       <span class="pill__label">I Wanna White</span>
       <span class="bead"><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M44 6Q60 17 76 6L97 13L118 35L103 51L92 43V106H28V43L17 51L2 35L23 13Z"/></svg></span>
@@ -71,7 +68,6 @@
       <div class="scene" id="scene">
         <div class="scene__stick">
           <div class="stage turnable" id="stage" aria-label="Drag to turn it">
-            <svg class="ring" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="500" cy="100" rx="497" ry="97" vector-effect="non-scaling-stroke"/></svg>
             <div class="turnable__view"><img class="turnable__img" src="/assets/seq/black/turn/0000.webp" alt="The Wattashirt tee. Drag to turn it 360°." draggable="false"></div>
             <div class="spin"><button data-spin="-1" aria-label="Rotate left"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6"/></svg></button><span>360°</span><button data-spin="1" aria-label="Rotate right"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6"/></svg></button></div>
           </div>
@@ -83,13 +79,17 @@
           </div>
         </div>
 
-        <section class="scene__hero" id="product" aria-label="The tee"></section>
+        <section class="scene__hero" id="product" aria-label="The tee">
+          <a class="back lg" id="backBtn" href="/"><svg class="ic-back" viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6"/></svg>Back</a>
+        </section>
 
         <section class="specs" id="why" aria-labelledby="specsTitle">
           <h2 class="specs__title" id="specsTitle"><span class="sec-title__dim">Before you buy</span><span class="specs__line"><span class="t-black">Once you go black, you never go back.</span><span class="t-white">Once you go white, it's alright.</span></span></h2>
           <ul class="facts">
-            <li class="fact fact--tl"><p class="k">Composition</p><p class="v">92%</p><p class="note">Combed cotton, 8% elastane. Soft, and it springs back.</p></li>
-            <li class="fact fact--bl"><p class="k">Weight</p><p class="v">180<small>g/m²</small></p><p class="note">Holds the drape, light enough to forget.</p></li>
+            <li class="fact fact--tl"><p class="k">Composition</p>
+              <ul class="mix"><li><span>Combed cotton</span><b>92%</b><i style="--w:92%"></i></li><li><span>Elastane</span><b>8%</b><i style="--w:8%"></i></li></ul>
+              <p class="note">Soft on skin, with just enough stretch to spring back.</p></li>
+            <li class="fact fact--bl"><p class="k">Weight</p><p class="v">180<small>g/m²</small></p><p class="note">Dense enough to hold the drape, light enough to forget.</p></li>
             <li class="fact fact--tr"><p class="k">Seams</p><p class="v">Flat</p><p class="note">Flatlock inside: no ridge under a backpack strap.</p></li>
             <li class="fact fact--br"><p class="k">Wash after wash</p><p class="v">Same</p><p class="note">Pre-shrunk, knitted tight. The cut keeps its line.</p></li>
           </ul>
@@ -189,7 +189,7 @@
   </div>
 
   <p class="toast glass" id="toast" role="status" aria-live="polite"></p>
-  <script src="/bag/bag.js?v=2"></script>
-  <script src="/buy/buy.js?v=7"></script>
+  <script src="/bag/bag.js?v=3"></script>
+  <script src="/buy/buy.js?v=8"></script>
 </body>
 </html>

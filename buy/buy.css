@@ -6,7 +6,6 @@
 
 /* ---------- header: back + logo on the left, EN + bag + menu on the right ---------- */
 .page-buy .header { background: color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border-bottom: 1px solid rgba(var(--ink), .08); }
-.header__left { justify-self: start; display: flex; align-items: center; gap: 16px; }
 .burger { position: relative; width: 18px; height: 12px; display: block; }
 .burger i { position: absolute; left: 0; right: 0; height: 1.5px; border-radius: 2px; background: var(--fg); transition: transform .5s var(--ease), top .5s var(--ease); }
 .burger i:first-child { top: 2.5px; } .burger i:last-child { top: 8px; }
@@ -21,17 +20,19 @@
 /* the scene: one grid cell holds the sticky tee and, on top of it, the sections that scroll past */
 .scene { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: calc(100vh - 88px) auto; }
 .scene__stick { grid-area: 1 / 1 / 3 / 2; align-self: start; position: sticky; top: 88px; height: calc(100vh - 88px); display: flex; flex-direction: column; padding: 16px 0 24px; }
-.scene__hero { grid-area: 1 / 1 / 2 / 2; pointer-events: none; }
+.scene__hero { grid-area: 1 / 1 / 2 / 2; pointer-events: none; position: relative; z-index: 2; }
+/* back: under the header, so the logo sits where it does on every other page */
+.back { position: absolute; left: 0; top: 16px; pointer-events: auto; display: inline-flex; align-items: center; gap: 10px; height: 40px; padding: 0 18px 0 16px; border-radius: 500px; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; transition: transform .5s var(--ease), box-shadow .5s; }
+.back:hover { transform: translateY(-2px); box-shadow: var(--lg-edge), inset 0 0 22px rgba(var(--ink), .08), var(--lg-drop); }
+.back:hover .ic-back { transform: translateX(-3px); }
+.back .ic-back { transition: transform .5s var(--ease); }
 .specs { grid-area: 2 / 1 / 3 / 2; position: relative; min-height: 100vh; padding-top: 88px; pointer-events: none; }   /* top 88 = under the header, like the sticky tee */
 
 /* ---------- stage ---------- */
 .stage { position: relative; flex: 1; min-height: 0; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; transition: transform .9s var(--ease); }
 .stage.is-drag { cursor: grabbing; }
 .stage .turnable__view { position: absolute; inset: 0 0 34px; overflow: hidden; z-index: 1; }
-.stage .ring { position: absolute; left: 50%; bottom: 34px; width: min(640px, 86%); height: 120px; transform: translate(-50%, 0); overflow: visible; z-index: 0; transition: opacity .4s var(--ease); }
-.stage .ring ellipse { fill: none; stroke: rgba(var(--ink), .3); stroke-width: 1; }
 .stage .spin { bottom: 34px; transform: translate(-50%, 50%); transition: opacity .4s var(--ease); }
-.stage.is-muse .ring { opacity: 0; }   /* the muse frames carry their own studio floor */
 .thumbs { display: flex; gap: 10px; justify-content: center; padding-top: 18px; transition: opacity .4s var(--ease), transform .6s var(--ease); }
 .thumb-btn { position: relative; width: 64px; height: 64px; border-radius: 14px; overflow: hidden; display: grid; place-items: center; background: var(--lg-fill); box-shadow: var(--lg-edge); transition: box-shadow .3s, transform .5s var(--ease); }
 .thumb-btn:hover { transform: translateY(-2px); }
@@ -47,23 +48,26 @@
 
 /* ---------- specs: title, then four facts around the tee ---------- */
 .specs__title { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 10px; padding-top: 32px; text-transform: uppercase; font-weight: 400; }
-.specs__line { font-size: clamp(24px, 2.4vw, 36px); line-height: 1.04; max-width: 16em; }
+.specs__line { font-size: clamp(24px, 2.4vw, 36px); line-height: 1.04; max-width: 16em; text-wrap: balance; }
 .facts { position: absolute; inset: 88px 0 0; }
-.fact { position: absolute; width: min(230px, 26%); display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 18px; pointer-events: auto;
+.fact { position: absolute; width: min(250px, 28%); min-height: 210px; display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 16px; pointer-events: auto;
   background: var(--lg-fill); box-shadow: var(--lg-edge), var(--lg-drop); backdrop-filter: var(--lg-blur); -webkit-backdrop-filter: var(--lg-blur);
   opacity: 0; transition: opacity .7s var(--ease), transform .9s var(--ease); }
-.fact--tl { left: 0; top: 30%; transform: translateX(-24px); }
-.fact--bl { left: 0; top: 60%; transform: translateX(-24px); }
-.fact--tr { right: 0; top: 30%; transform: translateX(24px); }
-.fact--br { right: 0; top: 60%; transform: translateX(24px); }
+.fact--tl { left: 0; top: 24%; transform: translateX(-24px); }
+.fact--bl { left: 0; top: 58%; transform: translateX(-24px); }
+.fact--tr { right: 0; top: 24%; transform: translateX(24px); }
+.fact--br { right: 0; top: 58%; transform: translateX(24px); }
 .fact--bl, .fact--br { transition-delay: .12s; }
 .scene.is-specs .fact { opacity: 1; transform: none; }
-.fact::after { content: ""; position: absolute; top: 34px; width: 48px; height: 1px; background: linear-gradient(90deg, rgba(var(--ink), .4), rgba(var(--ink), 0)); }
-.fact--tl::after, .fact--bl::after { left: 100%; }
-.fact--tr::after, .fact--br::after { right: 100%; transform: scaleX(-1); }
-.fact .v { font-size: 40px; line-height: .95; letter-spacing: -.02em; }
-.fact .v small { font-size: 15px; letter-spacing: 0; margin-left: 6px; color: var(--muted); }
-.fact .note { font-size: 13px; line-height: 1.35; color: var(--muted); }
+.fact .v { font-size: 56px; line-height: .9; letter-spacing: -.02em; }
+.fact .v small { font-size: 14px; letter-spacing: 0; margin-left: 6px; color: var(--muted); }
+.fact .note { margin-top: auto; font-size: 13px; line-height: 1.35; color: var(--muted); }
+.mix { display: flex; flex-direction: column; gap: 14px; }
+.mix li { display: grid; grid-template-columns: 1fr auto; row-gap: 6px; font-size: 14px; }
+.mix b { font-weight: 500; }
+.mix i { grid-column: 1 / -1; height: 2px; background: rgba(var(--ink), .15); position: relative; overflow: hidden; border-radius: 2px; }
+.mix i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: var(--fg); transform: scaleX(0); transform-origin: 0 50%; transition: transform 1.2s var(--ease) .3s; }
+.scene.is-specs .mix i::after { transform: none; }
 
 /* ---------- questions ---------- */
 .faq { display: flex; flex-direction: column; max-width: 760px; padding: 72px 0 120px; }
@@ -77,20 +81,20 @@
 .faq p { padding: 0 0 18px; font-size: 15px; line-height: 1.45; color: var(--muted); max-width: 560px; }
 
 /* ---------- the buy card: light glass, always on screen ---------- */
-.card { position: sticky; top: 104px; margin: 16px 0 48px; max-height: calc(100vh - 120px); overflow-y: auto; scrollbar-width: none;
-  border: 0; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 18px;
-  background: linear-gradient(160deg, rgba(var(--ink), .07), rgba(var(--ink), .015) 55%, rgba(var(--ink), .04));
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,.22), inset 0 0 0 1px rgba(var(--ink), .08);
+.card { position: sticky; top: var(--card-top, 104px); margin: calc(var(--card-top, 104px) - 88px) 0 48px; max-height: calc(100vh - var(--card-top, 104px) - 24px); overflow-y: auto; scrollbar-width: none;
+  border: 0; border-radius: 28px; padding: 32px 30px 28px; display: flex; flex-direction: column; gap: 26px;
+  background: linear-gradient(160deg, rgba(var(--ink), .06), rgba(var(--ink), .012) 55%, rgba(var(--ink), .03));
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,.2), inset 0 0 0 1px rgba(var(--ink), .07);
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
 .card::-webkit-scrollbar { display: none; }
 .card__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
 .card__head .k { margin-bottom: 10px; }
-.card__title { font-weight: 400; font-size: 30px; line-height: 1.02; text-transform: uppercase; }
+.card__title { font-weight: 400; font-size: 30px; line-height: 1.02; text-transform: uppercase; text-wrap: balance; }
 .card__title em { font-style: normal; font-weight: 700; display: block; }
 .card__price { font-size: 28px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; padding-top: 22px; }
-.card__desc { font-size: 14px; line-height: 1.4; color: var(--muted); margin-top: -6px; }
+.card__desc { font-size: 14px; line-height: 1.45; color: var(--muted); margin-top: -10px; text-wrap: pretty; }
 .opt { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-.opt legend { display: flex; align-items: baseline; gap: 10px; padding: 0; margin-bottom: 10px; width: 100%; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.opt legend { display: flex; align-items: baseline; gap: 10px; padding: 0; margin-bottom: 12px; width: 100%; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .opt legend > span:first-child { font-size: 10px; }
 .opt legend b { color: var(--fg); font-weight: 500; letter-spacing: .04em; }
 .opt__hint { margin-left: auto; letter-spacing: .04em; text-transform: none; font-size: 12px; }
@@ -114,7 +118,7 @@
 .qty button:hover { background: rgba(var(--ink), .1); }
 .qty output { min-width: 20px; text-align: center; font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .buy-cta { flex: 1; width: auto; justify-content: space-between; white-space: nowrap; font-size: 18px; }
-.trust { display: flex; flex-wrap: wrap; gap: 8px 16px; padding-top: 14px; border-top: 1px solid rgba(var(--ink), .1); }
+.trust { display: flex; flex-wrap: wrap; gap: 8px 18px; padding-top: 18px; border-top: 1px solid rgba(var(--ink), .1); }
 .trust li { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
 .trust svg { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -154,13 +158,13 @@ html.is-white .socials img { filter: invert(1); }
 /* ---------- smaller desktops ---------- */
 @media (max-width: 1200px) {
   .shop { grid-template-columns: minmax(0, 1fr) 360px; column-gap: 40px; }
-  .card { padding: 20px; gap: 16px; }
+  .card { padding: 26px 24px 22px; gap: 20px; }
   .card__title { font-size: 26px; }
-  .fact { width: min(200px, 28%); padding: 14px; }
-  .fact .v { font-size: 32px; }
+  .fact { width: min(210px, 29%); min-height: 0; padding: 16px; }
+  .fact .v { font-size: 40px; }
 }
 @media (max-height: 760px) and (min-width: 1001px) {
-  .card { gap: 12px; padding: 18px 20px; }
+  .card { gap: 14px; padding: 20px 22px; }
   .card__desc { display: none; }
 }
 
@@ -169,11 +173,14 @@ html.is-white .socials img { filter: invert(1); }
   .shop { grid-template-columns: minmax(0, 1fr); padding-top: 72px; }
   .shop__left, .scene { display: contents; }
   .scene__stick { order: 1; grid-area: auto; position: relative; top: auto; height: min(64vh, 600px); padding-top: 8px; }
-  .scene__hero { display: none; }
   .shop__right { order: 2; }
   .specs { order: 3; grid-area: auto; min-height: 0; padding-top: 0; pointer-events: auto; padding-bottom: 8px; }
   .faq { order: 4; padding: 48px 0 120px; }
   .card { position: static; max-height: none; overflow: visible; margin: 8px 0 0; }
+  .scene__hero { display: block; order: 0; grid-area: auto; height: 0; }
+  .fact { min-height: 0; }
+  .mix i::after { transform: none; }
+  .back { top: 4px; height: 36px; font-size: 13px; padding: 0 14px 0 12px; z-index: 3; }
   .specs__title { padding-top: 48px; }
   .facts { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
   .fact { position: static; width: auto; opacity: 1; transform: none; }
@@ -183,16 +190,17 @@ html.is-white .socials img { filter: invert(1); }
 }
 @media (max-width: 760px) {
   .page-buy .header { column-gap: 8px; }
-  .header__left, .page-buy .header__right { gap: 8px; }
-  .page-buy #backBtn, .page-buy .header__right > .circle:first-child { display: none; }   /* logo + menu go home; EN as on the landing */
+  .page-buy .header__right { gap: 8px; }
+  .page-buy .header__right > .circle:first-child { display: none; }   /* EN, as on the landing */
   .page-buy .header .circle { width: 36px; height: 36px; }
   .page-buy .header #themeToggle { padding-right: 4px; gap: 6px; }
   .page-buy .header #themeToggle .bead { width: 26px; height: 26px; }
   .scene__stick { height: 54vh; }
   .thumb-btn { width: 56px; height: 56px; }
   .card { padding: 20px 18px; border-radius: 20px; }
-  .fact { padding: 14px; }
-  .fact .v { font-size: 30px; }
+  .fact { padding: 14px; gap: 10px; }
+  .fact .v { font-size: 34px; }
+  .mix li { font-size: 12px; }
   .buy-cta { font-size: 16px; padding-left: 18px; gap: 10px; }
   .qty { height: 52px; padding: 0 2px; }
   .qty button { width: 34px; }

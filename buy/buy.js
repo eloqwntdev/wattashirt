@@ -136,6 +136,16 @@
   new IntersectionObserver(([en]) => { mainOut = !en.isIntersecting && en.boundingClientRect.top < 0; syncBar(); }).observe($('#buyBtn'));
   new IntersectionObserver(([en]) => { footIn = en.isIntersecting; syncBar(); }).observe($('.footer'));
 
+  /* ---------- the card's top on the tee's top: the frame fills the view's height, the collar sits 10% down ---------- */
+  const wide = matchMedia('(min-width: 1001px)');
+  function alignCard() {
+    if (!wide.matches) { document.documentElement.style.removeProperty('--card-top'); return; }
+    const view = $('#stage .turnable__view');
+    const top = 88 + 16 + view.offsetTop + view.clientHeight * 0.1;
+    document.documentElement.style.setProperty('--card-top', `${Math.round(Math.max(104, top))}px`);
+  }
+  alignCard(); addEventListener('resize', alignCard);
+
   /* ---------- specs in view: the four facts come in around the sticky tee ---------- */
   const scene = $('#scene');
   new IntersectionObserver(([en]) => scene.classList.toggle('is-specs', en.intersectionRatio >= .35), { threshold: [0, .35, .7] }).observe($('#why'));
@@ -176,7 +186,8 @@
     return null;
   }
   const frameOf = a => view === 'tee' ? teeFrame(a) : museFrame(a);
-  const st = { angle: 0, target: 0, vel: 0, drag: false, lastX: 0, touched: false, shown: '' };
+  const st = { angle: 0, target: 0, vel: 0, drag: false, lastX: 0, touched: false, lastT: 0, shown: '' };
+  const touch = () => { st.touched = true; st.lastT = performance.now(); };
   function paintNow() {   // first frame of a new sequence: show it straight away, never the other colour or fit
     const k = key(); load(k);
     img.src = nearest(k, frameOf(st.angle)) || url(k, frameOf(st.angle));
@@ -192,23 +203,23 @@
     $$('.thumb-btn').forEach(x => x.classList.toggle('is-on', x.dataset.view === on));
   }
   $$('.thumb-btn').forEach(b => b.addEventListener('click', () => {
-    st.touched = true;
+    touch();
     if (b.dataset.view === '360') setView('tee', 0);
     else setView('muse', VIEW_ANGLE[b.dataset.view]);
   }));
   stage.addEventListener('pointerdown', e => {
     if (e.target.closest('button')) return;
-    st.drag = true; st.touched = true; st.lastX = e.clientX; st.vel = 0;
+    st.drag = true; touch(); st.lastX = e.clientX; st.vel = 0;
     stage.classList.add('is-drag'); stage.setPointerCapture(e.pointerId);
   });
   stage.addEventListener('pointermove', e => {
     if (!st.drag) return;
-    const dx = e.clientX - st.lastX; st.lastX = e.clientX;
+    const dx = e.clientX - st.lastX; st.lastX = e.clientX; st.lastT = performance.now();
     const w = stage.clientWidth * 0.9; st.target -= dx / w; st.vel = -dx / w;
   });
   const end = () => { st.drag = false; stage.classList.remove('is-drag'); if (view === 'muse') setView('muse'); };
   stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
-  $$('[data-spin]', stage).forEach(b => b.addEventListener('click', () => { st.touched = true; st.target += 0.125 * +b.dataset.spin; st.vel = 0; if (view === 'muse') setView('muse'); }));
+  $$('[data-spin]', stage).forEach(b => b.addEventListener('click', () => { touch(); st.target += 0.125 * +b.dataset.spin; st.vel = 0; if (view === 'muse') setView('muse'); }));
   const turn = { reset: () => { paintNow(); load(`tee_${state.color}`); } };   // colour change
   function stageRefresh(fitChanged) {  // called by render(): thumbnails follow colour + fit
     $$('[data-av]').forEach(im => { im.src = `/assets/seq/av/${state.color === 'white' ? 'w' : 'b'}_${state.fit}_turn/${pad4(museFrame(VIEW_ANGLE[im.dataset.av]))}.webp?v=17`; });
@@ -219,7 +230,7 @@
   const thumbImg = $('#thumbSpin');
   (function tick(t) {
     const dt = tLast ? Math.min(.05, (t - tLast) / 1000) : 0; tLast = t;
-    if (!st.drag) { st.target += st.vel; st.vel *= 0.92; if (!st.touched && !reduce && view === 'tee') st.target += dt * 0.03; }
+    if (!st.drag) { st.target += st.vel; st.vel *= 0.92; if (!reduce && view === 'tee' && (!st.touched || t - st.lastT > 3500)) st.target += dt * 0.045; }
     st.angle = damp(st.angle, st.target, 7, dt);
     if (t - thumbT > 70) {   // the 360 thumbnail: a small tee that keeps turning
       thumbT = t; thumbF = (thumbF + 2) % TURN_N;

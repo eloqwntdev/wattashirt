@@ -54,7 +54,7 @@ html.wsb-lock body { padding-right: var(--wsb-sb, 0px); }
 .wsb__x { position: absolute; right: 18px; top: 16px; width: 40px; height: 40px; border-radius: 50%; font-size: 26px; line-height: 1; display: grid; place-items: center; transition: background .25s; }
 .wsb__x:hover { background: rgba(var(--wsb-ink), .1); }
 .wsb__k { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--wsb-muted); }
-.wsb__h { font-weight: 400; font-size: 34px; line-height: 1.04; text-transform: uppercase; letter-spacing: 0; }
+.wsb__h { font-weight: 400; font-size: 34px; line-height: 1.04; text-transform: uppercase; letter-spacing: 0; text-wrap: balance; padding-right: 32px; }
 .wsb__list { display: flex; flex-direction: column; border-top: 1px solid rgba(var(--wsb-ink), .12); overflow-y: auto; min-height: 0; overscroll-behavior: contain; }
 .wsb__item { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(var(--wsb-ink), .12); }
 .wsb__item img { display: block; width: 72px; height: 72px; object-fit: contain; border-radius: 12px; background: rgba(var(--wsb-ink), .05); }
@@ -99,26 +99,36 @@ html.wsb-lock body { padding-right: var(--wsb-sb, 0px); }
 .wsb__rail::-webkit-scrollbar { display: none; }
 .wsb__bar { position: absolute; left: 0; right: 0; top: 10px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(var(--wsb-ink), 0), rgba(var(--wsb-ink), .35) 12%, rgba(var(--wsb-ink), .35) 88%, rgba(var(--wsb-ink), 0)); box-shadow: 0 1px 0 rgba(255,255,255,.08); }
 .wsb__hooks { position: relative; display: flex; gap: 14px; min-width: min-content; padding-top: 9px; height: 100%; }
-.wsb__hang { position: relative; margin: 0; flex: none; width: 76px; height: 116px; transform-origin: 50% 0; animation: wsbSway 4.8s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -1.3s); }
+.wsb__hang { position: relative; margin: 0; flex: none; width: 76px; height: 116px; transform-origin: 50% 0; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; transition: transform .45s var(--wsb-ease); }
+.wsb__swing { position: absolute; inset: 0; transform-origin: 50% 0; animation: wsbSway 4.8s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -1.3s); }
+.wsb__hang img { pointer-events: none; -webkit-user-drag: none; }
+.wsb__hooks.is-dragging .wsb__swing { animation: none; }
+.wsb__hang.is-drag { z-index: 2; cursor: grabbing; transition: none; }
+.wsb__swing.is-nudge { animation: wsbNudge .7s ease-out; }
+.wsb__swing.is-settle { animation: wsbSettle 1.4s ease-out, wsbSway 4.8s ease-in-out 1.4s infinite; }
+@keyframes wsbNudge { 0% { transform: none; } 30% { transform: rotate(7deg); } 60% { transform: rotate(-3deg); } 100% { transform: none; } }
+@keyframes wsbSettle { 0% { transform: rotate(10deg); } 30% { transform: rotate(-7deg); } 55% { transform: rotate(4deg); } 80% { transform: rotate(-1.5deg); } 100% { transform: none; } }
 .wsb__hanger { position: absolute; left: 6px; top: 0; width: 64px; height: 36px; fill: none; stroke: rgba(var(--wsb-ink), .55); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .wsb__hang img { position: absolute; left: 4px; top: 11px; width: 68px; height: 89px; object-fit: contain; filter: drop-shadow(0 10px 12px rgba(0,0,0,.35)); }
 html.is-white .wsb__hang img { filter: drop-shadow(0 10px 12px rgba(0,0,0,.14)); }
 .wsb__hang b { position: absolute; right: -2px; bottom: 6px; min-width: 24px; height: 20px; padding: 0 6px; border-radius: 10px; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: var(--wsb-fg); color: var(--wsb-bg); }
-.wsb__hang.is-new { animation: wsbDrop 1.3s cubic-bezier(.3, 1.4, .5, 1) both, wsbSway 4.8s ease-in-out 1.3s infinite; }
+.wsb__hang.is-new { animation: wsbDrop 1.3s cubic-bezier(.3, 1.4, .5, 1) both; }
+.wsb__hang.is-new .wsb__swing { animation-delay: 1.3s; }
 @keyframes wsbSway { 0%, 100% { transform: rotate(-1.6deg); } 50% { transform: rotate(1.6deg); } }
 @keyframes wsbDrop { 0% { transform: translateY(-70px) rotate(-14deg); opacity: 0; } 30% { opacity: 1; } 55% { transform: translateY(0) rotate(9deg); } 75% { transform: rotate(-5deg); } 90% { transform: rotate(2deg); } 100% { transform: none; } }
 /* empty bag: the rail takes the room, one bare hanger swings in the middle */
 .wsb.is-empty .wsb__rail { flex: 1; height: auto; min-height: 220px; display: flex; }
 .wsb.is-empty .wsb__bar { top: 30%; left: 18%; right: 18%; }
 .wsb.is-empty .wsb__hooks { flex: 1; flex-direction: column; align-items: center; padding-top: 0; }
-.wsb__hang.is-empty { position: absolute; left: 50%; top: calc(30% - 1px); width: 128px; height: 72px; margin-left: -64px; animation: wsbSwing 3.6s ease-in-out infinite; }
+.wsb__hang.is-empty { cursor: default; position: absolute; left: 50%; top: calc(30% - 1px); width: 128px; height: 72px; margin-left: -64px; }
+.wsb__hang.is-empty .wsb__swing { animation: wsbSwing 3.6s ease-in-out infinite; }
 .wsb__hang.is-empty .wsb__hanger { left: 0; width: 128px; height: 72px; stroke-width: 1.4; }
 @keyframes wsbSwing { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
 .wsb__railNote { position: absolute; left: 0; right: 0; top: calc(30% + 96px); text-align: center; font-size: 14px; color: var(--wsb-muted); }
 .wsb.is-empty .wsb__list { display: none; }
 .wsb-btn.is-bump i { animation: wsbBump .6s cubic-bezier(.3, 1.6, .5, 1); }
 @keyframes wsbBump { 0% { transform: scale(.4); } 60% { transform: scale(1.25); } 100% { transform: none; } }
-@media (prefers-reduced-motion: reduce) { .wsb__hang, .wsb__hang.is-new, .wsb-btn.is-bump i { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .wsb__swing, .wsb__swing.is-nudge, .wsb__swing.is-settle, .wsb__hang.is-new, .wsb-btn.is-bump i { animation: none; } }
 
 /* toast, for pages that have none of their own */
 .wsb-toast { position: fixed; left: 50%; bottom: 32px; z-index: 210; margin: 0; transform: translate(-50%, 20px); opacity: 0; padding: 12px 20px; border-radius: 500px; font: 14px/1.3 "Inter Tight", system-ui, sans-serif; color: var(--wsb-fg); pointer-events: none;
