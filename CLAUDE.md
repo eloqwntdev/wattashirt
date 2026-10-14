@@ -76,7 +76,8 @@ This is a concept. Several things look real but are invented:
 - `buy/` is the product page every buy button on the landing opens (`data-buy` links; an inline script after main.js adds `?color=` from the theme and, for the configurator's "Get it", `&fit=`).
   - Colour = theme, like the landing: picking White flips the page. Options sync to the URL (`?color=&fit=&size=`).
   - Two sections: product and "before you buy". The stage plays the bare tee 360° (`seq/*/turn`, one cut per colour) or the muse in the chosen colour + fit (`seq/av/*_turn`, dragged front → back → front); picking a fit switches to the muse, since only his clips differ by fit. Section 2: tagline, four facts, FAQ beside a live "Your pick" card with the one buy button. The sticky bar shows only while neither the main button nor that card is on screen.
-  - Buy needs a size, then opens the order sheet. **`CHECKOUT_URL` in `buy/buy.js` is empty**: until payments are connected the sheet says checkout opens soon. Set it to a Shopify/Stripe link (`{color} {fit} {size} {qty}` are filled in).
+  - **Bag:** Buy needs a size, then adds the pick to a bag (`localStorage['ws-bag']`) and opens it. The bag holds several items (qty, remove), offers the other colour in the same fit and size as a one-tap add, and the header shows a bag button with the count. "Get both" next to the colour swatches adds one black and one white at once.
+  - **`CHECKOUT_URL` in `buy/buy.js` is empty**: until payments are connected the bag says checkout opens soon. Set it to the checkout link; `{items}` is filled in as `color-fit-size-qty`, comma separated.
   - Uses `brand/brand.css` for tokens, glass, header and menu, plus `buy/buy.css`.
 - `brand/` is the interactive brand guide. `vercel.json` serves it at `brand.wattashirt.com` (a `routes` rule, since rewrites can't shadow the root `index.html`) and redirects `wattashirt.com/brand` there.
 

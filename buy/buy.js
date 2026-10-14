@@ -2,7 +2,8 @@
 // Options sync to the URL (?color=&fit=&size=), so a configured tee can be shared or linked from the landing.
 (() => {
   // Where "Checkout" goes once payments are connected (Shopify / Stripe Payment Link, etc.).
-  // {color} {fit} {size} {qty} are filled in. Empty = checkout not connected yet: the sheet says so.
+  // {items} is filled in as color-fit-size-qty, comma separated (black-over-M-1,white-over-M-1).
+  // Empty = checkout not connected yet: the bag says so.
   const CHECKOUT_URL = '';
   const PRICE = 75;
 
@@ -51,7 +52,7 @@
     $$('button', seg).forEach(b => b.classList.toggle('is-on', b.dataset.fit === state.fit));
     const c = state.color === 'white' ? 'w' : 'b';
     if (typeof stageRefresh === 'function') stageRefresh();
-    $('#sheetImg').src = `/assets/brand/shirt_front_${c}.webp`;
+    $('#bothLabel').textContent = `Get both · ${money(PRICE * 2 * state.qty)}`;
     $('#recapImg').src = `/assets/brand/shirt_front_${c}.webp`;
     const pill = $('#themeToggle');
     pill.setAttribute('aria-pressed', String(isWhite()));
@@ -89,32 +90,97 @@
   $('#qtyMinus').addEventListener('click', () => { state.qty = Math.max(1, state.qty - 1); render(); });
   $('#qtyPlus').addEventListener('click', () => { state.qty = Math.min(9, state.qty + 1); render(); });
 
-  /* ---------- buy: size first, then the order sheet ---------- */
+  /* ---------- bag: several items, e.g. one black and one white ---------- */
+  const SIZES = ['S', 'M', 'L', 'XL'];
+  const valid = it => it && ['black', 'white'].includes(it.color) && FIT[it.fit] && SIZES.includes(it.size) && it.qty >= 1 && it.qty <= 9;
+  let bag = [];
+  try { bag = (JSON.parse(localStorage.getItem('ws-bag')) || []).filter(valid); } catch (e) {}
+  const sameItem = (a, b) => a.color === b.color && a.fit === b.fit && a.size === b.size;
+  function add(color, qty = state.qty) {
+    const item = { color, fit: state.fit, size: state.size, qty };
+    const hit = bag.find(x => sameItem(x, item));
+    if (hit) hit.qty = Math.min(9, hit.qty + qty); else bag.push(item);
+    lastAdded = item;
+    renderBag();
+  }
+  let lastAdded = null;
+  const shirtImg = color => `/assets/brand/shirt_front_${color === 'white' ? 'w' : 'b'}.webp`;
+  function renderBag() {
+    try { localStorage.setItem('ws-bag', JSON.stringify(bag)); } catch (e) {}
+    const total = bag.reduce((n, x) => n + x.qty * PRICE, 0), count = bag.reduce((n, x) => n + x.qty, 0);
+    $('#bagList').innerHTML = bag.map((x, i) => `
+      <li class="bag__item">
+        <img src="${shirtImg(x.color)}" alt="">
+        <div class="bag__txt"><b>Wattashirt ${cap(x.color)}</b><span>${FIT[x.fit]} · Size ${x.size}</span>
+          <span class="bag__qty"><button type="button" data-i="${i}" data-d="-1" aria-label="One less">−</button><output>${x.qty}</output><button type="button" data-i="${i}" data-d="1" aria-label="One more">+</button></span></div>
+        <div class="bag__end"><b>${money(x.qty * PRICE)}</b><button type="button" class="bag__rm" data-rm="${i}">Remove</button></div>
+      </li>`).join('') || '<li class="bag__empty">Your bag is empty.</li>';
+    $('#bagTotal').textContent = money(total);
+    $('#checkoutTotal').textContent = money(total);
+    $('#checkoutBtn').classList.toggle('is-off', !bag.length);
+    const bb = $('#bagBtn');
+    bb.hidden = !count; $('#bagCount').textContent = count;
+    bb.setAttribute('aria-label', `Open bag, ${count} item${count === 1 ? '' : 's'}`);
+    // upsell: the other colour, same fit and size, if it isn't in the bag yet
+    const ref = lastAdded || bag[bag.length - 1];
+    const other = ref && { color: ref.color === 'black' ? 'white' : 'black', fit: ref.fit, size: ref.size };
+    const show = other && !bag.some(x => x.color === other.color);
+    const up = $('#upsell'); up.hidden = !show;
+    if (show) {
+      up.dataset.color = other.color; up.dataset.fit = other.fit; up.dataset.size = other.size;
+      $('#upsellName').textContent = `Add ${cap(other.color)} too`;
+      $('#upsellOpts').textContent = `${FIT[other.fit]} · Size ${other.size}. One for each mode.`;
+      $('#upsellDot').style.background = other.color === 'white' ? '#f4f4f4' : '#000';
+      $('#upsellAdd').textContent = `+ ${money(PRICE)}`;
+    }
+  }
+  $('#bagList').addEventListener('click', e => {
+    const q = e.target.closest('[data-d]'), rm = e.target.closest('[data-rm]');
+    if (q) { const it = bag[+q.dataset.i]; it.qty = Math.max(0, Math.min(9, it.qty + +q.dataset.d)); if (!it.qty) bag.splice(+q.dataset.i, 1); renderBag(); }
+    if (rm) { bag.splice(+rm.dataset.rm, 1); renderBag(); }
+  });
+  $('#upsellAdd').addEventListener('click', () => {
+    const up = $('#upsell');
+    const item = { color: up.dataset.color, fit: up.dataset.fit, size: up.dataset.size, qty: 1 };
+    const hit = bag.find(x => sameItem(x, item));
+    if (hit) hit.qty = Math.min(9, hit.qty + 1); else bag.push(item);
+    lastAdded = item; renderBag(); say(`${cap(item.color)} added`);
+  });
+
+  /* ---------- buy: size first, then into the bag ---------- */
   function needSize() {
     sizeOpt.classList.remove('is-missing'); void sizeOpt.offsetWidth; sizeOpt.classList.add('is-missing');
     sizeOpt.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
     say('Pick your size first');
   }
-  function buy() { if (!state.size) { needSize(); return; } openSheet(); }
+  function buy() { if (!state.size) { needSize(); return; } add(state.color); openSheet(); }
   $('#buyForm').addEventListener('submit', e => { e.preventDefault(); buy(); });
   $('#barBtn').addEventListener('click', buy);
   $('#recapBtn').addEventListener('click', buy);
+  $('#bothBtn').addEventListener('click', () => {
+    if (!state.size) { needSize(); return; }
+    add('black'); add('white'); lastAdded = null; renderBag(); openSheet();
+  });
+  $('#bagBtn').addEventListener('click', openSheet);
 
   const sheet = $('#sheet'); let lastFocus = null;
   function openSheet() {
     lastFocus = document.activeElement;
+    $('#sheetNote').hidden = true;
     sheet.classList.add('is-open'); sheet.setAttribute('aria-hidden', 'false');
-    const go = $('#checkoutBtn');
-    if (CHECKOUT_URL) {
-      go.href = CHECKOUT_URL.replace('{color}', state.color).replace('{fit}', state.fit).replace('{size}', state.size).replace('{qty}', state.qty);
-      $('#sheetNote').hidden = true;
-    } else { go.removeAttribute('href'); go.setAttribute('role', 'button'); go.tabIndex = 0; }
-    setTimeout(() => go.focus(), 300);
+    setTimeout(() => $('#checkoutBtn').focus(), 300);
   }
   function closeSheet() { sheet.classList.remove('is-open'); sheet.setAttribute('aria-hidden', 'true'); if (lastFocus) lastFocus.focus(); }
   $$('[data-close]', sheet).forEach(el => el.addEventListener('click', closeSheet));
   addEventListener('keydown', e => { if (e.key === 'Escape' && sheet.classList.contains('is-open')) closeSheet(); });
-  $('#checkoutBtn').addEventListener('click', e => { if (!CHECKOUT_URL) { e.preventDefault(); $('#sheetNote').hidden = false; } });
+  const go = $('#checkoutBtn');
+  if (!CHECKOUT_URL) { go.removeAttribute('href'); go.setAttribute('role', 'button'); go.tabIndex = 0; }
+  go.addEventListener('click', e => {
+    if (!bag.length) { e.preventDefault(); closeSheet(); return; }
+    if (!CHECKOUT_URL) { e.preventDefault(); $('#sheetNote').hidden = false; return; }
+    go.href = CHECKOUT_URL.replace('{items}', encodeURIComponent(bag.map(x => `${x.color}-${x.fit}-${x.size}-${x.qty}`).join(',')));
+  });
+  renderBag();
 
   /* ---------- sticky bar: only while neither the main button nor the recap card is on screen ---------- */
   const bar = $('#bar');
