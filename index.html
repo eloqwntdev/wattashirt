@@ -21,8 +21,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=47">
-  <link rel="stylesheet" href="/bag/bag.css?v=5">
+  <link rel="stylesheet" href="style.css?v=55">
+  <link rel="stylesheet" href="/bag/bag.css?v=6">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
@@ -163,14 +163,14 @@
           <p class="cfg__kicker">AI Influencer / Concept 01</p>
           <h2 class="cfg__title">Try it on</h2>
           <p class="cfg__lead">One tee on our AI muse. Change the colour, fit or angle and he moves with it. Pick a mood and watch his face.</p>
-          <div class="cfg__group">
+          <div class="cfg__group cfg__group--color">
             <p class="cfg__label"><span>01</span>Colour<b data-val="color">Black</b></p>
             <div class="swatches">
               <button class="sw" data-cfg="color:black" aria-label="Black"><i class="sw__dot sw__dot--black"></i></button>
               <button class="sw" data-cfg="color:white" aria-label="White"><i class="sw__dot sw__dot--white"></i></button>
             </div>
           </div>
-          <div class="cfg__group">
+          <div class="cfg__group cfg__group--fit">
             <p class="cfg__label"><span>02</span>Fit<b data-val="fit">Oversized</b></p>
             <div class="seg"><i class="seg__thumb"></i>
               <button data-cfg="fit:reg"><svg class="tee" viewBox="0 0 24 20" aria-hidden="true"><path d="M8 2Q12 5 16 2L16 4L22 9L19 12L16 10V19H8V10L5 12L2 9L8 4Z"/></svg>Regular</button>
@@ -179,7 +179,7 @@
           </div>
         </div>
         <div class="cfg__side cfg__side--right">
-          <div class="cfg__group">
+          <div class="cfg__group cfg__group--view">
             <p class="cfg__label"><span>03</span>View<b data-val="view">Front</b></p>
             <div class="seg seg--wide"><i class="seg__thumb"></i>
               <button data-cfg="view:front">Front</button>
@@ -187,7 +187,7 @@
               <button data-cfg="view:back">Back</button>
             </div>
           </div>
-          <div class="cfg__group">
+          <div class="cfg__group cfg__group--mood">
             <p class="cfg__label"><span>04</span>Mood<b data-val="mood">Deadpan</b></p>
             <div class="moods">
               <button class="mood" data-cfg="mood:deadpan"><img data-mood="deadpan" src="assets/avatar/b_mood_deadpan.webp?v=3" alt=""><span>Deadpan</span></button>
@@ -463,9 +463,9 @@
     </div>
   </footer>
 
-  <script src="main.js?v=52"></script>
+  <script src="main.js?v=59"></script>
 
-  <script src="/bag/bag.js?v=4"></script>
+  <script src="/bag/bag.js?v=5"></script>
 
   <script src="/progress.js?v=1"></script>
   <script>

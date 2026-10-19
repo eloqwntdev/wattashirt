@@ -202,21 +202,40 @@ function storyFrame(p) {
   return lerp(STORY_ANCHORS[i], STORY_ANCHORS[i + 1], t);
 }
 
-function drawFrame(img, pose, alpha = 1) {
+// phones: the 16:9 story frame is shorter than the screen, so its top and bottom edges show; flying cotton
+// would end on a hard line there. Those frames go through a buffer that fades the top and bottom edges.
+const featherCv = document.createElement('canvas'), featherCtx = featherCv.getContext('2d');
+function drawFrame(img, pose, alpha = 1, feather = false) {
   if (!img || alpha <= 0) return;
   const S = pose.s * base();
-  ctx.globalAlpha = alpha;
   const Wd = S * img.width / img.height;
-  ctx.drawImage(img, (pose.x * vw - Wd / 2) * dpr, (pose.y * vh - S / 2) * dpr, Wd * dpr, S * dpr);
+  const x = (pose.x * vw - Wd / 2) * dpr, y = (pose.y * vh - S / 2) * dpr, w = Wd * dpr, h = S * dpr;
+  if (feather && isMobile) {
+    if (featherCv.width !== canvas.width || featherCv.height !== canvas.height) { featherCv.width = canvas.width; featherCv.height = canvas.height; }
+    featherCtx.globalCompositeOperation = 'source-over';
+    featherCtx.clearRect(0, 0, featherCv.width, featherCv.height);
+    featherCtx.drawImage(img, x, y, w, h);
+    featherCtx.globalCompositeOperation = 'destination-in';
+    const g = featherCtx.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.12, '#000'); g.addColorStop(0.9, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    featherCtx.fillStyle = g; featherCtx.fillRect(0, 0, featherCv.width, featherCv.height);
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(featherCv, 0, 0);
+    ctx.globalAlpha = 1;
+    return;
+  }
+  ctx.globalAlpha = alpha;
+  ctx.drawImage(img, x, y, w, h);
   ctx.globalAlpha = 1;
 }
 // black frame underneath, white on top with t (the silhouettes line up closely)
 function drawColored(kind, f, pose, a = 1) {
-  if (colorState.t < 1) drawFrame(frameImg(`black/${kind}`, f), pose, a);
+  const fe = kind === 'story';
+  if (colorState.t < 1) drawFrame(frameImg(`black/${kind}`, f), pose, a, fe);
   // while a white sequence is still streaming, stay white: the turntable falls back to the white back view
   // never a black shirt on the white page: until the frame arrives, the nearest white view stands in
   const w = frameImg(`white/${kind}`, f) || (kind === 'turn' ? frameImg('white/story', 179) : frameImg('white/turn', 0));
-  if (colorState.t > 0) drawFrame(w, pose, a * colorState.t);
+  if (colorState.t > 0) drawFrame(w, pose, a * colorState.t, fe);
 }
 
 /* ------------------------------------------------------------------ */
@@ -334,6 +353,7 @@ HOTSPOTS.forEach(h => {
 // Labels never sit on the shirt: each side has a text column just outside the silhouette,
 // and the leader line runs from the dot out to it (and on under the label).
 // labels sit in the page grid's side columns (see --col-l / --col-r in style.css)
+const mobileCards = [...document.querySelectorAll('.video-card')];
 const HS_MAX = 260, HS_SHORT = 150; // HS_SHORT: dot-to-label run for compact hotspots
 function updateHotspots(p, pose) {
   const S = pose.s * base();
@@ -359,8 +379,15 @@ function updateHotspots(p, pose) {
     h.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     if (h.text) {
       if (isMobile) {
-        const tw = 150, left = clamp(x - tw / 2, 16, vw - 16 - tw) - x;
-        h.text.style.left = left + 'px'; h.text.style.top = '-150px';
+        // a footnote: the note sits on the left column, above the dot; a rule runs under it and bends
+        // down into the dot, so the dot is always at the end of the line, right of and below the text
+        const tw = Math.min(250, vw - 32);
+        h.text.style.width = tw + 'px';
+        const th = h.text.offsetHeight || 80;
+        const lx = 16 - x;                                  // the left column, relative to the dot
+        h.text.style.left = lx + 'px';
+        h.text.style.top = (-46 - th) + 'px';               // the rule (y -38) runs 8 px under the note
+        h.path.setAttribute('d', `M0 0 L-28 -31.6 Q-31.8 -38 -43 -38 H${Math.min(-43, lx)}`);
       } else {
         const right = h.side === 'right';
         const cw = document.documentElement.clientWidth; // same box CSS % resolves against (no scrollbar)
@@ -376,6 +403,15 @@ function updateHotspots(p, pose) {
         h.path.setAttribute('d', `M0 0 L${28 * k} -31.6 Q${31.8 * k} -38 ${43 * k} -38 H${far}`);
         h.text.style.left = (tx - x) + 'px';
         h.text.style.top = '-84px';
+      }
+    }
+    // phones: a photo card that scrolls through the shirt's stretch takes the stage; the note steps aside
+    if (isMobile && on && h.text) {
+      const tr = h.text.getBoundingClientRect(), pad = 12;
+      const top = Math.min(tr.top, y - 24), bottom = Math.max(tr.bottom, y + 24);
+      for (const card of mobileCards) {
+        const cr = card.getBoundingClientRect();
+        if (cr.bottom > top - pad && cr.top < bottom + pad && cr.right > tr.left && cr.left < Math.max(tr.right, x + 24)) { on = false; break; }
       }
     }
     h.el.classList.toggle('is-on', on && started);
@@ -520,8 +556,14 @@ function syncCfgChips() {
   document.querySelectorAll('.cfg .seg').forEach(seg => {
     const on = seg.querySelector('button.is-on'), thumb = seg.querySelector('.seg__thumb');
     if (!on || !thumb || !on.offsetWidth) return;
-    thumb.style.width = on.offsetWidth + 'px';
-    thumb.style.transform = `translateX(${on.offsetLeft}px)`;
+    if (getComputedStyle(seg).flexDirection === 'column') {   // phones: View is a column, the thumb slides down
+      thumb.style.width = on.offsetWidth + 'px'; thumb.style.height = on.offsetHeight + 'px'; thumb.style.bottom = 'auto';
+      thumb.style.transform = `translate(${on.offsetLeft}px, ${on.offsetTop - 4}px)`;
+    } else {
+      thumb.style.height = ''; thumb.style.bottom = '';
+      thumb.style.width = on.offsetWidth + 'px';
+      thumb.style.transform = `translateX(${on.offsetLeft}px)`;
+    }
   });
   document.querySelectorAll('.cfg [data-val]').forEach(el => { el.textContent = CFG_NAMES[state[el.dataset.val]]; });
   const look = document.getElementById('cfgLook');
@@ -613,8 +655,13 @@ function drawConfigurator(p, pose, dt) {
     ctx.globalAlpha = 1;
   }
   const ui = clamp(1 - Math.max(IDX.avatarIn - p, p - IDX.avatarOut, 0) / 0.2);
-  cfgUI.style.opacity = ui;
-  cfgUI.style.pointerEvents = ui > 0.6 ? '' : 'none';
+  let ui2 = ui;
+  if (isMobile) {   // phones: the HUD fades out as the pinned block leaves, before it slides under the header
+    const top = cfgUI.getBoundingClientRect().top;
+    if (top < 0) ui2 *= clamp(1 + top / 90);
+  }
+  cfgUI.style.opacity = ui2;
+  cfgUI.style.pointerEvents = ui2 > 0.6 ? '' : 'none';
 }
 syncCfgChips();
 
@@ -762,7 +809,7 @@ revToRest(true);
 addEventListener('resize', () => revToRest(true));
 document.fonts && document.fonts.ready.then(() => revToRest(true));
 addEventListener('pointermove', e => {
-  if (e.pointerType !== 'mouse') return;
+  if (e.pointerType !== 'mouse' || isMobile) return;   // phone width behaves like a phone, mouse or not
   const s = revSec.getBoundingClientRect();
   const inside = e.clientY >= s.top && e.clientY <= s.bottom;
   if (inside || revDrag) { dragX(e.clientX - s.left); dragY(e.clientY - s.top); }
@@ -771,6 +818,12 @@ addEventListener('pointermove', e => {
 }, { passive: true });
 document.documentElement.addEventListener('pointerleave', () => { if (revIn) { revIn = false; revToRest(); } });
 revTrack.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') revDragEl.classList.add('is-down'); });
+// touch: the badge rests on the first card as a hint; the first swipe has shown it, so it goes
+if (matchMedia('(hover: none)').matches || isMobile) {
+  const hideHint = () => revDragEl.classList.add('is-gone');
+  revTrack.addEventListener('scroll', hideHint, { passive: true, once: true });
+  revTrack.addEventListener('pointerdown', hideHint, { once: true });
+}
 addEventListener('pointerup', () => revDragEl.classList.remove('is-down'));
 addEventListener('pointercancel', () => revDragEl.classList.remove('is-down'));
 

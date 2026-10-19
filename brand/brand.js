@@ -54,7 +54,9 @@
     rail.forEach((a, j) => a.classList.toggle('is-on', j === i));
     pageNo.textContent = `${pad(i + 1)} / ${pad(secs.length)}`;
   }
+  const header = $('.header');
   function onScroll() {
+    header.classList.toggle('is-scrolled', scrollY > 8);   // frosted once content runs under it
     const mid = innerHeight * .45;
     let i = 0;
     secs.forEach((s, j) => { if (s.getBoundingClientRect().top <= mid) i = j; });
@@ -93,7 +95,7 @@
 
   /* ---------- cover: the shirt drifts with the pointer ---------- */
   const cover = $('#cover'), coverShirt = $('#coverShirt');
-  if (!reduce && matchMedia('(pointer: fine)').matches) {
+  if (!reduce && matchMedia('(pointer: fine) and (min-width: 761px)').matches) {
     cover.addEventListener('pointermove', e => {
       const r = cover.getBoundingClientRect();
       coverShirt.style.setProperty('--mx', `${((e.clientX - r.left) / r.width - .5) * -24}px`);
@@ -391,7 +393,7 @@
       if (performance.now() - lastTouch < 4000) return;
       progBase = angle; progT = 0; run();
     }, 3000);
-    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    if (matchMedia('(hover: hover) and (pointer: fine) and (min-width: 761px)').matches) {
       const cur = document.createElement('div');
       cur.className = 'spin-cursor'; cur.setAttribute('aria-hidden', 'true');
       cur.innerHTML = '<div class="spin-cursor__in"><svg viewBox="0 0 16 16"><path d="M13 8a5 5 0 1 1-1.5-3.6"/><path d="M13 2.5v3h-3"/></svg><span>Spin</span></div>';

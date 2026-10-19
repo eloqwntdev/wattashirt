@@ -369,7 +369,7 @@ html.is-white .washer__foam i { border-color: rgba(255,255,255,.95); background:
 .washer.is-spinning .washer__water--c { animation-duration: 1.9s; }
 
 /* glass "Spin" disc that replaces the pointer over the 404 door (pages.js), same build as "Drag" on the landing */
-@media (hover: hover) and (pointer: fine) { .washer__door { cursor: none; } }
+@media (hover: hover) and (pointer: fine) and (min-width: 761px) { .washer__door { cursor: none; } }
 .spin-cursor { position: fixed; left: 0; top: 0; z-index: 30; width: 84px; height: 84px; margin: -42px 0 0 -42px; pointer-events: none; }
 .spin-cursor__in {
   width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; gap: 6px;

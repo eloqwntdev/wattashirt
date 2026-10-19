@@ -111,9 +111,12 @@
     shownCount = count;
     btn.setAttribute('aria-label', count ? `Open bag, ${count} item${count === 1 ? '' : 's'}` : 'Open bag');
     // upsell: the other colour, same fit and size, if it isn't in the bag yet
-    const ref = lastAdded || bag[bag.length - 1];
-    const other = ref && { color: ref.color === 'black' ? 'white' : 'black', fit: ref.fit, size: ref.size };
-    const show = other && !bag.some(x => x.color === other.color);
+    // while only one colour is in the bag, offer the other one (same fit and size as the latest line of that
+    // colour); this also brings the offer back after the other colour is removed
+    const missing = ['black', 'white'].filter(c => !bag.some(x => x.color === c));
+    const ref = missing.length === 1 && ((lastAdded && bag.some(x => sameItem(x, lastAdded)) && lastAdded) || bag[bag.length - 1]);
+    const other = ref && { color: missing[0], fit: ref.fit, size: ref.size };
+    const show = !!other;
     up.hidden = !show;
     if (show) {
       Object.assign(up.dataset, other);

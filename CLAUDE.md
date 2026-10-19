@@ -45,10 +45,13 @@ This is a concept. Several things look real but are invented:
   - `intro` and `intro_w` (120 frames, unboxing preloader, opaque).
   - `av/{b|w}_{over|reg}_{turn|mood}` (61 frames each, 1600×900, configurator avatar).
 - **`ASSET_V`** (main.js, currently 17) is appended as `?v=` to every frame URL. Bump it after you re-cut any frames.
-- **Cache-busting** on css/js is manual via `?v=` in the HTML: style.css?v=47, main.js?v=52, pages.css?v=31, pages.js?v=9, bag.css?v=5, bag.js?v=4. Bump the number when you edit the file.
+- **Cache-busting** on css/js is manual via `?v=` in the HTML: style.css?v=55, main.js?v=59, pages.css?v=32, pages.js?v=10, bag.css?v=6, bag.js?v=5. Bump the number when you edit the file.
 - **Preloader:** a counter runs while the intro frames load, then the box opens on the stage canvas. Arriving with a hash (`index.html#reviews`) skips the intro and jumps to that section (`arrivalHash` / `anchorTarget()`).
 - **Loupe** (magnifier) only in About. Hotspot labels are laid out in columns outside the shirt (`HS_HALF`/`HS_GAP`). Video cards are linked to the shirt by leader lines (`CARD_LINKS`).
 - **Configurator:** colour / fit / view / mood drive the avatar sequences. Mood shows full height and never zooms.
+  - Phones: a game-style HUD around the muse (`.cfg__side` is `display: contents`; each `.cfg__group--{color,fit,view,mood}` is placed on its own): view (a vertical segmented control; `syncCfgChips` slides its thumb down) and mood as two columns down the left and right edges, colour (left) and fit (right) along the bottom; no buy button and no step numbers on phones. The reviews Drag badge is a hint on touch: it goes after the first swipe.
+- **Phone width = phone behaviour:** desktop-only pointer effects (the reviews Drag disc following the mouse, the 404 Spin cursor, the brand cover drift, keyboard hints) also switch off under 761 px, not only on touch screens, so a narrow window or a phone-frame preview shows what a phone shows.
+- **Phones, story frames:** the 16:9 frame is shorter than the screen, so `drawFrame(…, feather)` fades its top and bottom edges through an off-screen buffer (story sequence only), otherwise flying cotton ends on a hard line. Hotspot notes are footnotes: 2 lines wide (≤250 px) on the left column, always above their dot, with the desktop leader (a rule under the note bending down into the dot); they appear with the dot, and step aside while a photo card (`.video-card`) scrolls through them.
 - **Page grid:** every section is anchored on the same two side columns:
   - left column: `--col-l` (= gutter);
   - right column: `--col-r` (= 100% − gutter − side-w);
@@ -81,7 +84,7 @@ This is a concept. Several things look real but are invented:
   - Uses `brand/brand.css` for tokens, glass, header and menu, plus `buy/buy.css`.
 - **Bag (`bag/bag.js` + `bag/bag.css`) is shared by every page**: landing, /buy, 404, privacy, terms. Each page loads both files; bag.js inserts the bag button into `.header .header__right` (before `#menuBtn`, or before the back button on /buy) and appends the sheet to `<body>`.
   - Items live in `localStorage['ws-bag']` (`[{color, fit, size, qty}]`), so the bag follows the visitor across pages and tabs (`storage` event). API: `window.WSBag.add(item)`, `.open()`, `.close()`, `.items()`; a `ws-bag` event fires on every change.
-  - The rail at the top of the sheet: every line of the bag hangs on a bar (`assets/bag/tee_{b|w}.webp`, clean cut-outs; the brand shirt_front_w carries the light studio floor). New items drop on and swing; a tee can be dragged along the bar to reorder the bag (it leans with the drag, the others swing aside). An empty bag is one bare swinging hanger.
+  - A full bag shows the list only (the rail is hidden); the panel itself scrolls. The rail at the top of the sheet: every line of the bag hangs on a bar (`assets/bag/tee_{b|w}.webp`, clean cut-outs; the brand shirt_front_w carries the light studio floor). New items drop on and swing; a tee can be dragged along the bar to reorder the bag (it leans with the drag, the others swing aside). An empty bag is one bare swinging hanger.
   - The sheet: items (qty, remove), the other colour in the same fit and size as a one-tap add, total, checkout. Empty bag: "Shop the tee" to /buy instead of checkout. The page under the sheet is locked (`html.wsb-lock`), and the sheet has `data-lenis-prevent` for the landing.
   - bag.css carries its own `--wsb-*` tokens (the three stylesheets don't share one variable set); the button takes its glass from the page's `.circle`.
   - **`CHECKOUT_URL` in `bag/bag.js` is empty**: until payments are connected the bag says checkout opens soon. Set it to the checkout link; `{items}` is filled in as `color-fit-size-qty`, comma separated.

@@ -388,15 +388,17 @@ html.is-white .photo--seam { background-image: url(assets/seam_white.webp); back
   .video-card--left { top: auto; bottom: 24px; } /* under the hem, clear of the Longline Back hotspot */
   .video-card__caption { width: auto; }
   .sec--tech .side-copy { display: none; }
-  .hs__text { width: 150px; text-align: left !important; }
-  .hs__line { display: none; }
+  .hs__text { width: 250px; text-align: left !important; transition-delay: 0s, 0s; }   /* appears with its dot */
+  .hs__text p { text-wrap: balance; }
+  .hs__line path { transition-delay: 0s; }   /* the leader draws in with the dot */
   .hs__text h3 { margin-bottom: 8px; font-size: 14px; gap: 8px; }
   .hs__icon { width: 26px; height: 26px; } .hs__icon svg { width: 14px; height: 14px; }
-  .hs__text p { font-size: 12px; }
+  .hs__text p { font-size: 13px; line-height: 1.35; }
   .hs__dot { transform: scale(.42) !important; }
   .sec--features { height: 330vh; } /* slower: each hotspot gets its own stretch of scroll */
   .sec--back { height: 200vh; }
-  .buy__info { top: auto; bottom: 40px; left: var(--gutter); right: var(--gutter); }
+  .buy__info { top: auto; bottom: 40px; left: var(--gutter); right: var(--gutter); width: auto; }   /* --side-w is 28vw: 109 px on a phone */
+  .buy__rating { white-space: nowrap; }
   .buy__title { flex-direction: row; gap: 12px; font-size: 34px; }
   .buy__desc { display: none; }
   .buy__price { margin: 8px 0 16px; font-size: 26px; }
@@ -405,11 +407,14 @@ html.is-white .photo--seam { background-image: url(assets/seam_white.webp); back
   .thumbs { justify-content: flex-start; flex-direction: row; }
   .thumb { width: 48px; height: 48px; border-radius: 12px; }
     .drag-zone { left: 0; right: 0; top: 18%; bottom: 36%; }
-    .footer { height: auto; gap: 40px; }
-  .footer__top { grid-template-columns: 1fr auto; height: auto; row-gap: 20px; }
+  /* footer: logo + socials, the theme pill, then links on one line, then © and language on one line */
+  .footer { height: auto; gap: 36px; padding: 40px var(--gutter) 36px; }
+  .footer__top { grid-template-columns: 1fr auto; height: auto; row-gap: 28px; align-items: center; }
   .footer__toggle { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
-  .footer__bottom { grid-template-columns: 1fr; gap: 12px; }
-  .footer__bottom p:last-child { justify-self: start; }
+  .footer__bottom { grid-template-columns: 1fr auto; row-gap: 20px; column-gap: 16px; padding-top: 24px; border-top: 1px solid rgba(var(--ink), .1); font-size: 14px; }
+  .footer__links { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 20px; }
+  .footer__links a { white-space: nowrap; }
+  .footer__bottom p:last-child { justify-self: end; }
   .loader__corner { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -442,7 +447,7 @@ html.is-white .loupe__lens { background-image: url(assets/macro_white.webp); bac
 }
 .loupe__tag { position: absolute; right: -6px; bottom: 10px; font-size: 11px; letter-spacing: .04em; padding: 3px 7px; border-radius: 20px; background: rgba(255,255,255,.14); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .loupe-hint { position: absolute; left: var(--gutter); bottom: 64px; color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
-@media (hover: none) { .loupe-hint { display: none; } }
+@media (hover: none), (max-width: 760px) { .loupe-hint { display: none; } }
 @media (max-width: 760px) {
   .loupe { width: 104px; height: 104px; margin: -52px 0 0 -52px; }
   .loupe__tag { font-size: 10px; }
@@ -557,20 +562,32 @@ html.is-white .loupe__lens { background-image: url(assets/macro_white.webp); bac
 .cfg__cta span { font-weight: 400; opacity: .6; }
 .cfg__cta:hover { transform: translateY(-2px); }
 
+/* phones: a game HUD around the muse, clear of his head. View and mood across the top,
+   colour and fit just above the bottom, Get it along the bottom edge. No step numbers. */
 @media (max-width: 760px) {
-  .cfg__side { top: auto; bottom: 64px; width: auto; gap: 14px; }
-  .cfg__side--left { left: var(--gutter); right: 50%; }
-  .cfg__side--right { right: var(--gutter); left: 52%; }
-  .cfg__kicker, .cfg__title, .cfg__lead { display: none; }
-  .seg button { height: 28px; padding: 0 9px; font-size: 11px; }
-  .tee, .cfg__look, .cfg__label b { display: none; }
-  .sw { width: 34px; height: 34px; } .sw__dot { width: 24px; height: 24px; }
-  .cfg__group { padding-top: 0; gap: 6px; border-top: 0; }
-  /* mood as small face chips under View */
-  .moods { display: flex; gap: 8px; }
-  .mood { width: 34px; height: 34px; border-radius: 50%; flex: none; }
+  .cfg__side { display: contents; }
+  .cfg__kicker, .cfg__title, .cfg__lead, .cfg__look-text, .cfg__label b, .cfg__label span, .mood span { display: none; }
+  .cfg__group { position: absolute; padding-top: 0; border-top: 0; gap: 8px; }
+  .cfg__label { font-size: 10px; letter-spacing: .2em; }
+  /* view and mood: two columns down the screen edges, beside the muse */
+  .cfg__group--view, .cfg__group--mood { top: 96px; }
+  .cfg__group--view { left: var(--gutter); }
+  .cfg__group--mood { right: var(--gutter); align-items: flex-end; }
+  .cfg__group--view .seg { flex-direction: column; border-radius: 24px; }
+  .cfg__group--view .seg button { flex: none; justify-content: center; width: 64px; height: 36px; padding: 0; }   /* .seg--wide gives flex: 1, which collapses a column */
+  .cfg__group--view .seg__thumb { top: 4px; left: 0; border-radius: 20px; }
+  .moods { display: flex; flex-direction: column; gap: 10px; }
+  .mood { width: 44px; height: 44px; border-radius: 50%; flex: none; }
   .mood img { aspect-ratio: 1; height: 100%; object-position: 50% 12%; }
-  .mood span { display: none; }
+  .cfg__group--color, .cfg__group--fit { bottom: 28px; }
+  .cfg__look { display: none !important; }   /* no buy button on phones: the configurator is for trying it on */
+  .cfg__group--color { left: var(--gutter); }
+  .cfg__group--fit { right: var(--gutter); align-items: flex-end; }
+  .cfg__group--color .swatches { display: flex; gap: 10px; }
+  .sw { width: 44px; height: 44px; } .sw__dot { width: 30px; height: 30px; }   /* as tall as the fit control, so both labels share a line */
+  .cfg__group--fit .seg, .cfg__group--view .seg { align-self: auto; }
+  .seg button { height: 34px; padding: 0 12px; font-size: 12px; }
+  .cfg__group--view .seg button { height: 36px; padding: 0; }
 }
 
 /* ---------- Pack (final): the shirt settles into the box ---------- */
@@ -862,8 +879,10 @@ html.is-white .big-word span { font-size: clamp(104px, 22.4vw, 322px); }
 }
 .rev__drag svg { width: 6px; height: 10px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: .7; }
 .rev__drag.is-down .rev__drag-in { transform: scale(.82); }
+.rev__drag-in { transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.rev__drag.is-gone .rev__drag-in { opacity: 0; transform: scale(.6); }   /* touch: gone after the first swipe */
 html.is-white .rev__drag-in { background: rgba(255,255,255,.55); box-shadow: inset 1.2px 1.2px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.1), 0 14px 30px -14px rgba(0,0,0,.3); }
-@media (hover: hover) and (pointer: fine) { .rev__track, .rev__track.is-dragging { cursor: none; } }
+@media (hover: hover) and (pointer: fine) and (min-width: 761px) { .rev__track, .rev__track.is-dragging { cursor: none; } }
 @media (max-width: 760px) { .rev__drag { width: 76px; height: 76px; margin: -38px 0 0 -38px; } .rev__drag-in { font-size: 10px; gap: 6px; } }
 
 .rev__nav { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 0 var(--gutter); margin-top: 8px; }
@@ -881,8 +900,12 @@ html.is-white .rev__btn { background: rgba(255,255,255,.7); box-shadow: inset 1.
 
 @media (max-width: 760px) {
   .sec--reviews { padding-top: 96px; }
-  .rev__summary { position: static; width: auto; padding: 18px var(--gutter) 0; flex-direction: row; align-items: baseline; gap: 12px; flex-wrap: wrap; text-align: left; }
-  .rev__score b { font-size: 34px; }
+  /* 4.9 on the left, stars over the count on the right */
+  .rev__summary { position: static; width: auto; padding: 18px var(--gutter) 0; display: grid; grid-template-columns: auto 1fr; column-gap: 14px; row-gap: 4px; align-items: center; text-align: left; }
+  .rev__score { display: contents; }
+  .rev__score b { grid-row: 1 / span 2; font-size: 44px; }
+  .rev__stars { align-self: end; font-size: 14px; }
+  .rev__total { align-self: start; font-size: 13px; }
   .rev__track { margin-top: 24px; gap: 12px; }
   .rev-card.glass { width: 80vw; flex-direction: column; padding: 10px; gap: 4px; }
   .rev-card__photo { width: 100%; aspect-ratio: 5 / 4; }
