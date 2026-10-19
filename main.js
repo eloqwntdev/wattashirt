@@ -353,6 +353,7 @@ HOTSPOTS.forEach(h => {
 // Labels never sit on the shirt: each side has a text column just outside the silhouette,
 // and the leader line runs from the dot out to it (and on under the label).
 // labels sit in the page grid's side columns (see --col-l / --col-r in style.css)
+const mobileCards = [...document.querySelectorAll('.video-card')];
 const HS_MAX = 260, HS_SHORT = 150; // HS_SHORT: dot-to-label run for compact hotspots
 function updateHotspots(p, pose) {
   const S = pose.s * base();
@@ -402,6 +403,15 @@ function updateHotspots(p, pose) {
         h.path.setAttribute('d', `M0 0 L${28 * k} -31.6 Q${31.8 * k} -38 ${43 * k} -38 H${far}`);
         h.text.style.left = (tx - x) + 'px';
         h.text.style.top = '-84px';
+      }
+    }
+    // phones: a photo card that scrolls through the shirt's stretch takes the stage; the note steps aside
+    if (isMobile && on && h.text) {
+      const tr = h.text.getBoundingClientRect(), pad = 12;
+      const top = Math.min(tr.top, y - 24), bottom = Math.max(tr.bottom, y + 24);
+      for (const card of mobileCards) {
+        const cr = card.getBoundingClientRect();
+        if (cr.bottom > top - pad && cr.top < bottom + pad && cr.right > tr.left && cr.left < Math.max(tr.right, x + 24)) { on = false; break; }
       }
     }
     h.el.classList.toggle('is-on', on && started);
