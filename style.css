@@ -447,7 +447,7 @@ html.is-white .loupe__lens { background-image: url(assets/macro_white.webp); bac
 }
 .loupe__tag { position: absolute; right: -6px; bottom: 10px; font-size: 11px; letter-spacing: .04em; padding: 3px 7px; border-radius: 20px; background: rgba(255,255,255,.14); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .loupe-hint { position: absolute; left: var(--gutter); bottom: 64px; color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
-@media (hover: none) { .loupe-hint { display: none; } }
+@media (hover: none), (max-width: 760px) { .loupe-hint { display: none; } }
 @media (max-width: 760px) {
   .loupe { width: 104px; height: 104px; margin: -52px 0 0 -52px; }
   .loupe__tag { font-size: 10px; }
@@ -882,7 +882,7 @@ html.is-white .big-word span { font-size: clamp(104px, 22.4vw, 322px); }
 .rev__drag-in { transition: opacity .5s var(--ease), transform .5s var(--ease); }
 .rev__drag.is-gone .rev__drag-in { opacity: 0; transform: scale(.6); }   /* touch: gone after the first swipe */
 html.is-white .rev__drag-in { background: rgba(255,255,255,.55); box-shadow: inset 1.2px 1.2px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.1), 0 14px 30px -14px rgba(0,0,0,.3); }
-@media (hover: hover) and (pointer: fine) { .rev__track, .rev__track.is-dragging { cursor: none; } }
+@media (hover: hover) and (pointer: fine) and (min-width: 761px) { .rev__track, .rev__track.is-dragging { cursor: none; } }
 @media (max-width: 760px) { .rev__drag { width: 76px; height: 76px; margin: -38px 0 0 -38px; } .rev__drag-in { font-size: 10px; gap: 6px; } }
 
 .rev__nav { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 0 var(--gutter); margin-top: 8px; }

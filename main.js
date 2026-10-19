@@ -804,7 +804,7 @@ revToRest(true);
 addEventListener('resize', () => revToRest(true));
 document.fonts && document.fonts.ready.then(() => revToRest(true));
 addEventListener('pointermove', e => {
-  if (e.pointerType !== 'mouse') return;
+  if (e.pointerType !== 'mouse' || isMobile) return;   // phone width behaves like a phone, mouse or not
   const s = revSec.getBoundingClientRect();
   const inside = e.clientY >= s.top && e.clientY <= s.bottom;
   if (inside || revDrag) { dragX(e.clientX - s.left); dragY(e.clientY - s.top); }
@@ -814,7 +814,7 @@ addEventListener('pointermove', e => {
 document.documentElement.addEventListener('pointerleave', () => { if (revIn) { revIn = false; revToRest(); } });
 revTrack.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') revDragEl.classList.add('is-down'); });
 // touch: the badge rests on the first card as a hint; the first swipe has shown it, so it goes
-if (matchMedia('(hover: none)').matches) {
+if (matchMedia('(hover: none)').matches || isMobile) {
   const hideHint = () => revDragEl.classList.add('is-gone');
   revTrack.addEventListener('scroll', hideHint, { passive: true, once: true });
   revTrack.addEventListener('pointerdown', hideHint, { once: true });

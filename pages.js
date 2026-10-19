@@ -164,7 +164,7 @@ if (door) {
   }, 3000);
 
   // desktop: the pointer over the door becomes a glass "Spin" disc, like the "Drag" disc on the reviews
-  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  if (matchMedia('(hover: hover) and (pointer: fine) and (min-width: 761px)').matches) {
     const cur = document.createElement('div');
     cur.className = 'spin-cursor';
     cur.setAttribute('aria-hidden', 'true');
