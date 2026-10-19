@@ -556,8 +556,14 @@ function syncCfgChips() {
   document.querySelectorAll('.cfg .seg').forEach(seg => {
     const on = seg.querySelector('button.is-on'), thumb = seg.querySelector('.seg__thumb');
     if (!on || !thumb || !on.offsetWidth) return;
-    thumb.style.width = on.offsetWidth + 'px';
-    thumb.style.transform = `translateX(${on.offsetLeft}px)`;
+    if (getComputedStyle(seg).flexDirection === 'column') {   // phones: View is a column, the thumb slides down
+      thumb.style.width = on.offsetWidth + 'px'; thumb.style.height = on.offsetHeight + 'px'; thumb.style.bottom = 'auto';
+      thumb.style.transform = `translate(${on.offsetLeft}px, ${on.offsetTop - 4}px)`;
+    } else {
+      thumb.style.height = ''; thumb.style.bottom = '';
+      thumb.style.width = on.offsetWidth + 'px';
+      thumb.style.transform = `translateX(${on.offsetLeft}px)`;
+    }
   });
   document.querySelectorAll('.cfg [data-val]').forEach(el => { el.textContent = CFG_NAMES[state[el.dataset.val]]; });
   const look = document.getElementById('cfgLook');

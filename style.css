@@ -569,11 +569,15 @@ html.is-white .loupe__lens { background-image: url(assets/macro_white.webp); bac
   .cfg__kicker, .cfg__title, .cfg__lead, .cfg__look-text, .cfg__label b, .cfg__label span, .mood span { display: none; }
   .cfg__group { position: absolute; padding-top: 0; border-top: 0; gap: 8px; }
   .cfg__label { font-size: 10px; letter-spacing: .2em; }
-  .cfg__group--view, .cfg__group--mood { top: 92px; }
+  /* view and mood: two columns down the screen edges, beside the muse */
+  .cfg__group--view, .cfg__group--mood { top: 96px; }
   .cfg__group--view { left: var(--gutter); }
   .cfg__group--mood { right: var(--gutter); align-items: flex-end; }
-  .moods { display: flex; flex-direction: row; gap: 8px; }
-  .mood { width: 38px; height: 38px; border-radius: 50%; flex: none; }
+  .cfg__group--view .seg { flex-direction: column; border-radius: 24px; }
+  .cfg__group--view .seg button { flex: none; justify-content: center; width: 64px; height: 36px; padding: 0; }   /* .seg--wide gives flex: 1, which collapses a column */
+  .cfg__group--view .seg__thumb { top: 4px; left: 0; border-radius: 20px; }
+  .moods { display: flex; flex-direction: column; gap: 10px; }
+  .mood { width: 44px; height: 44px; border-radius: 50%; flex: none; }
   .mood img { aspect-ratio: 1; height: 100%; object-position: 50% 12%; }
   .cfg__group--color, .cfg__group--fit { bottom: 28px; }
   .cfg__look { display: none !important; }   /* no buy button on phones: the configurator is for trying it on */
@@ -583,7 +587,7 @@ html.is-white .loupe__lens { background-image: url(assets/macro_white.webp); bac
   .sw { width: 44px; height: 44px; } .sw__dot { width: 30px; height: 30px; }   /* as tall as the fit control, so both labels share a line */
   .cfg__group--fit .seg, .cfg__group--view .seg { align-self: auto; }
   .seg button { height: 34px; padding: 0 12px; font-size: 12px; }
-  .cfg__group--view .seg button { padding: 0 11px; }
+  .cfg__group--view .seg button { height: 36px; padding: 0; }
 }
 
 /* ---------- Pack (final): the shirt settles into the box ---------- */
