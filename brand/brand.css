@@ -562,7 +562,13 @@ html.is-white .spin-cursor__in { background: rgba(255,255,255,.6); box-shadow: i
   .copy, .side-copy, .side-r .copy { font-size: 15px; line-height: 1.45; }
   .note { font-size: 13px; line-height: 1.4; }
   /* wordmark: the clear-space label sits above the box, the own colourway leads the tiles */
-  .wm__box { margin-top: 24px; }
+  .wm { gap: 20px; padding: 0; align-items: stretch; }
+  .wm__box { margin-top: 24px; align-self: center; }
+  /* the size control: a card, not a wrapped pill. Size + slider on one row, the check and Guides under it */
+  .wm__ctrl { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 14px 16px; padding: 16px 18px; border-radius: 20px; }
+  .wm__ctrl input[type=range] { width: 100%; }
+  .wm__flag { justify-self: start; }
+  .wm__ctrl .seg-btn { justify-self: end; }
   .wm__label { top: -22px; left: 0; }
   .wm__tiles { gap: 12px; }
   .wm__tiles li:is(.t-black, .t-white) { grid-column: 1 / -1; }   /* the mode's own colourway, whichever is on screen */
