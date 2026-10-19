@@ -794,6 +794,12 @@ addEventListener('pointermove', e => {
 }, { passive: true });
 document.documentElement.addEventListener('pointerleave', () => { if (revIn) { revIn = false; revToRest(); } });
 revTrack.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') revDragEl.classList.add('is-down'); });
+// touch: the badge rests on the first card as a hint; the first swipe has shown it, so it goes
+if (matchMedia('(hover: none)').matches) {
+  const hideHint = () => revDragEl.classList.add('is-gone');
+  revTrack.addEventListener('scroll', hideHint, { passive: true, once: true });
+  revTrack.addEventListener('pointerdown', hideHint, { once: true });
+}
 addEventListener('pointerup', () => revDragEl.classList.remove('is-down'));
 addEventListener('pointercancel', () => revDragEl.classList.remove('is-down'));
 

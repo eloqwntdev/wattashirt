@@ -562,26 +562,24 @@ html.is-white .loupe__lens { background-image: url(assets/macro_white.webp); bac
 .cfg__cta span { font-weight: 400; opacity: .6; }
 .cfg__cta:hover { transform: translateY(-2px); }
 
-/* phones: a game HUD around the muse instead of one dense strip at the bottom.
-   Fit on top, colour down the left edge, mood down the right, view + Get it at the bottom. */
+/* phones: a game HUD around the muse, clear of his head. Colour and mood up the two top corners,
+   fit and view stacked bottom-left, Get it bottom-right. */
 @media (max-width: 760px) {
   .cfg__side { display: contents; }
   .cfg__kicker, .cfg__title, .cfg__lead, .cfg__look-text, .cfg__label b, .mood span { display: none; }
   .cfg__group { position: absolute; padding-top: 0; border-top: 0; gap: 8px; }
   .cfg__label { font-size: 10px; letter-spacing: .2em; gap: 6px; }
-  .cfg__group--fit { top: 84px; left: 50%; transform: translateX(-50%); align-items: center; }
-  .cfg__group--fit .cfg__label { justify-content: center; }
-  .cfg__group--color, .cfg__group--mood { top: 50%; transform: translateY(-50%); align-items: center; }
+  .cfg__group--color, .cfg__group--mood { top: 96px; align-items: center; }
   .cfg__group--color { left: var(--gutter); }
   .cfg__group--mood { right: var(--gutter); }
   .cfg__group--color .swatches, .moods { display: flex; flex-direction: column; gap: 12px; }
   .sw { width: 44px; height: 44px; } .sw__dot { width: 30px; height: 30px; }
   .mood { width: 44px; height: 44px; border-radius: 50%; flex: none; }
   .mood img { aspect-ratio: 1; height: 100%; object-position: 50% 12%; }
-  /* bottom bar: view on the left, the buy button on the right */
-  .cfg__group--view { left: var(--gutter); bottom: 28px; }
-  .cfg__group--view .seg { align-self: flex-start; }
-  .cfg__look { position: absolute; right: var(--gutter); bottom: 28px; padding: 0; border: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .cfg__group--fit { left: var(--gutter); bottom: 96px; }
+  .cfg__group--view { left: var(--gutter); bottom: 24px; }
+  .cfg__group--fit .seg, .cfg__group--view .seg { align-self: flex-start; }
+  .cfg__look { position: absolute; right: var(--gutter); bottom: 24px; padding: 0; border: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
   .cfg__cta { height: 44px; padding: 0 18px; font-size: 13px; }
   .seg button { height: 34px; padding: 0 12px; font-size: 12px; }
   .cfg__group--view .seg button { padding: 0 11px; }
@@ -876,6 +874,8 @@ html.is-white .big-word span { font-size: clamp(104px, 22.4vw, 322px); }
 }
 .rev__drag svg { width: 6px; height: 10px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: .7; }
 .rev__drag.is-down .rev__drag-in { transform: scale(.82); }
+.rev__drag-in { transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.rev__drag.is-gone .rev__drag-in { opacity: 0; transform: scale(.6); }   /* touch: gone after the first swipe */
 html.is-white .rev__drag-in { background: rgba(255,255,255,.55); box-shadow: inset 1.2px 1.2px 0 #fff, inset -1px -1px 0 rgba(0,0,0,.1), 0 14px 30px -14px rgba(0,0,0,.3); }
 @media (hover: hover) and (pointer: fine) { .rev__track, .rev__track.is-dragging { cursor: none; } }
 @media (max-width: 760px) { .rev__drag { width: 76px; height: 76px; margin: -38px 0 0 -38px; } .rev__drag-in { font-size: 10px; gap: 6px; } }
