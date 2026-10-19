@@ -45,12 +45,12 @@ This is a concept. Several things look real but are invented:
   - `intro` and `intro_w` (120 frames, unboxing preloader, opaque).
   - `av/{b|w}_{over|reg}_{turn|mood}` (61 frames each, 1600×900, configurator avatar).
 - **`ASSET_V`** (main.js, currently 17) is appended as `?v=` to every frame URL. Bump it after you re-cut any frames.
-- **Cache-busting** on css/js is manual via `?v=` in the HTML: style.css?v=50, main.js?v=54, pages.css?v=31, pages.js?v=9, bag.css?v=6, bag.js?v=5. Bump the number when you edit the file.
+- **Cache-busting** on css/js is manual via `?v=` in the HTML: style.css?v=51, main.js?v=55, pages.css?v=31, pages.js?v=9, bag.css?v=6, bag.js?v=5. Bump the number when you edit the file.
 - **Preloader:** a counter runs while the intro frames load, then the box opens on the stage canvas. Arriving with a hash (`index.html#reviews`) skips the intro and jumps to that section (`arrivalHash` / `anchorTarget()`).
 - **Loupe** (magnifier) only in About. Hotspot labels are laid out in columns outside the shirt (`HS_HALF`/`HS_GAP`). Video cards are linked to the shirt by leader lines (`CARD_LINKS`).
 - **Configurator:** colour / fit / view / mood drive the avatar sequences. Mood shows full height and never zooms.
   - Phones: a game-style HUD around the muse (`.cfg__side` is `display: contents`; each `.cfg__group--{color,fit,view,mood}` is placed on its own): view (left) and mood (right) across the top, colour (left) and fit (right) above the bottom, Get it full width along the bottom; no step numbers. The reviews Drag badge is a hint on touch: it goes after the first swipe.
-- **Phones, story frames:** the 16:9 frame is shorter than the screen, so `drawFrame(…, feather)` fades its top and bottom edges through an off-screen buffer (story sequence only), otherwise flying cotton ends on a hard line. Hotspot notes are 2 lines wide (≤250 px), appear with their dot, and sit under the dot when the header would cover them.
+- **Phones, story frames:** the 16:9 frame is shorter than the screen, so `drawFrame(…, feather)` fades its top and bottom edges through an off-screen buffer (story sequence only), otherwise flying cotton ends on a hard line. Hotspot notes are footnotes: 2 lines wide (≤250 px) on the left column, always above their dot, with the desktop leader (a rule under the note bending down into the dot); they appear with the dot.
 - **Page grid:** every section is anchored on the same two side columns:
   - left column: `--col-l` (= gutter);
   - right column: `--col-r` (= 100% − gutter − side-w);

@@ -378,12 +378,15 @@ function updateHotspots(p, pose) {
     h.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     if (h.text) {
       if (isMobile) {
-        // wide enough for two lines; above the dot, or under it when the header would cover it
-        const tw = Math.min(250, vw - 32), left = clamp(x - tw / 2, 16, vw - 16 - tw) - x;
+        // a footnote: the note sits on the left column, above the dot; a rule runs under it and bends
+        // down into the dot, so the dot is always at the end of the line, right of and below the text
+        const tw = Math.min(250, vw - 32);
         h.text.style.width = tw + 'px';
         const th = h.text.offsetHeight || 80;
-        h.text.style.left = left + 'px';
-        h.text.style.top = (y - 34 - th > 84 ? -(34 + th) : 34) + 'px';
+        const lx = 16 - x;                                  // the left column, relative to the dot
+        h.text.style.left = lx + 'px';
+        h.text.style.top = (-46 - th) + 'px';               // the rule (y -38) runs 8 px under the note
+        h.path.setAttribute('d', `M0 0 L-28 -31.6 Q-31.8 -38 -43 -38 H${Math.min(-43, lx)}`);
       } else {
         const right = h.side === 'right';
         const cw = document.documentElement.clientWidth; // same box CSS % resolves against (no scrollbar)

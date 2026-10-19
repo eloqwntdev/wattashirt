@@ -390,7 +390,7 @@ html.is-white .photo--seam { background-image: url(assets/seam_white.webp); back
   .sec--tech .side-copy { display: none; }
   .hs__text { width: 250px; text-align: left !important; transition-delay: 0s, 0s; }   /* appears with its dot */
   .hs__text p { text-wrap: balance; }
-  .hs__line { display: none; }
+  .hs__line path { transition-delay: 0s; }   /* the leader draws in with the dot */
   .hs__text h3 { margin-bottom: 8px; font-size: 14px; gap: 8px; }
   .hs__icon { width: 26px; height: 26px; } .hs__icon svg { width: 14px; height: 14px; }
   .hs__text p { font-size: 13px; line-height: 1.35; }
