@@ -388,15 +388,17 @@ html.is-white .photo--seam { background-image: url(assets/seam_white.webp); back
   .video-card--left { top: auto; bottom: 24px; } /* under the hem, clear of the Longline Back hotspot */
   .video-card__caption { width: auto; }
   .sec--tech .side-copy { display: none; }
-  .hs__text { width: 150px; text-align: left !important; }
+  .hs__text { width: 250px; text-align: left !important; transition-delay: 0s, 0s; }   /* appears with its dot */
+  .hs__text p { text-wrap: balance; }
   .hs__line { display: none; }
   .hs__text h3 { margin-bottom: 8px; font-size: 14px; gap: 8px; }
   .hs__icon { width: 26px; height: 26px; } .hs__icon svg { width: 14px; height: 14px; }
-  .hs__text p { font-size: 12px; }
+  .hs__text p { font-size: 13px; line-height: 1.35; }
   .hs__dot { transform: scale(.42) !important; }
   .sec--features { height: 330vh; } /* slower: each hotspot gets its own stretch of scroll */
   .sec--back { height: 200vh; }
-  .buy__info { top: auto; bottom: 40px; left: var(--gutter); right: var(--gutter); }
+  .buy__info { top: auto; bottom: 40px; left: var(--gutter); right: var(--gutter); width: auto; }   /* --side-w is 28vw: 109 px on a phone */
+  .buy__rating { white-space: nowrap; }
   .buy__title { flex-direction: row; gap: 12px; font-size: 34px; }
   .buy__desc { display: none; }
   .buy__price { margin: 8px 0 16px; font-size: 26px; }
@@ -405,11 +407,14 @@ html.is-white .photo--seam { background-image: url(assets/seam_white.webp); back
   .thumbs { justify-content: flex-start; flex-direction: row; }
   .thumb { width: 48px; height: 48px; border-radius: 12px; }
     .drag-zone { left: 0; right: 0; top: 18%; bottom: 36%; }
-    .footer { height: auto; gap: 40px; }
-  .footer__top { grid-template-columns: 1fr auto; height: auto; row-gap: 20px; }
+  /* footer: logo + socials, the theme pill, then links on one line, then © and language on one line */
+  .footer { height: auto; gap: 36px; padding: 40px var(--gutter) 36px; }
+  .footer__top { grid-template-columns: 1fr auto; height: auto; row-gap: 28px; align-items: center; }
   .footer__toggle { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
-  .footer__bottom { grid-template-columns: 1fr; gap: 12px; }
-  .footer__bottom p:last-child { justify-self: start; }
+  .footer__bottom { grid-template-columns: 1fr auto; row-gap: 20px; column-gap: 16px; padding-top: 24px; border-top: 1px solid rgba(var(--ink), .1); font-size: 14px; }
+  .footer__links { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 20px; }
+  .footer__links a { white-space: nowrap; }
+  .footer__bottom p:last-child { justify-self: end; }
   .loader__corner { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -557,20 +562,29 @@ html.is-white .loupe__lens { background-image: url(assets/macro_white.webp); bac
 .cfg__cta span { font-weight: 400; opacity: .6; }
 .cfg__cta:hover { transform: translateY(-2px); }
 
+/* phones: a game HUD around the muse instead of one dense strip at the bottom.
+   Fit on top, colour down the left edge, mood down the right, view + Get it at the bottom. */
 @media (max-width: 760px) {
-  .cfg__side { top: auto; bottom: 64px; width: auto; gap: 14px; }
-  .cfg__side--left { left: var(--gutter); right: 50%; }
-  .cfg__side--right { right: var(--gutter); left: 52%; }
-  .cfg__kicker, .cfg__title, .cfg__lead { display: none; }
-  .seg button { height: 28px; padding: 0 9px; font-size: 11px; }
-  .tee, .cfg__look, .cfg__label b { display: none; }
-  .sw { width: 34px; height: 34px; } .sw__dot { width: 24px; height: 24px; }
-  .cfg__group { padding-top: 0; gap: 6px; border-top: 0; }
-  /* mood as small face chips under View */
-  .moods { display: flex; gap: 8px; }
-  .mood { width: 34px; height: 34px; border-radius: 50%; flex: none; }
+  .cfg__side { display: contents; }
+  .cfg__kicker, .cfg__title, .cfg__lead, .cfg__look-text, .cfg__label b, .mood span { display: none; }
+  .cfg__group { position: absolute; padding-top: 0; border-top: 0; gap: 8px; }
+  .cfg__label { font-size: 10px; letter-spacing: .2em; gap: 6px; }
+  .cfg__group--fit { top: 84px; left: 50%; transform: translateX(-50%); align-items: center; }
+  .cfg__group--fit .cfg__label { justify-content: center; }
+  .cfg__group--color, .cfg__group--mood { top: 50%; transform: translateY(-50%); align-items: center; }
+  .cfg__group--color { left: var(--gutter); }
+  .cfg__group--mood { right: var(--gutter); }
+  .cfg__group--color .swatches, .moods { display: flex; flex-direction: column; gap: 12px; }
+  .sw { width: 44px; height: 44px; } .sw__dot { width: 30px; height: 30px; }
+  .mood { width: 44px; height: 44px; border-radius: 50%; flex: none; }
   .mood img { aspect-ratio: 1; height: 100%; object-position: 50% 12%; }
-  .mood span { display: none; }
+  /* bottom bar: view on the left, the buy button on the right */
+  .cfg__group--view { left: var(--gutter); bottom: 28px; }
+  .cfg__group--view .seg { align-self: flex-start; }
+  .cfg__look { position: absolute; right: var(--gutter); bottom: 28px; padding: 0; border: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .cfg__cta { height: 44px; padding: 0 18px; font-size: 13px; }
+  .seg button { height: 34px; padding: 0 12px; font-size: 12px; }
+  .cfg__group--view .seg button { padding: 0 11px; }
 }
 
 /* ---------- Pack (final): the shirt settles into the box ---------- */
@@ -881,8 +895,12 @@ html.is-white .rev__btn { background: rgba(255,255,255,.7); box-shadow: inset 1.
 
 @media (max-width: 760px) {
   .sec--reviews { padding-top: 96px; }
-  .rev__summary { position: static; width: auto; padding: 18px var(--gutter) 0; flex-direction: row; align-items: baseline; gap: 12px; flex-wrap: wrap; text-align: left; }
-  .rev__score b { font-size: 34px; }
+  /* 4.9 on the left, stars over the count on the right */
+  .rev__summary { position: static; width: auto; padding: 18px var(--gutter) 0; display: grid; grid-template-columns: auto 1fr; column-gap: 14px; row-gap: 4px; align-items: center; text-align: left; }
+  .rev__score { display: contents; }
+  .rev__score b { grid-row: 1 / span 2; font-size: 44px; }
+  .rev__stars { align-self: end; font-size: 14px; }
+  .rev__total { align-self: start; font-size: 13px; }
   .rev__track { margin-top: 24px; gap: 12px; }
   .rev-card.glass { width: 80vw; flex-direction: column; padding: 10px; gap: 4px; }
   .rev-card__photo { width: 100%; aspect-ratio: 5 / 4; }

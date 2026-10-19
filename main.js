@@ -202,21 +202,40 @@ function storyFrame(p) {
   return lerp(STORY_ANCHORS[i], STORY_ANCHORS[i + 1], t);
 }
 
-function drawFrame(img, pose, alpha = 1) {
+// phones: the 16:9 story frame is shorter than the screen, so its top and bottom edges show; flying cotton
+// would end on a hard line there. Those frames go through a buffer that fades the top and bottom edges.
+const featherCv = document.createElement('canvas'), featherCtx = featherCv.getContext('2d');
+function drawFrame(img, pose, alpha = 1, feather = false) {
   if (!img || alpha <= 0) return;
   const S = pose.s * base();
-  ctx.globalAlpha = alpha;
   const Wd = S * img.width / img.height;
-  ctx.drawImage(img, (pose.x * vw - Wd / 2) * dpr, (pose.y * vh - S / 2) * dpr, Wd * dpr, S * dpr);
+  const x = (pose.x * vw - Wd / 2) * dpr, y = (pose.y * vh - S / 2) * dpr, w = Wd * dpr, h = S * dpr;
+  if (feather && isMobile) {
+    if (featherCv.width !== canvas.width || featherCv.height !== canvas.height) { featherCv.width = canvas.width; featherCv.height = canvas.height; }
+    featherCtx.globalCompositeOperation = 'source-over';
+    featherCtx.clearRect(0, 0, featherCv.width, featherCv.height);
+    featherCtx.drawImage(img, x, y, w, h);
+    featherCtx.globalCompositeOperation = 'destination-in';
+    const g = featherCtx.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.12, '#000'); g.addColorStop(0.9, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    featherCtx.fillStyle = g; featherCtx.fillRect(0, 0, featherCv.width, featherCv.height);
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(featherCv, 0, 0);
+    ctx.globalAlpha = 1;
+    return;
+  }
+  ctx.globalAlpha = alpha;
+  ctx.drawImage(img, x, y, w, h);
   ctx.globalAlpha = 1;
 }
 // black frame underneath, white on top with t (the silhouettes line up closely)
 function drawColored(kind, f, pose, a = 1) {
-  if (colorState.t < 1) drawFrame(frameImg(`black/${kind}`, f), pose, a);
+  const fe = kind === 'story';
+  if (colorState.t < 1) drawFrame(frameImg(`black/${kind}`, f), pose, a, fe);
   // while a white sequence is still streaming, stay white: the turntable falls back to the white back view
   // never a black shirt on the white page: until the frame arrives, the nearest white view stands in
   const w = frameImg(`white/${kind}`, f) || (kind === 'turn' ? frameImg('white/story', 179) : frameImg('white/turn', 0));
-  if (colorState.t > 0) drawFrame(w, pose, a * colorState.t);
+  if (colorState.t > 0) drawFrame(w, pose, a * colorState.t, fe);
 }
 
 /* ------------------------------------------------------------------ */
@@ -359,8 +378,12 @@ function updateHotspots(p, pose) {
     h.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     if (h.text) {
       if (isMobile) {
-        const tw = 150, left = clamp(x - tw / 2, 16, vw - 16 - tw) - x;
-        h.text.style.left = left + 'px'; h.text.style.top = '-150px';
+        // wide enough for two lines; above the dot, or under it when the header would cover it
+        const tw = Math.min(250, vw - 32), left = clamp(x - tw / 2, 16, vw - 16 - tw) - x;
+        h.text.style.width = tw + 'px';
+        const th = h.text.offsetHeight || 80;
+        h.text.style.left = left + 'px';
+        h.text.style.top = (y - 34 - th > 84 ? -(34 + th) : 34) + 'px';
       } else {
         const right = h.side === 'right';
         const cw = document.documentElement.clientWidth; // same box CSS % resolves against (no scrollbar)
