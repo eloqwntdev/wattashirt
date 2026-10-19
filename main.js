@@ -655,8 +655,13 @@ function drawConfigurator(p, pose, dt) {
     ctx.globalAlpha = 1;
   }
   const ui = clamp(1 - Math.max(IDX.avatarIn - p, p - IDX.avatarOut, 0) / 0.2);
-  cfgUI.style.opacity = ui;
-  cfgUI.style.pointerEvents = ui > 0.6 ? '' : 'none';
+  let ui2 = ui;
+  if (isMobile) {   // phones: the HUD fades out as the pinned block leaves, before it slides under the header
+    const top = cfgUI.getBoundingClientRect().top;
+    if (top < 0) ui2 *= clamp(1 + top / 90);
+  }
+  cfgUI.style.opacity = ui2;
+  cfgUI.style.pointerEvents = ui2 > 0.6 ? '' : 'none';
 }
 syncCfgChips();
 

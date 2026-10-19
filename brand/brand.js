@@ -54,7 +54,9 @@
     rail.forEach((a, j) => a.classList.toggle('is-on', j === i));
     pageNo.textContent = `${pad(i + 1)} / ${pad(secs.length)}`;
   }
+  const header = $('.header');
   function onScroll() {
+    header.classList.toggle('is-scrolled', scrollY > 8);   // frosted once content runs under it
     const mid = innerHeight * .45;
     let i = 0;
     secs.forEach((s, j) => { if (s.getBoundingClientRect().top <= mid) i = j; });
